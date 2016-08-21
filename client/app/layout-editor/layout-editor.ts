@@ -43,7 +43,7 @@ declare var  domtoimage:any;
                 <div class="layout">
                     <div class="form-group">
                         <label>Layout Name</label>
-                       <!-- <input type="text" [(ngModel)]="currentLayout.props.label" />-->
+                       <input type="text" [(ngModel)]="currentLayout.props.label" name="layoutname" />
                         <label *ngIf="devicesLabels">Used devices: <span>{{devicesLabels}}</span> </label>
                     </div>
                     <div  id="SnapshotDiv" [style.width.px]="mySizeW" [style.height.px]="mySizeH">

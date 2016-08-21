@@ -27,7 +27,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
         
         
             <label class="PNameLabel" for="PName">Playlist Name</label>
-           <!-- <input id="PName" type="text" [(ngModel)]="playlistProps.label"/>-->
+           <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
             
@@ -96,7 +96,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
 
 
 export class PlaylistEditable implements OnInit{
-    @Input() palylistid:number;
+    @Input() playlistid:number;
     @Input() set dragEnter(item:VOAsset){
        // console.log(item);
        //  if(item)this.selectedItem = new VOPlayLists_Assets({item,position:-1})

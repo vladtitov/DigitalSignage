@@ -31,7 +31,7 @@ import {LayoutsListService} from "../layouts/layouts-list-service";
             </div>
             <div class="form-group">
                 <label for="selectLayout">Layout</label>
-              <!--  <select class="form-control"    id="selectLayout"  [(ngModel)]="currentLayout"> <option *ngFor="let label1 of layouts" [ngValue]="label1">{{label1.props.label}}</option> </select>-->
+             <select class="form-control"    id="selectLayout"  [(ngModel)]="currentLayout" name="mylayout"> <option *ngFor="let label1 of layouts" [ngValue]="label1">{{label1.props.label}}</option> </select>
             </div>
             <div class="card-256x320">
                 <div class="mythumb">

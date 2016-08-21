@@ -17,6 +17,7 @@ var forms_1 = require('@angular/forms');
 var app_component_1 = require('./app.component');
 var app_routing_1 = require('./app.routing');
 var http_1 = require('@angular/http');
+var playlist_editable_1 = require("./playlist-editor/playlist-editable");
 //import { HeroesModule } from './heroes/heroes.module';
 //import { LoginComponent } from './login.component';
 //import { DialogService }  from './dialog.service';
@@ -32,7 +33,9 @@ var AppModule = (function () {
                 http_1.JsonpModule,
                 app_routing_1.routing
             ],
-            declarations: [],
+            declarations: [
+                playlist_editable_1.PlaylistEditable
+            ],
             providers: [
                 app_routing_1.appRoutingProviders,
             ],
