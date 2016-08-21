@@ -13,10 +13,10 @@ var layouts_assembled_1 = require("./layouts/layouts-assembled");
 var layout_editor_1 = require("./layout-editor/layout-editor");
 var layouts_template_1 = require("./layouts/layouts-template");
 var content_manager_1 = require("./assets/content-manager");
-var crisisCenterRoutes = [
-    { path: '', redirectTo: '/heroes', pathMatch: 'full' },
-    { path: 'crisis-center', loadChildren: 'app/crisis-center/crisis-center.module#CrisisCenterModule' }
-];
+//const crisisCenterRoutes: Routes = [
+//  {  path: '', redirectTo: '/heroes', pathMatch: 'full' },
+//  { path: 'crisis-center', loadChildren: 'app/crisis-center/crisis-center.module#CrisisCenterModule' }
+//];
 var appRoutes = [
     { path: '', component: devices_manager_1.DevicesManager },
     { path: 'devices-manager/:id', component: devices_manager_1.DevicesManager },
