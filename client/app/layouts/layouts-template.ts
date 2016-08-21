@@ -50,7 +50,7 @@ import {LayoutsTemplateList} from "./layouts-template-list";
                 
               `]
     ,
-    directives: [ ROUTER_DIRECTIVES, ViewportsView, LayoutsTemplateList ]
+    directives: [ ROUTER_DIRECTIVES, LayoutsTemplateList ]
     ,providers:[]
 })
 

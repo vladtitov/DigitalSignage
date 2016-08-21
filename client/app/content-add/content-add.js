@@ -12,11 +12,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var tabs_1 = require('@angular2-material/tabs');
+//import { MD_TABS_DIRECTIVES } from '@angular2-material/tabs';
 var router_1 = require('@angular/router');
 var content_files_1 = require("./content-files");
-var content_rss_1 = require("./content-rss");
-var content_web_1 = require("./content-web");
+//import {RssContent} from "./content-rss";
+//import {WebContent} from "./content-web";
 var AddContent = (function () {
     function AddContent(router, activatedRoute) {
         this.router = router;
@@ -84,7 +84,7 @@ var AddContent = (function () {
             selector: 'add-content',
             template: "\n                <div class=\"add-content\">\n                    <multiple-progressbar \n                            (hided)=\"onHided()\" \n                            (showed)=\"onShowed()\"\n                            (closed)=\"onModalClose()\"\n                            (changed)=\"onUpload()\">\n                    </multiple-progressbar>\n                </div>\n  ",
             styles: ["\n                .add-content-title {\n                    margin-top: 20px;\n                    text-align: center;\n                    font-weight: bold;\n                }\n            "],
-            directives: [router_1.ROUTER_DIRECTIVES, tabs_1.MD_TABS_DIRECTIVES, content_files_1.FileContent, content_rss_1.RssContent, content_web_1.WebContent]
+            directives: [router_1.ROUTER_DIRECTIVES, content_files_1.FileContent]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.ActivatedRoute])
     ], AddContent);

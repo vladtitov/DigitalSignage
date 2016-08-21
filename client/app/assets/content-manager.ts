@@ -26,8 +26,8 @@ import {PlayListService} from "../playlist-editor/playlist-service";
                     </nav>
                  </div>
                  <div class="panel-body">
-                      <asset-library #assetLibrary [changesResult]="changesResult" (onselect)="onLibrarySelect($event)"></asset-library>
-                      <asset-editor *ngIf="editorVisible" #assetEditor [_currentAsset]="currentAsset"></asset-editor>  
+                     <asset-library #assetLibrary [changesResult]="changesResult" (onselect)="onLibrarySelect($event)"></asset-library>
+                     <asset-editor *ngIf="editorVisible" #assetEditor [_currentAsset]="currentAsset"></asset-editor>
                 </div>
                 
                 
