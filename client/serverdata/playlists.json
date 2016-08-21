@@ -1,0 +1,156 @@
+[
+  {
+    "item": {
+      "id": 1,
+      "name_pl": null,
+      "description": null,
+      "size": null,
+      "time_from": null,
+      "time_to": null,
+      "created_user": null,
+      "created_time": null,
+      "duration": null,
+      "active": null,
+      "dimension": null
+    },
+    "list": [
+      {
+        "id": 1,
+        "listId": 1,
+        "assetId": 84,
+        "duration": 0,
+        "afterId": 0,
+        "type": "img",
+        "asset": {
+          "id": 84,
+          "originalName": "1922.jpg",
+          "path": "/clientAssets/uploads/userImages/_1468553585376_1922.jpg",
+          "thumb": "/clientAssets/uploads/thumbnails/_1468553585376_1922.jpg",
+          "size": 98484,
+          "width": 422,
+          "height": 512,
+          "mime": "image/jpeg",
+          "orig_dimension": null,
+          "active": null,
+          "duration": null,
+          "type": null,
+          "time_from": null,
+          "time_to": null,
+          "created_user": null,
+          "created_time": null
+        }
+      },
+      {
+        "id": 3,
+        "listId": 1,
+        "assetId": 86,
+        "duration": 10,
+        "afterId": 1,
+        "type": "img",
+        "asset": {
+          "id": 86,
+          "originalName": "1923.jpg",
+          "path": "/clientAssets/uploads/userImages/_1468553585547_1923.jpg",
+          "thumb": "/clientAssets/uploads/thumbnails/_1468553585547_1923.jpg",
+          "size": 148163,
+          "width": 800,
+          "height": 452,
+          "mime": "image/jpeg",
+          "orig_dimension": null,
+          "active": null,
+          "duration": null,
+          "type": null,
+          "time_from": null,
+          "time_to": null,
+          "created_user": null,
+          "created_time": null
+        }
+      }
+    ]
+  },
+  {
+    "item": {
+      "id": 2,
+      "name_pl": null,
+      "description": null,
+      "size": null,
+      "time_from": null,
+      "time_to": null,
+      "created_user": null,
+      "created_time": null,
+      "duration": null,
+      "active": null,
+      "dimension": null
+    },
+    "list": []
+  },
+  {
+    "item": {
+      "id": 3,
+      "name_pl": "some name",
+      "description": "some description",
+      "size": 6574894,
+      "time_from": 0,
+      "time_to": 25,
+      "created_user": 1,
+      "created_time": 21,
+      "duration": 25,
+      "active": 1,
+      "dimension": "landscape"
+    },
+    "list": [
+      {
+        "id": 6,
+        "listId": 3,
+        "assetId": 84,
+        "duration": 10,
+        "afterId": 0,
+        "type": "img",
+        "asset": {
+          "id": 84,
+          "originalName": "1922.jpg",
+          "path": "/clientAssets/uploads/userImages/_1468553585376_1922.jpg",
+          "thumb": "/clientAssets/uploads/thumbnails/_1468553585376_1922.jpg",
+          "size": 98484,
+          "width": 422,
+          "height": 512,
+          "mime": "image/jpeg",
+          "orig_dimension": null,
+          "active": null,
+          "duration": null,
+          "type": null,
+          "time_from": null,
+          "time_to": null,
+          "created_user": null,
+          "created_time": null
+        }
+      },
+      {
+        "id": 7,
+        "listId": 3,
+        "assetId": 85,
+        "duration": 10,
+        "afterId": 6,
+        "type": "img",
+        "asset": {
+          "id": 85,
+          "originalName": "1920.jpg",
+          "path": "/clientAssets/uploads/userImages/_1468553585370_1920.jpg",
+          "thumb": "/clientAssets/uploads/thumbnails/_1468553585370_1920.jpg",
+          "size": 171987,
+          "width": 720,
+          "height": 506,
+          "mime": "image/jpeg",
+          "orig_dimension": null,
+          "active": null,
+          "duration": null,
+          "type": null,
+          "time_from": null,
+          "time_to": null,
+          "created_user": null,
+          "created_time": null
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,95 @@
+
+
+<div>
+    <style>
+        .pos-center{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        #MainContainer{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+        }
+        #deviceready{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #ViewportsContainer{
+            position: absolute;
+            top:0;
+            left: 0;
+            transform: scale(0.5);
+        }
+        .ht-player{
+            position: absolute;
+            border: thin gray solid;
+        }
+        .ht-player img{
+            position: absolute;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .ht-player video{
+            position: absolute;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .htcontainer{
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        #loading-container{
+            width:100%;
+            height:90vh;
+            position:relative;
+        }
+        .loading{
+            width: 150px;
+            height: 100px;
+        }
+
+
+    </style>
+    <div id="MainPlayerContainer">
+            <div id="HTMyPlayer">
+                HT Player
+
+            </div>
+        </div>
+
+<!--        <script type="text/javascript" src="js/htplayer.js"></script>
+    <-->
+       <script>
+
+
+           if(typeof loadMyScript ==='undefined'){
+               $.getScript('js/htplayer.js',function ( data, textStatus, jqxhr ){
+                   /// console.log( data ); // Data returned
+                   console.log( textStatus );
+                   console.log( jqxhr.status );
+                   console.log( "Load was performed.js/login.js " );
+                   // this.player =  new htplayer.PlayerController()
+
+               });
+           }else  loadMyScript('js/htplayer.js');
+
+    </script>
+
+</div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h1>Server Test. Single upload form.</h1>
+<br>
+<form name      =  "uploadForm"
+      id        =  "uploadForm"
+      enctype   =  "multipart/form-data"
+      action    =  "/api/assets/upload"
+      method    =  "post"
+>
+    <input type="file" name="userImages" />
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+<br>
+<h1>Server Test. Multiple upload form.</h1>
+<br>
+<form name      =   "uploadsForm"
+      id        =   "uploadsForm"
+      enctype   =   "multipart/form-data"
+      action    =   "/api/assets/uploads"
+      method    =   "post">
+    <input type="file" name="userImages" multiple />
+    <input type="submit" value="Upload Images" name="submit">
+    <input type='text' id='random' name='random'><br>
+    <span id = "status"></span>
+</form>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $('#uploadForm').submit(function() {
+            $("#status").empty().text("File is uploading...");
+
+            $(this).ajaxSubmit({
+
+                error: function(xhr) {
+                    status('Error: ' + xhr.status);
+                },
+
+                success: function(response) {
+                    console.log(response)
+                    $("#status").empty().text(response);
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+</html>

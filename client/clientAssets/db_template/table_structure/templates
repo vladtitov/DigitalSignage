@@ -1,0 +1,1 @@
+CREATE TABLE "templates" (id INTEGER PRIMARY KEY AUTOINCREMENT,   viewports TEXT,  props TEXT,  image TEXT, width INTEGER, height INTEGER, label TEXT)

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "outFile": "../../myversion/js/login.js"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

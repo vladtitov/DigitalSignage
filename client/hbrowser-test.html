@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, user-scalable=no">
+    <title>HT player</title>
+
+    <script type="text/javascript" src="libs/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="libs/underscore-min.js"></script>
+    <script type="text/javascript" src="libs/moment.min.js"></script>
+    <link rel="stylesheet" href="libs/font-awesome.css">
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+
+    <object id="pluginObjectDownload" classid="clsid:SAMSUNG-INFOLINK-DOWNLOAD" style="opacity: 0.0; background-color: #000; width: 0px; height: 0px;"></object>
+    <style>
+        .pos-center{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        #MainContainer{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+        }
+        #deviceready{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #ViewportsContainer{
+            position: absolute;
+            top:0;
+            left: 0;
+            transform: scale(0.5);
+        }
+        .ht-player{
+            position: absolute;
+            border: thin gray solid;
+        }
+        .ht-player img{
+            position: absolute;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .ht-player video{
+            position: absolute;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .htcontainer{
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        #loading-container{
+            width:100%;
+            height:90vh;
+            position:relative;
+        }
+        .loading{
+            width: 150px;
+            height: 100px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<div>
+    <div id="MainContainer">
+        Progress:
+        <div id="Progress"></div>
+<h2>Result</h2>
+
+        <div id="DownResult"></div>
+        <hr/>
+        <h2>Return</h2>
+        <div id="DownReturn"></div>
+
+    </div>
+
+    <!--        <script type="text/javascript" src="js/htplayer.js"></script>
+        <-->
+
+    <script src="js/signs.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            var signs = new htplayer.Signs('http://182.168.1.10:56888','HospitalityBrowser/htplayer','/dtv/usb/sda1/');
+        })
+    </script>
+
+
+</div>
+
+</body>
+</html>

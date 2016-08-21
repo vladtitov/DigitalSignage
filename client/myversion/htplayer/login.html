@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" href="libs/css/font-awesome.min.css">
+        <link rel="stylesheet" href="libs/css/bootstrap.min.css">
+
+        <title>HT Player</title>
+        <style>
+            .pos-center{
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+            }
+            #MainContainer{
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #deviceready{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            #ViewportsContainer{
+                position: absolute;
+                top:0;
+                left: 0;
+                transform: scale(0.5);
+            }
+            .ht-player{
+                position: absolute;
+                border: thin gray solid;
+            }
+            .ht-player img{
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+            .ht-player video{
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+            .htcontainer{
+                position: absolute;
+                width: 100%;
+                height: 100vh;
+                top: 0;
+                left: 0;
+            }
+            #Library{
+                display: none;
+            }
+            #loading-container{
+                width:100%;
+                height:90vh;
+                position:relative;
+            }
+            .loading{
+                width: 150px;
+                height: 100px;
+            }
+
+
+            #ToolTip{
+                position: fixed;
+                background-color: khaki;
+                font-size: x-small;
+                padding: 5px;
+                box-shadow: darkslategray 5px 5px 10px;
+                -webkit-box-shadow: darkslategray 5px 5px 10px;
+                border-radius: 5px;
+            }
+            #ToolTip .fa{
+                color: firebrick;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="MainContainer" class="app">
+            <div class="container route-outlet">
+
+                <div> <div id="Loading">
+                    <div class="loading pos-center">
+                        <img src="libs/Loading_icon.gif" width="150"/>
+                    </div>
+                </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+
+<div id="Library">
+    <div id="auto-load" class="row text-center">
+        <h2>Autologin</h2>
+        <style>
+
+        </style>
+        <div class="loading pos-center">
+            <img src="libs/Loading_icon.gif" width="150"/>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-success" id="StopAutoLoad" >Stop Autoload</button>
+        </div>
+
+    </div>
+
+    <div id="ToolTip">
+        <style>
+
+
+        </style>
+
+    </div>
+    <div id="Devices">
+        <h2>Devices</h2>
+        <div>
+                <style>
+                    #Devices{
+                        text-align: center;
+                    }
+                    #Devices>div{
+                        width: 70%;
+                    }
+                    #devices-list .mydevice{
+                        width: 128px;
+                        height: 200px;
+                        padding: 10px;
+                        margin: 20px;
+                        float: left;
+                        box-shadow: darkslategray 3px 3px 5px;
+                        -webkit-box-shadow: darkslategray 3px 3px 5px;
+                        border-radius: 10px;
+                        text-align: center;
+                    }
+                    #devices-list .mydevice.selected{
+                        border: khaki thin solid;
+                        box-shadow: darkslategray 3px 3px 10px;
+                        -webkit-box-shadow: darkslategray 3px 3px 10px;
+                    }
+                    #devices-list .mydevice .fa-desktop{
+                        font-size: 50px;
+
+                    }
+                    #devices-list .mydevice .props{
+                        padding: 10px;
+                        text-align: left;
+                    }
+                    #devices-list .layout img{
+                        max-width: 128px;
+                        max-height: 128px;
+                    }
+
+                </style>
+
+                <div class="metadata">
+                    <div class="loading pos-center">
+                        <img src="libs/Loading_icon.gif" width="150"/>
+                    </div>
+                </div>
+                         <button id="btnPlayHere">Play on this device</button>
+                <div id="devices-list">
+
+                </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="AccountScreen" class="row text-center">
+        <style>
+
+            #LoginView .panel{
+                border: thin darkblue solid;
+                box-shadow: darkslategray 5px 5px 10px;
+                -webkit-box-shadow: darkslategray 5px 5px 10px;
+            }
+
+
+        </style>
+        <div class="route-outlet">
+                    <div id="LoginView" class="text-center row">
+
+                        <div class="col-xs-4">
+
+                        </div>
+                        <div class="col-xs-4">
+                            <h3>Login</h3>
+                            <a class="btn btn-success newuser pull-left">New User</a>
+                            <br/>
+
+                            <a class="btn forgetpassword pull-right" >Forget password</a>
+                            <br/>
+                            <br/>
+
+                            <div id="LoginForm" class="panel panel-default">
+
+                                <div class="panel-body">
+                                    <div class="form">
+
+
+                                        <div class="form-group">
+                                            <label>Username</label>
+                                            <input type="text" class="form-control username" name="username" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Password:</label>
+                                            <input type="password" class="form-control password" name="password" >
+                                        </div>
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" data-id="chkPass" class="showpassword" name="showpassword"> Show password</label>
+
+                                        </div>
+                                        <hr/>
+
+                                        <button type="submit" class="btn btn-primary submit">Submit</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-4">
+
+                        </div>
+
+
+                    </div>
+        </div>
+
+
+        <div id="CreateNewAccount" lass="text-center row">
+            <br/>
+           <div class="col-xs-4">
+
+            </div>
+            <div class="col-xs-4">
+                <h3>Create New account</h3>
+                <br/>
+                <br/>
+
+                <div class="panel panel-default">
+                    <a class="btn close fa fa-close"></a>
+
+                    <div class="panel-body">
+                        <div class="form">
+
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" class="form-control username" name="username" >
+                            </div>
+                            <div class="form-group">
+                                <label >Password:</label>
+                                <input type="password" class="form-control password" name="password" >
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" data-id="chkPass" class="showpassword" name="showpassword"> Show password</label>
+                            </div>
+                            <hr/>
+                            <button type="submit" class="btn btn-primary submit">Submit</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xs-4">
+
+            </div>
+
+        </div>
+        <div id="ForgetPassword">
+
+            <div class="col-xs-4">
+
+            </div>
+            <div class="col-xs-4">
+                <h3>Reset password</h3>
+                <br/>
+                <br/>
+
+                <div  class="panel panel-default">
+                    <a class="btn close fa fa-close"></a>
+                    <div class="panel-body">
+                        <div class="form">
+
+                            <div class="form-group">
+                                <label>email address</label>
+                                <div class="form-control username"  ></div>
+                            </div>
+                            <div class="form-group">
+                                <label >Attention</label>
+                               <p>
+                                   You can not restore password right away.
+                                   Horever if you submit request to reset password will be send to you email addres listed above.
+                                   Following link in your email you can create new password and login using new credetials.
+                                   Full operation take a coupke of minutes.
+                               </p>
+                            </div>
+                            <hr/>
+
+                            <button type="submit" class="btn btn-primary submit">Submit</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xs-4">
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    <div id="HTMyPlayer">
+        <h2>HT Player</h2>
+
+    </div>
+    <style>
+        #LoginScreen{
+            display: none;
+        }
+    </style>
+
+</div>
+
+
+        <script type="text/javascript" src="libs/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="libs/underscore-min.js"></script>
+
+        <script type="text/javascript" src="js/mobile.js"></script>
+
+
+    </body>
+</html>

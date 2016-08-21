@@ -1,0 +1,1 @@
+CREATE TABLE "playlists" (id INTEGER PRIMARY KEY AUTOINCREMENT,   label TEXT,   description TEXT,   size INTEGER,   time_from INTEGER,   time_to INTEGER,   created_user INTEGER,   created_time INTEGER,   duration INTEGER,   active INTEGER,   dimension TEXT, image TEXT, timestamp INTEGER)

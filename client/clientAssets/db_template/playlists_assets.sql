@@ -1,0 +1,1 @@
+CREATE TABLE "playlists_assets" (id INTEGER PRIMARY KEY AUTOINCREMENT,    list_id INTEGER,    asset_id INTEGER,    duration INTEGER,    after_id INTEGER,    type TEXT,    position INTEGER)

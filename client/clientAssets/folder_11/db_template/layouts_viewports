@@ -1,0 +1,1 @@
+CREATE TABLE "layouts_viewports" (id INTEGER PRIMARY KEY AUTOINCREMENT, layout_id INTEGER, viewport_id INTEGER, playlist_id INTEGER, published_id INTEGER, player_type INTEGER, time_from INTEGER, time_to INTEGER, active INTEGER, dimension TEXT, label TEXT, x INTEGER, y INTEGER, width INTEGER, height INTEGER, image INTEGER)

@@ -1,0 +1,17 @@
+{
+  "label":"1080x1920_C",
+  "width":1080,
+  "height":1920,
+  "image":"images/Layout_1080x1920_C.png",
+  "viewports": [
+            {
+                "id":1,
+                "label": "C",
+                "width":1080,
+                "height":1920,
+                "x":0,
+                "y":0
+            }
+  ]
+}
+

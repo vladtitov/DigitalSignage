@@ -1,0 +1,32 @@
+{
+  "label":"1080_1920_C_T_B",
+  "width":1080,
+  "height":1920,
+  "image":"images/Layout_1080x1920_C_T_B.png",
+  "viewports": [
+    {
+      "id":1,
+      "label": "T",
+      "width":1080,
+      "height":120,
+      "x":0,
+      "y":0
+    },
+    {
+      "id":2,
+      "label": "C",
+      "width":1080,
+      "height":1700,
+      "x":0,
+      "y":120
+    }
+  ,{
+      "id":3,
+      "label": "B",
+      "width":1080,
+      "height":100,
+      "x":0,
+      "y":1820
+    }
+  ]
+}

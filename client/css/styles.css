@@ -1,0 +1,304 @@
+h1 {
+    color: #369;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 250%;
+}
+body {
+    padding: 2em;
+}
+
+.pos-relative{
+    position: relative;
+}
+.pos-absolute{
+    position: absolute;
+}
+.pos-center{
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin:auto;
+}
+
+.pos-bottom{
+    position: absolute;
+    bottom: 0;
+}
+.box-shadow{
+    border:2px rgba(169, 169, 169, 0.13) solid;
+    box-shadow: grey 5px 5px 10px;
+}
+
+.box-selected{
+    border:2px #f0dd54 solid;
+}
+
+
+/*          --------------------          card 256          --------------------          */
+.card-256x320{
+    width: 270px;
+    height: 320px;
+    background-color: #fcfcfc;
+    margin: 10px;
+    float: left;;
+}
+
+.card-256x320 .mythumb{
+    position: relative;
+    width: 270px;
+    height: 320px;
+    box-shadow: grey 5px 5px 10px;
+
+}
+
+.card-256x320 .mythumb .props{
+    position: absolute;
+    bottom: 0;
+    padding: 3px 5px 0 9px;
+    height: 60px;
+}
+
+
+.card-256x320 .myimage-container{
+    width:260px;
+    height:260px;
+    background-color: #EFF5FB; /*#e7f1ff;*/
+
+    margin: 4px;
+    position: absolute;
+}
+
+.card-256x320 .myimage-container .myimage{
+    max-width: 256px;
+    max-height: 256px;
+    border: 1px solid #c3c3c3;
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin:auto;
+}
+
+/*          --------------------          end card 256          --------------------          */
+
+
+/*          --------------------          card 256          --------------------          */
+.card-256{
+    width: 270px;
+    height: 320px;
+    background-color: #fcfcfc;
+    margin: 10px;
+}
+
+.card-256 .thumb-256{
+    position: relative;
+    width: 270px;
+    height: 320px;
+    box-shadow: grey 5px 5px 10px;
+
+}
+
+.card-256 .thumb-256 .props{
+    position: absolute;
+    bottom: 0;
+    padding: 3px 5px 0 9px;
+    height: 60px;
+}
+
+
+.card-256 .image-container-256{
+    width:260px;
+    height:260px;
+    background-color: #EFF5FB; /*#e7f1ff;*/
+
+    margin: 4px;
+    position: absolute;
+}
+
+.card-256 .image-container-256 .image-256{
+    max-width: 256px;
+    max-height: 256px;
+    border: 1px solid #c3c3c3;
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin:auto;
+}
+.deviceText-256{
+    width: 256px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*          --------------------          end card 256          --------------------          */
+
+
+
+/*          --------------------          card-128          --------------------          */
+.card-128{
+    width: 140px;
+    height: 180px;
+    background-color: #fcfcfc;
+    margin: 10px;
+}
+.card-128 .thumb-128{
+    position: relative;
+    width: 140px;
+    height: 180px;
+    box-shadow: grey 5px 5px 10px;
+    margin-right: 10px;
+}
+.card-128 .image-container-128{
+    width:132px;
+    height:132px;
+    background-color: #EFF5FB; /*#e7f1ff;*/
+
+    margin: 3px;
+    position: absolute;
+}
+.card-128 .image-container-128 .image-128{
+    max-width: 128px;
+    max-height: 128px;
+    border: 1px solid #c3c3c3;
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin:auto;
+}
+.deviceText-128{
+    width: 128px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*          --------------------          end card-128          --------------------          */
+
+/*          --------------------          card-128-2          --------------------          */
+.thumb-128-2{
+    position: relative;
+    width: 132px;
+    height: 132px;
+    box-shadow: grey 5px 5px 10px;
+    margin-right: 10px;
+}
+.thumb-128-2 > div{
+    width:132px;
+    height:132px;
+    background-color: #EFF5FB; /*#e7f1ff;*/
+    /*position: absolute;*/
+}
+.thumb-128-2 > div > img{
+    max-width: 128px;
+    max-height: 128px;
+    /*border: 1px solid #c3c3c3;*/
+    position:absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin:auto;
+}
+.thumb-128-2 > div > div{
+    position: absolute;
+    bottom: 0;
+    color: black;
+    background-color: #ffffff;
+
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+/*          --------------------          end card-128-2          --------------------          */
+
+
+
+/*          --------------------          tooltip          --------------------          */
+
+.mytooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.mytooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -17px;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/*.mytooltip:hover .tooltiptext {*/
+    /*visibility: visible;*/
+    /*opacity: 1;*/
+/*}*/
+
+/*.mytooltip:hover .tooltiptext {*/
+    /*visibility: visible;*/
+    /*opacity: 1;*/
+/*}*/
+
+/*          --------------------          end tooltip          --------------------          */
+
+
+
+
+
+
+
+
+
+.max-128{
+    max-width:128px;
+    max-height:128px;
+}
+.myimage-256{
+    max-width: 256px;
+    max-height: 256px;
+    border: 1px solid #c3c3c3;
+}
+
+.float-left{
+    float: left;
+}
+
+.item-128{
+    width: 128px;
+    height: 128px;
+}
+
+
+.content-850{
+    width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+ * See https://github.com/angular/angular.io/blob/master/public/docs/_examples/styles.css
+ * for the full set of master styles used by the documentation samples
+ */

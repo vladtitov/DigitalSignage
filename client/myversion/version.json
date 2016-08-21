@@ -1,0 +1,7 @@
+{
+  "version":"0.1",
+  "url":"myversion",
+  "download":["welcome.html","htplayer.html","htplayer.js","js/VersionControl.js","login.html","js/login.js"],
+  "start":"welcome.html",
+  "server":"http:\/\/192.168.1.10:56888\/"
+}

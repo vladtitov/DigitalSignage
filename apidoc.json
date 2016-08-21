@@ -1,0 +1,13 @@
+{
+  "name": "apidoc-example",
+  "version": "0.0.1",
+  "description": "apidoc example project",
+  "title": "DigitalSignage apiDoc",
+  "url" : "",
+  "sampleUrl": "/",
+
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
+}

@@ -1,0 +1,93 @@
+
+2016-07-13 00:00:23
+{"errno":1,"code":"SQLITE_ERROR"}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:34:43 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:36:09 PM
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","storageErrors":[]}
+7/12/2016, 9:38:00 PM
+{"errno":-4058,"code":"ENOENT","syscall":"open","path":"C:\\wamp\\www\\GitHub\\DigitalSignage\\server\\uploads\\file\\_1468373880403_Layout 1.jpg","storageErrors":[]}
+2016-07-14 22:26:12
+{"errno":1,"code":"SQLITE_ERROR"}
+2016-07-14 22:28:17
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-14 22:29:45
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-16 01:01:41
+{"changes":0}
+2016-07-16 01:14:46
+{"changes":0}
+2016-07-16 02:07:48
+{}
+2016-07-18 17:01:46
+{"changes":0}
+2016-07-18 17:13:00
+{}
+2016-07-18 17:21:46
+undefined
+2016-07-18 17:22:24
+undefined
+2016-07-18 17:30:12
+undefined
+2016-07-18 18:07:49
+{"changes":0}
+2016-07-18 22:26:35
+{"errno":1,"code":"SQLITE_ERROR"}
+2016-07-18 22:28:41
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-19 17:45:01
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-19 17:46:23
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-19 17:50:05
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-19 19:42:52
+{"changes":0}
+2016-07-19 20:28:48
+{"errno":1,"code":"SQLITE_ERROR"}
+7/19/2016, 7:50:04 PM
+{"changes":0}
+2016-07-22 23:07:24
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:17:28
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:17:41
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:19:24
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:34:44
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:40:54
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:42:23
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:42:28
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:44:51
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:49:07
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:52:29
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-22 23:53:39
+{"error":{"errno":1,"code":"SQLITE_ERROR"}}
+2016-07-25 23:40:38
+{"storageErrors":[]}
+2016-07-25 23:46:45
+{"storageErrors":[]}
+2016-07-25 23:54:32
+{"storageErrors":[]}
+2016-07-26 19:04:32
+{"storageErrors":[]}

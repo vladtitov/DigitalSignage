@@ -1,0 +1,54 @@
+{
+  "image":"images/layout3.png",
+  "viewports":[
+    {
+      "id":1,
+      "label": "TL",
+      "width":1280,
+      "height":720,
+      "x":50,
+      "y":30
+    },
+    {
+      "id":3,
+      "label": "B-1",
+      "width":620,
+      "height":270,
+      "x":50,
+      "y":775
+    },
+    {
+      "id":4,
+      "label": "B-2",
+      "width":620,
+      "height":270,
+      "x":725,
+      "y":775
+    },
+    {
+      "id":5,
+      "label": "B-3",
+      "width":480,
+      "height":270,
+      "x":1390,
+      "y":775
+    },
+
+    {
+      "id":6,
+      "label": "R-1",
+      "width":480,
+      "height":345,
+      "x":1390,
+      "y":30
+    },
+    {
+      "id":7,
+      "label": "R-2",
+      "width":480,
+      "height":345,
+      "x":1390,
+      "y":410
+    }
+  ]
+}

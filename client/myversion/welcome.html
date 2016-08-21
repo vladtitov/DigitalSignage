@@ -1,0 +1,57 @@
+<div id="MyTimerView" class="text-center">
+    <style>
+
+    </style>
+    <br/>
+    <br/>
+    <h1>Welcome to HEROtech mini Digital Sinage <small>v0.1</small></h1>
+    <br/>
+    <br/>
+    <br/>
+    <div id="myTimer">
+        <h1>0:<span id="MySeconds"></span></h1>>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+
+    <button id="gotologinBtn" class="btn btn-primary">Go to Login</button>
+    <script>
+        $(document).ready(function(){
+            if(!localStorage.getItem('userdata')){
+                if(typeof MyApplicationLoadHTML =='undefined') window.location.href='login.html'
+                else MyApplicationLoadHTML('login.html');
+            }
+
+            var myTimeout;
+            var myinterval;
+            var counter=20;
+
+            $('#gotologinBtn').click(function () {
+                clearInterval(myinterval);
+                clearTimeout( myTimeout);
+
+                if(typeof MyApplicationLoadHTML =='undefined') window.location.href='login.html'
+                else MyApplicationLoadHTML('login.html');
+
+            })
+
+            $('#MySeconds').text(counter);
+
+            myinterval=  setInterval(function(){
+                counter--;
+                $('#MySeconds').text((counter<10?'0'+counter:counter))
+                if(counter<1){
+                    clearInterval(myinterval);
+                    myTimeout =   setTimeout(function () {
+                        if(typeof MyApplicationLoadHTML =='undefined') window.location.href='htplayer.html'
+                        else MyApplicationLoadHTML('htplayer.html');
+                    },3000);
+
+                }
+            },1000)
+        })
+    </script>
+</div>
+
+

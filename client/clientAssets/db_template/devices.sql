@@ -1,0 +1,1 @@
+CREATE TABLE "devices" (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, description TEXT, timestamp INTEGER, layout_id INTEGER)

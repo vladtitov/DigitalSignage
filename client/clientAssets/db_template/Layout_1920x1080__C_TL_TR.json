@@ -1,0 +1,32 @@
+{
+  "label":"1920x1080_C_TL_TR",
+  "width":1920,
+  "height":1080,
+  "image":"images/Layout_1920x1080_C_TL_TR.png",
+  "viewports": [
+      {
+        "id":1,
+        "label": "C",
+        "width":1920,
+        "height":1080,
+        "x":0,
+        "y":0
+      }
+    ,{
+        "id":2,
+        "label": "TL",
+        "width":350,
+        "height":200,
+        "x":10,
+        "y":10
+    }
+  ,{
+        "id":3,
+        "label": "TR",
+        "width":350,
+        "height":200,
+        "x":1560,
+        "y":10
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<div class="tools">
+    <div>
+        <span class="fa fa-commenting"></span>
+        Messages Marquee
+    </div>
+    <div>
+        <a id="btnAdd" class="btn" (click)="add()">
+            <span class="fa fa-plus"></span>
+            <span>Add</span>
+        </a>
+    </div>
+    <div>
+        <a id="btnEdit" class="btn" (click)="edit()">
+            <span class="fa fa-edit"></span>
+            <span>Edit</span>
+        </a>
+    </div>
+    <div>
+        <a id="btnDelete" class="btn" (click)="del()">
+            <span class="fa fa-remove"></span>
+            <span>Delete</span>
+
+        </a>
+    </div>
+    <div class="pull-right" >
+        <a id="btn-logout" class="btn">
+            <span class="fa fa-sign-out"></span>
+            <span>Logout</span>
+        </a>
+        <script>
+            $('#btn-logout').click(function(){
+                $.get('users/login.php',{a:'logout'}).done(function(res){
+                    console.log(res)
+                    window.location.reload();
+                }).fail(function(res){
+                    window.location.reload();
+                })
+            })
+        </script>
+    </div>
+    <div class="pull-right" >
+        <a id="btn-save" class="btn" (click)="save()">
+            <span class="fa fa-save"></span>
+            <span>Save</span>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+.mother {
+    display: flex;
+    flex-flow: row wrap;/* it's the same as => flex-direction: row ; flex-wrap: wrap;*/
+    /*
+     flex-direction: can accept 4 parameters :
+     row            => left to right (with ltr)
+     column         => the same this as row but Top to Buttom
+     row-reverse    => right to left (with ltr)
+     column-reverse => the same this as row-reverse (bottom to top)
+
+     flex-wrap:
+     wrap         => multi-line, left to right (with ltr)
+     nowrap       => no new line.
+     wrap-reverse => multi-line, right to left (with ltr)
+    */
+    justify-content: space-around; /*it helps with the distribute of extra free space*/
+    /*
+     accepts 5 parameters :
+      flex-start    => elements grouped to the start of the line
+      flex-end      => elements grouped to the end of the line
+      center        => elements centred
+      space-between => first element to the start line / the end element to the end line
+      space-around; => equality distribution
+    */
+    align-items: flex-end;/*align element to an extremity*/
+    /*
+    flex-start => Top
+    flex-end   => Bottom
+    center     => Center
+    baseline   => as Baseline
+    stretch    => stretch with the respect of min/max (width)
+    */
+
+    height: 220px;
+    background-color: #00b3ee;
+}
+.achild {
+    width: 128px;
+    height: 128px;
+    margin: auto;
+    align-self: flex-start ;/* override the mother configuration*/
+    /*
+      auto, flex-start, flex-end, center, baseline, stretch;
+    */
+}
+
+.primary {
+    color:#e6e6e8 ;
+}
+
+.card {
+    height: 128px;
+    width: 128px;
+    float: left;
+}
+.wrapper {
+    display: table;
+}
+.container {
+    display: table-cell;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 50%;
+}
+.container:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.container div,
+.gu-mirror {
+    margin: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: opacity 0.4s ease-in-out;
+}
+.container div {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+.gu-mirror {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.panel-body {
+    clear: both;
+}
+
+.panel-heading {
+    height: 150px;
+}
+
+.item {
+    float: left;
+}
+
+.item {
+    width: 128px;
+    height: 128px;
+}
+
+

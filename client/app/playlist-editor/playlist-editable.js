@@ -1,0 +1,308 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+/**
+ * Created by Vlad on 7/18/2016.
+ */
+var core_1 = require("@angular/core");
+var models_1 = require("../services/models");
+var playlist_service_1 = require("./playlist-service");
+var playlist_editable_item_1 = require("./playlist-editable-item");
+var PlayListSpacer_1 = require("./PlayListSpacer");
+var router_1 = require('@angular/router');
+var router_2 = require('@angular/router');
+var TimeCell_1 = require("./TimeCell");
+var PlaylistEditable = (function () {
+    function PlaylistEditable(playlistservice, route, router) {
+        this.playlistservice = playlistservice;
+        this.route = route;
+        this.router = router;
+        this.isMove = false;
+        this.playlistProps = new models_1.VOPlayListProps({});
+        this.selectInnerEmitter = new core_1.EventEmitter();
+    }
+    Object.defineProperty(PlaylistEditable.prototype, "dragEnter", {
+        set: function (item) {
+            // console.log(item);
+            //  if(item)this.selectedItem = new VOPlayLists_Assets({item,position:-1})
+            if (item)
+                this.selectedItem = new models_1.VOPlayLists_Assets(item);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PlaylistEditable.prototype, "addToCart", {
+        set: function (item) {
+            this.addAssetToCollection(item);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    PlaylistEditable.prototype.onremovemeDrag = function (item) {
+        this.selectInnerEmitter.next(item);
+    };
+    PlaylistEditable.prototype.calculateDuration = function () {
+        if (!this.playlist)
+            return;
+        var total = 0;
+        this.playlistItems.forEach(function (item) {
+            total += item.lasting;
+        });
+        this.playlistProps.duration = total;
+        console.log('total', total);
+    };
+    PlaylistEditable.prototype.createCover = function () {
+        if (!this.playlist)
+            return;
+        var cover;
+        var image;
+        this.playlistItems.forEach(function (item) {
+            if (item.isCover)
+                cover = item;
+        });
+        if (!cover) {
+            cover = this.playlistItems[0];
+        }
+        switch (cover.type) {
+            case 'image':
+                image = cover.path;
+                break;
+            case 'video':
+                image = cover.thumb.split(',')[0];
+                break;
+            default:
+                image = cover.path;
+                break;
+        }
+        this.playlistProps.image = image;
+    };
+    PlaylistEditable.prototype.saveOnServer = function () {
+        var _this = this;
+        //console.log(this.playlistProps)
+        this.calculateDuration();
+        this.createCover();
+        this.playlistservice.saveDataOnServer()
+            .subscribe(function (result) {
+            if (result.insertId) {
+                console.log(result);
+                _this.router.navigate(['./playlist-editor', result.insertId]);
+            }
+        });
+        // this.getDataFromServer();
+    };
+    PlaylistEditable.prototype.onItemDragend = function (evt) {
+    };
+    PlaylistEditable.prototype.ngOnInit = function () {
+        var _this = this;
+        var ar = [];
+        for (var i = 0; i < 20; i++) {
+            ar.push(new TimeCell_1.TimeCellVO(i));
+        }
+        this.timeCells = ar;
+        this.playlistservice.currentItem$.subscribe(function (item) {
+            _this.playlist = item;
+            _this.playlistItems = _this.playlist.list;
+            _this.playlistProps = item.props;
+        }, function (error) { alert(error.toString()); });
+        this.sub = this.route.params.subscribe(function (params) {
+            var id = +params['id']; // (+) converts string 'id' to a number
+            if (id == -1)
+                _this.toolsDisadled = true;
+            console.log(params);
+            if (!isNaN(id))
+                _this.playlistservice.getData(id);
+        });
+    };
+    PlaylistEditable.prototype.savePlayList = function () {
+        this.playlistservice.saveData();
+    };
+    PlaylistEditable.prototype.createPlayList = function () {
+        if (this.route.params['id'] == '-1')
+            window.location.reload();
+        else
+            this.router.navigate(['playlist-editor', -1]);
+    };
+    PlaylistEditable.prototype.deletePlayList = function () {
+        var _this = this;
+        if (this.playlist && confirm('You want to delete Playlist ' + this.playlist.props.label + '?')) {
+            this.playlistservice.daletePlaylist(this.playlist.props.id)
+                .subscribe(function (result) {
+                if (result.changes)
+                    _this.createPlayList();
+            });
+        }
+    };
+    PlaylistEditable.prototype.onPlayListDargEnter = function (evt) {
+        //  console.log(evt);
+    };
+    PlaylistEditable.prototype.inserAt = function (item, ind) {
+        var oldIndex = this.playlistItems.indexOf(item);
+        if (oldIndex === ind)
+            return;
+        if (oldIndex !== -1)
+            this.playlistItems.splice(oldIndex, 1);
+        this.playlistItems.splice(ind, 0, item);
+        var i = 0;
+        this.playlistItems.forEach(function (item) {
+            item.position = i++;
+        });
+    };
+    PlaylistEditable.prototype.resetHilited = function () {
+        if (this.hilitedItem)
+            this.hilitedItem.hilited = false;
+        this.hilitedItem = null;
+    };
+    PlaylistEditable.prototype.resetSelected = function () {
+        if (this.selectedItem)
+            this.selectedItem.selected = false;
+        this.selectedItem = null;
+    };
+    PlaylistEditable.prototype.hilite = function (item) {
+        if (this.hilitedItem && this.hilitedItem.position === item.position)
+            return;
+        this.resetHilited();
+        this.hilitedItem = item;
+        this.hilitedItem.hilited = true;
+    };
+    PlaylistEditable.prototype.insertBeforeHilited = function () {
+        this.inserAt(this.selectedItem, this.playlistItems.indexOf(this.hilitedItem));
+    };
+    PlaylistEditable.prototype.onItemDragOver = function (evt, item) {
+        if (!this.selectedItem)
+            return;
+        /*   if(this.dragEnter){
+               var vo:VOPlayLists_Assets = new VOPlayLists_Assets({asset:this.dragEnter,id:this.playlistItems.length});
+               this.inserAt(vo,item.position);
+               this.dragEnter = null;
+               this.selectedItem = null;
+   
+               return
+           }*/
+        if (item.position == this.selectedItem.position) {
+            this.resetHilited();
+            return;
+        }
+        if (evt.offsetX < 20) {
+            this.hilite(item);
+        }
+        else if (evt.offsetX > 100) {
+        }
+    };
+    PlaylistEditable.prototype.addAssetToCollection = function (item) {
+        // var vo:VOPlayLists_Assets = new VOPlayLists_Assets({item,position:this.playlistItems.length});
+        var vo = new models_1.VOPlayLists_Assets(item);
+        if (!vo.lasting)
+            vo.lasting = 10;
+        this.selectedItem = vo;
+        if (!this.playlistItems)
+            this.playlistItems = [];
+        this.playlistItems.push(vo);
+        // console.log('VO ', vo);
+        // console.log('this.selectedItem ', this.selectedItem);
+        // console.log('this.playlistItems ', this.playlistItems);
+        this.calculateDuration();
+    };
+    PlaylistEditable.prototype.onDragEnd = function (evt, item) {
+        var d = evt.screenY - this.startY;
+        if (d > 200)
+            this.removeItemFromCart(item);
+        this.insertBeforeHilited();
+        this.resetHilited();
+        this.resetSelected();
+    };
+    PlaylistEditable.prototype.removeItemFromCart = function (item) {
+        var ind = this.playlistItems.indexOf(item);
+        if (ind !== -1) {
+            this.playlistItems.splice(ind, 1);
+            this.calculateDuration();
+        }
+    };
+    PlaylistEditable.prototype.onDragItemStart = function (evt, item, view) {
+        this.dragEnter = null;
+        this.resetSelected();
+        this.selectedItem = item;
+        this.selectedItem.selected = true;
+        this.startY = evt.screenY;
+    };
+    PlaylistEditable.prototype.onDragItemEnd = function (item) {
+    };
+    PlaylistEditable.prototype.onDragOut = function (evt) {
+        //var spacer:PlayListSpacer = <any>evt.target;
+        // var spacer = <any>evt.target;
+        // var itemId = spacer.getAttribute("item-id");
+        // if(itemId)
+        // this.service.deleteItem(+itemId);
+        // console.log('onDragOut ',evt,spacer.getAttribute("item-id"));
+    };
+    PlaylistEditable.prototype.insertToCardAt = function (item, i) {
+        /*   console.log(item, i, this.isMove);
+           if (item && i !== -1) {
+               if (this.isMove) {
+                   console.log(22)
+   
+                   let index:number = this.playlistItems.indexOf(item);
+                   if (index > -1) {
+                       this.playlistItems.splice(index,1);
+                   }
+                   this.playlistItems.splice(i + 1, 0, item);
+               }
+               else {
+                   if (i === (this.playlistItems.length - 1) ){
+                       this.playlistItems.push(item);
+                       this.service.addItem(1, item.id, i, 10).subscribe(
+                           (res)=>{
+                               console.log(res);
+                           },
+                           error =>  this.errorMessage = <any>error);
+                   }
+                   else this.playlistItems.splice(i + 1, 0, item);
+   
+               }
+               if (!this.isMove) this.dragItem = null;
+   
+           }*/
+    };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
+    ], PlaylistEditable.prototype, "palylistid", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', models_1.VOAsset), 
+        __metadata('design:paramtypes', [models_1.VOAsset])
+    ], PlaylistEditable.prototype, "dragEnter", null);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Boolean)
+    ], PlaylistEditable.prototype, "isMove", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', models_1.VOAsset), 
+        __metadata('design:paramtypes', [models_1.VOAsset])
+    ], PlaylistEditable.prototype, "addToCart", null);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], PlaylistEditable.prototype, "selectInnerEmitter", void 0);
+    PlaylistEditable = __decorate([
+        core_1.Component({
+            selector: 'playlist-editable',
+            template: "\n<div>       \n            \n            <a class=\"btn btn-default\" (click)=\"createPlayList()\"><span class=\"fa fa-plus\"> </span> Create New</a>\n            <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"deletePlayList()\"><span class=\"fa fa-remove\"></span> Delete</a>             \n            <a class=\"btn btn-default\" (click)=\"saveOnServer()\"><span class=\"fa fa-life-saver\"></span> Save on Server</a>\n        \n        \n            <label class=\"PNameLabel\" for=\"PName\">Playlist Name</label>\n            <input id=\"PName\" type=\"text\" [(ngModel)]=\"playlistProps.label\"/>\n            \n            <span> Duration:</span><span>{{playlistProps.duration}}</span>\n            \n            <div class=\"pl-container\">\n                <div class=\"pl-content\" >\n                    <div class=\"timeline\" flex layout=\"row\" >\n                        <div *ngFor=\"let mytime of timeCells\">\n                            <time-cell [timecell]=\"mytime\" ></time-cell>\n                        </div>                 \n                    </div>\n                    <div flex layout=\"row\"  class = \"cart\" (dragend)=\"onItemDragend(item)\">\n                        <div class=\"item\"  *ngFor=\"let item of playlistItems; let i = index\" layout=\"row\"  (dragend)=\"onDragItemEnd($event, item)\">\n                            <div>                                                        \n                                <playlist-editable-item\n                                    [item]=\"item\" [position]=\"i\" #myitem                               \n                                    (dragmove)=\"onDragMove$event(item)\"\n                                    (dragend)=\"onDragEnd($event,item)\" \n                                    (onremovemeDrag)=\"onremovemeDrag($event)\"\n                                    (dragstart)=\"onDragItemStart($event,item,myitem)\" \n                                    (dragover)=\"onItemDragOver($event,item)\"                                                       \n                                ></playlist-editable-item>\n                            </div>\n                        </div>\n                        <div id=\"emtyline\">\n                                                               \n                        </div>\n                    </div>\n                </div>                 \n            </div>\n</div>\n",
+            styles: ["\n            .pl-container{\n                width: 100%;\n                min-height: 160px;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n                margin-top: 10px;\n            }\n            .pl-content{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n            .title{\n            \n            }\n            .PNameLabel{\n                margin-left: 50px;\n            }\n            time-cell{\n                width: 128px;\n                height: 20px;\n                background-color: #0000AA;\n                color: white;                \n            }       \n         \n                \n"],
+            directives: [playlist_editable_item_1.PlayListItem, PlayListSpacer_1.PlayListSpacer, TimeCell_1.TimeCellCompnent],
+            providers: [playlist_service_1.PlayListService]
+        }), 
+        __metadata('design:paramtypes', [playlist_service_1.PlayListService, router_2.ActivatedRoute, router_1.Router])
+    ], PlaylistEditable);
+    return PlaylistEditable;
+}());
+exports.PlaylistEditable = PlaylistEditable;
+//# sourceMappingURL=playlist-editable.js.map
