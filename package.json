@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/herotechnologies/DigitalSignage.git"
+    "url": "git+https://github.com/vladtitov/DigitalSignage.git"
   },
   "author": "herotech",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/herotechnologies/DigitalSignage/issues"
+    "url": "https://github.com/vladtitov/DigitalSignage/issues"
   },
-  "homepage": "https://github.com/herotechnologies/DigitalSignage#readme",
+  "homepage": "https://github.com/vladtitov/DigitalSignage#readme",
   "dependencies": {
     "async": "^2.0.0",
     "body-parser": "^1.15.1",
