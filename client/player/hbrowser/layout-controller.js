@@ -30,9 +30,13 @@ var hbrowser;
             var w = this.screenWidth;
             var h = this.screenHeight;
             viewports.forEach(function (vp) {
-                var model = new hbrowser.PlayerController(server, vp);
-                out.push(model);
-                model.appendTo(view);
+                var ctr = new hbrowser.PlayerController(server, vp);
+                out.push(ctr);
+                ctr.appendTo(view);
+                ctr.onReady = function () {
+                    ctr.startPlay();
+                    ctr.onReady = null;
+                };
             });
             this.playerControllers = out;
         };

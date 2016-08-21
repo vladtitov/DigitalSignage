@@ -34,11 +34,11 @@ module htplayer{
         }
 
         width():number{
-           return this.layout.width || 1920;
+           return this.layout.props.width || 1920;
         }
 
         height():number{
-            return this.layout.height || 1080;
+            return this.layout.props.height || 1080;
         }
 
         start():void{

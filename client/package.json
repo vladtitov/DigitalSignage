@@ -34,7 +34,13 @@
     "rxjs": "5.0.0-beta.6",
     "zone.js": "^0.6.12",
     "angular2-in-memory-web-api": "0.0.15",
-    "dom-to-image":"*"
+    "@angular2-material/tabs":"*",
+    "@angular2-material/checkbox":"*",
+    "ng2-material": "*",
+    "dom-to-image":"*",
+    "jquery":"*",
+    "bootstrap":"*",
+    "moment":"*"
   },
   "devDependencies": {
     "concurrently": "^2.0.0"

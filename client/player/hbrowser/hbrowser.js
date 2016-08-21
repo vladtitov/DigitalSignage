@@ -32,6 +32,10 @@ var hbrowser;
             };
         };
         HBrowserController.prototype.createLayout = function (layout) {
+            if (this.layoutModel) {
+                window.location.reload();
+                return;
+            }
             this.layoutModel = new hbrowser.LayoutController(this.options.serverURL);
             this.layoutModel.setLayout(layout);
             this.layoutModel.appendTo(this.$container);

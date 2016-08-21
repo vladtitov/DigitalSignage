@@ -20,6 +20,7 @@ var hbrowser;
             var _this = this;
             console.log = function (log) { return _this.send(log); };
             console.error = function (log) { return _this.send(log); };
+            console.warn = function (log) { return _this.send(log); };
         };
         Debugger.prototype.createConsole = function () {
             this.$view = $('<div>').appendTo('body').css({

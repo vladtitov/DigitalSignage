@@ -27,7 +27,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
         
         
             <label class="PNameLabel" for="PName">Playlist Name</label>
-            <input id="PName" type="text" [(ngModel)]="playlistProps.label"/>
+           <!-- <input id="PName" type="text" [(ngModel)]="playlistProps.label"/>-->
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
             

@@ -12,10 +12,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Vlad on 7/21/2016.
  */
 var core_1 = require("@angular/core");
-var async_1 = require("@angular/platform-browser-dynamic/src/facade/async");
 var DragPlayListService = (function () {
     function DragPlayListService() {
-        this.emitDragEnd = new async_1.EventEmitter();
+        this.emitDragEnd = new core_1.EventEmitter();
     }
     DragPlayListService.prototype.setItem = function (item) {
     };

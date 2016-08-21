@@ -12,6 +12,15 @@ var hbrowser;
             this.y = model.y;
         }
         PlayerView.prototype.destroy = function () {
+            if (this.$view)
+                this.$view.remove();
+            if (this.$prev)
+                this.$view.remove();
+            if (this.$next)
+                this.$next.remove();
+            this.$view = null;
+            this.$prev = null;
+            this.$next = null;
         };
         PlayerView.prototype.remove = function () {
             this.$view.remove();

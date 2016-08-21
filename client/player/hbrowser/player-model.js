@@ -18,6 +18,7 @@ var hbrowser;
             this.y = Math.round(this._y * dy);
             this.width = Math.round(this._width * dx);
             this.height = Math.round(this._height * dy);
+            this.playlistItems = [];
         }
         PlayerModel.prototype.scale = function (dx, dy) {
             this.x = Math.round(this._x * dx);
@@ -32,10 +33,14 @@ var hbrowser;
             this.playlistItems = ar;
         };
         PlayerModel.prototype.getNextItem = function () {
-            this.currentIndex++;
-            if (this.currentIndex >= this.playlistItems.length)
-                this.currentIndex = 0;
-            return this.playlistItems[this.currentIndex];
+            if (this.playlistItems.length) {
+                this.currentIndex++;
+                if (this.currentIndex >= this.playlistItems.length)
+                    this.currentIndex = 0;
+                return this.playlistItems[this.currentIndex];
+            }
+            else
+                return null;
         };
         PlayerModel.dx = 1;
         PlayerModel.dy = 1;

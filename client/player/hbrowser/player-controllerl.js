@@ -27,7 +27,8 @@ var hbrowser;
                     _this.timestamp = 0;
                     var ar = res.data.list.map(function (item) { return new hbrowser.VOAssetItem(item); });
                     _this.model.setItems(ar);
-                    _this.startPlay();
+                    if (_this.onReady)
+                        _this.onReady();
                 }
             });
         };
@@ -64,7 +65,10 @@ var hbrowser;
             });
         };
         PlayerController.prototype.destroy = function () {
-            // this.view.remove();
+            this.stopPlay();
+            this.view.destroy();
+            this.$view.empty();
+            this.$view.remove();
         };
         PlayerController.prototype.appendTo = function ($container) {
             if (!this.$view)
@@ -73,10 +77,14 @@ var hbrowser;
             $container.append(this.$view);
         };
         PlayerController.prototype.startPlay = function () {
-            this.isPlaying = true;
-            this.playNext();
+            if (!this.isPlaying) {
+                this.isPlaying = true;
+                this.playNext();
+            }
         };
         PlayerController.prototype.stopPlay = function () {
+            clearTimeout(this.checkTimeout);
+            this.isPlaying = false;
         };
         PlayerController.prototype.playNext = function () {
             var _this = this;
@@ -119,7 +127,34 @@ var hbrowser;
                         break;
                 }
             }
-            setTimeout(function () { return _this.playNext(); }, (delay * 1000));
+            if (typeof requestAnimationFrame === 'function') {
+                this.frameCount = 0;
+                this.needFrames = delay * 60;
+                var path = this.currentItem.path;
+                clearTimeout(this.checkTimeout);
+                this.checkTimeout = setTimeout(function () { return _this.onDelayExeed20(path, delay); }, (delay * 1500));
+                requestAnimationFrame(function (timer) { return _this.onFrame(timer); });
+            }
+            else
+                console.error(' error no support for requestAnimationFrame');
+        };
+        PlayerController.prototype.onDelayExeed20 = function (path, delay) {
+            var fps = this.frameCount / delay;
+            if (fps < 5)
+                console.error(' error delay exeed 200%  fps was: ' + fps + ' path: ' + path);
+            else
+                console.warn('delay exeed +50%  fps was: ' + fps + ' path: ' + path);
+        };
+        PlayerController.prototype.onFrame = function (timer) {
+            var _this = this;
+            if (!this.isPlaying)
+                return;
+            this.frameCount++;
+            if (this.frameCount > this.needFrames) {
+                this.playNext();
+            }
+            else
+                requestAnimationFrame(function (timer) { return _this.onFrame(timer); });
         };
         return PlayerController;
     }());
