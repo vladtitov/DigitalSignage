@@ -34,6 +34,12 @@ app.use(express.static(WWW));
 app.get('/', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });
+app.get('/loginHello', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': path.resolve(WWW + '/mylogin/') });
+});
+app.get('/loginHello/*', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': path.resolve(WWW + '/mylogin/') });
+});
 app.get('/dashboard', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });

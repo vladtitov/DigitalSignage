@@ -75,6 +75,13 @@ app.get('/', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
 });
 
+app.get('/loginHello', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+});
+app.get('/loginHello/*', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+});
+
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
