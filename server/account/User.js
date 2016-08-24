@@ -95,26 +95,18 @@ var User = (function () {
         });
     };
     User.prototype.login = function (username, password, sid, ip) {
-        var _this = this;
-        var pass = crypto.createHash('md5').update(password).digest('hex');
+        password = crypto.createHash('md5').update(password).digest('hex');
         var def = Q.defer();
-        var db = new ObjectDatabase_1.ObjectDatabase(null, 'users');
-        var values = {
-            username: username,
-            password: pass
-        };
-        db.selectByValues(values).done(function (res) {
-            if (res && res.length) {
-                var user = res[0];
-                if (!user.token)
-                    user.token = _this.generateToken(username + pass);
-                user.sid = sid;
-                user.ip = ip;
-                user.timestamp = Math.round(Date.now() / 1000);
-                db.updateContent(user).done(function (res) { return def.resolve(user); }, function (err) { return def.reject(err); });
+        var db = new dbDriver_1.DBDriver(null);
+        var sql = 'SELECT id, role, folder, token, sid  FROM users WHERE username =? AND password=?';
+        db.selectOne(sql, [username, password]).done(function (user) {
+            if (user) {
+                var timestamp = Math.round(Date.now() / 1000);
+                db.updateRow({ id: user.id, timestamp: timestamp, ip: ip }, 'users');
+                def.resolve(user);
             }
             else
-                def.resolve({ error: 'wrong' });
+                (function (err) { return def.reject('wrong'); });
         }, function (err) { return def.reject(err); });
         return def.promise;
     };

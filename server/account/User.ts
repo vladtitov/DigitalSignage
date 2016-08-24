@@ -134,29 +134,22 @@ export class User{
 
     }
     login(username:string,password:string,sid:string,ip:string):Promise<any>{
-        var pass = crypto.createHash('md5').update(password).digest('hex');
+        password = crypto.createHash('md5').update(password).digest('hex');
+
         var def: Q.Deferred<any> = Q.defer();
-        var db:ObjectDatabase = new ObjectDatabase(null,'users');
-        var values:any = {
-            username:username
-            ,password:pass
-        }
 
-       db.selectByValues(values).done((res:any[])=>{
-            if(res && res.length){
-                var user:any = res[0];
-                if(!user.token) user.token = this.generateToken(username+pass);
-                user.sid=sid;
-                user.ip=ip;
-                user.timestamp = Math.round(Date.now()/1000);
-
-                db.updateContent(user).done(
-                    res=>def.resolve(user)
-                    ,err=>def.reject(err)
-                )
-
-            }else def.resolve({error:'wrong'});
-        },err=>def.reject(err));
+        var db = new DBDriver(null);
+        var sql:string ='SELECT id, role, folder, token, sid  FROM users WHERE username =? AND password=?';
+        db.selectOne(sql,[username,password]).done(
+            user=>{
+                if(user){
+                    var timestamp:number = Math.round(Date.now()/1000);
+                    db.updateRow({id:user.id,timestamp:timestamp, ip:ip},'users');
+                    def.resolve(user);
+                }else err=>def.reject('wrong');
+            }
+            ,err=>def.reject(err)
+        )
 
         return def.promise
     }
@@ -166,8 +159,6 @@ export class User{
         var pass = crypto.createHash('md5').update(password).digest('hex');
 
         var def: Q.Deferred<any> = Q.defer();
-
-
         var db:DBDriver = new DBDriver(null);
 
         var sql:string = 'SELECT id,token,role,folder FROM users WHERE username=? AND password=?';
@@ -180,37 +171,6 @@ export class User{
             ,err=>def.reject(err)
         )
 
-      /*  var db:ObjectDatabase = new ObjectDatabase(null,'users');
-        var values:any = {
-            username:username
-            ,password:pass
-        }*/
-     /*   db.selectByValues(values).done((res:any[])=>{
-            if(res && res.length){
-                var user:any = res[0];
-                user.devicedata = devicedata;
-                if(!user.token){
-                    user.token = this.generateToken(username);
-                    db.updateContent(user).done(
-                        res=>{
-                            this.insertPlayerLogin(user,ip).done(
-                                res=>def.resolve(user)
-                                ,err=>def.reject(err)
-                            )
-                        }
-                        ,err=>def.reject(err)
-                    )
-                }else {
-                    this.insertPlayerLogin(user,ip).done(
-                        res=>def.resolve(user)
-                        ,err=>def.reject(err)
-                    )
-                }
-
-
-            }else def.resolve({error:'wrong'});
-        },err=>def.reject(err));
-*/
         return def.promise
     }
 
