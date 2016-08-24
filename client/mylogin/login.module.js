@@ -15,9 +15,13 @@ var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
 var material_module_1 = require('./material.module');
-var login_manager_1 = require('./login-manager');
 var login_routing_1 = require('./login.routing');
 var http_1 = require('@angular/http');
+var router_1 = require('@angular/router');
+var login_manager_1 = require('./login-manager');
+var sign_in_1 = require("./login/sign-in");
+var new_user_1 = require("./login/new-user");
+var reset_password_1 = require("./login/reset-password");
 // import {DeviceEditor} from "./device/device-editor";
 // import {DevicesList} from "./device/devices-list";
 // import {PlaylistEditable} from "./playlist-editor/playlist-editable";
@@ -35,9 +39,15 @@ var LoginModule = (function () {
                 http_1.HttpModule,
                 http_1.JsonpModule,
                 login_routing_1.routing,
-                material_module_1.MaterialModule
+                material_module_1.MaterialModule,
+                router_1.RouterModule
             ],
-            declarations: [],
+            declarations: [
+                login_manager_1.LoginManager,
+                sign_in_1.SignIn,
+                new_user_1.NewUser,
+                reset_password_1.ResetPassword
+            ],
             providers: [
                 login_routing_1.loginRoutingProviders,
             ],

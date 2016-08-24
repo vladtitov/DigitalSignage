@@ -97,8 +97,8 @@ app.use('/api', bodyParser.json());
 app.use('/api', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (!folder) {
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser');
-        req.session['user_folder'] = '/clientAssets/folder_hbrowser/';
+        console.log(' user not loged in go to /clientAssets/folder_template_dev');
+        req.session['user_folder'] = '/clientAssets/folder_template_dev/';
     }
     next();
 });

@@ -7,10 +7,14 @@ import { FormsModule }    from '@angular/forms';
 
 import { MaterialModule } from './material.module'
 
-import { LoginManager }       from './login-manager';
 import { routing, loginRoutingProviders } from './login.routing';
 import { HttpModule, JsonpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 
+import { LoginManager }       from './login-manager';
+import {SignIn} from "./login/sign-in";
+import {NewUser} from "./login/new-user";
+import {ResetPassword} from "./login/reset-password";
 
 // import {DeviceEditor} from "./device/device-editor";
 // import {DevicesList} from "./device/devices-list";
@@ -27,13 +31,15 @@ import { HttpModule, JsonpModule } from '@angular/http';
         HttpModule,
         JsonpModule,
         routing,
-        MaterialModule
+        MaterialModule,
+        RouterModule
       //  HeroesModule
     ],
     declarations: [
-        // PlaylistEditable
-     //   DevicesList,
-     //   DeviceEditor
+        LoginManager,
+        SignIn,
+        NewUser,
+        ResetPassword
 
        // AppComponent,
      //   LoginComponent

@@ -15,17 +15,28 @@ var core_1 = require('@angular/core');
 // import { MD_TABS_DIRECTIVES } from '@angular2-material/tabs';
 // import {MATERIAL_DIRECTIVES} from "ng2-material/index";
 // import {MdToolbar} from '@angular2-material/toolbar';
+var router_1 = require('@angular/router');
 var SignIn = (function () {
-    function SignIn() {
+    function SignIn(router) {
+        this.router = router;
+        this.url = 'account/login';
+        this.inputPass = 'inputPass';
+        this.showPass = false;
         console.log('hello login-manager');
     }
+    SignIn.prototype.newUser = function () {
+        this.router.navigate(["./new-user"]);
+    };
+    SignIn.prototype.resetPass = function () {
+        this.router.navigate(["./reset-password"]);
+    };
     SignIn = __decorate([
         core_1.Component({
             selector: 'sign-in',
-            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>\n            <a [routerLink]=\"['./forget-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>\n\n            <div layout=\"column\" class=\"md-inline-form\">\n              <form>\n                <md-input class=\"demo-full-width\" placeholder=\"Company (disabled)\" disabled value=\"Google\">\n                </md-input>\n                <table style=\"width: 100%\" cellspacing=\"0\"><tr>\n                  <td><md-input placeholder=\"First name\" style=\"width: 100%\"></md-input></td>\n                  <td><md-input placeholder=\"Really Super Long Last Name Placeholder That Will Be Truncated\" style=\"width: 100%\"></md-input></td>\n                </tr></table>\n                <p>\n                  <md-input class=\"demo-full-width\" placeholder=\"Address\" value=\"1600 Amphitheatre Pkway\"></md-input>\n                  <md-input class=\"demo-full-width\" placeholder=\"Address 2\"></md-input>\n                </p>\n                <table style=\"width: 100%\" cellspacing=\"0\"><tr>\n                  <td><md-input class=\"demo-full-width\" placeholder=\"City\"></md-input></td>\n                  <td><md-input class=\"demo-full-width\" placeholder=\"State\"></md-input></td>\n                  <td><md-input #postalCode class=\"demo-full-width\" maxLength=\"5\"\n                                placeholder=\"Postal Code\"\n                                value=\"94043\">\n                    <md-hint align=\"end\">{{postalCode.characterCount}} / 5</md-hint>\n                  </md-input></td>\n                </tr></table>\n              </form>\n            </div>\n\n\n</div>",
-            styles: ["\n            .modal {\n                display: block;\n                background-color: rgba(0, 0, 0, 0.31);\n            }\n            \n            .modal-header {\n                text-align: center;\n            }\n            \n            .modal-content {\n                width: 500px;\n            }\n            \n            .shadow {\n                position: absolute;\n                background-color: rgba(0, 0, 0, 0.11);\n                width: 500px;\n                height: 120px;\n                top:0;\n            }\n            \n            .md-inline-form {\n              margin: 24px;\n            }\n            .demo-full-width {\n              width: 100%;\n            }\n    "]
+            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <!--<a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>-->\n            <!--<a [routerLink]=\"['./restore-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>-->\n\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Sign in to your account</h3>\n                        <hr>\n                        <form action=\"account/login\" method=\"post\" role=\"form\">                \n                            <div class=\"form-group\">\n                                <md-input placeholder=\"Email address\" type=\"email\" style=\"width: 100%\"></md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input placeholder=\"Password\" [type]=\"showPass ? 'text': 'password'\" style=\"width: 100%\"></md-input>\n                            </div>\n                            <!--<input type=\"hidden\" pattern=\".{6,}\"   required title=\"6 characters minimum\"/>-->\n                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"Log In\">Sign In</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"newUser()\">Create Account</a>\n                    </div>\n                    <a (click)=\"resetPass()\">Reset Password</a>\n                </div>\n                \n            </div>\n\n\n</div>",
+            styles: ["\n\n    "]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_1.Router])
     ], SignIn);
     return SignIn;
 }());
