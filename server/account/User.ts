@@ -134,6 +134,7 @@ export class User{
 
     }
     login(username:string,password:string,sid:string,ip:string):Promise<any>{
+        console.log('user ', username, password);
         var pass = crypto.createHash('md5').update(password).digest('hex');
         var def: Q.Deferred<any> = Q.defer();
         var db:ObjectDatabase = new ObjectDatabase(null,'users');

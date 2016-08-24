@@ -1,6 +1,7 @@
 
 import {Component} from "@angular/core";
 import { Router } from '@angular/router';
+import {LoginService} from "./login-service";
 
 @Component({
     selector: 'reset-password'
@@ -18,11 +19,18 @@ import { Router } from '@angular/router';
                     <div class="panel" id="login">
                         <h3>Reset Password</h3>
                         <hr>
-                        <form action="/login" method="post" role="form">                
+                        <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input placeholder="Email address" style="width: 100%"></md-input>
+                                <md-input 
+                                    placeholder="Email address" 
+                                    name="username" 
+                                    ngModel 
+                                    required
+                                    type="email" 
+                                    style="width: 100%">
+                                </md-input>
                             </div>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Log In">Reset Password</button>
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Reset Password">Reset Password</button>
                         </form>
                         <a class="panel-footer" (click)="back()">Back</a>
                     </div>
@@ -40,9 +48,21 @@ import { Router } from '@angular/router';
 
 export class ResetPassword{
 
-    constructor(private router:Router){console.log('hello restore-password');}
+    constructor(private router:Router, private loginService:LoginService){console.log('hello restore-password');}
 
     back(){
         this.router.navigate(["./sign-in"]);
+    }
+
+    onSubmit(value:any){
+        console.log('onSubmit ', value);
+
+    }
+
+    private handleError (error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        console.error(errMsg);
+        return errMsg;
     }
 }

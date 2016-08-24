@@ -48,6 +48,7 @@ router.post('/login', function (request, response) {
     console.log('login body', body);
     var ip = request.connection.remoteAddress;
     var password = body.password;
+    console.log('password ', password);
     if (password && password.length > 5) {
         var ctr = new User_1.User();
         ctr.login(body.username, body.password, sid, ip).done(function (user) {

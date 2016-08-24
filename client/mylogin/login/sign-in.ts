@@ -9,6 +9,7 @@ import {Component} from '@angular/core';
 // import {MdToolbar} from '@angular2-material/toolbar';
 
 import { Router } from '@angular/router';
+import {LoginService} from "./login-service";
 
 @Component({
     selector: 'sign-in'
@@ -29,15 +30,29 @@ import { Router } from '@angular/router';
                     <div class="panel" id="login">
                         <h3>Sign in to your account</h3>
                         <hr>
-                        <form action="account/login" method="post" role="form">                
+                        <!--<form action="account/login" method="post" role="form" #loginForm="ngForm">-->
+                        <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input placeholder="Email address" type="email" style="width: 100%"></md-input>
+                                <md-input 
+                                    placeholder="Email address" 
+                                    name="username" 
+                                    ngModel 
+                                    required
+                                    type="email" 
+                                    style="width: 100%">
+                                </md-input>
                             </div>
                             <div class="form-group">
-                                <md-input placeholder="Password" [type]="showPass ? 'text': 'password'" style="width: 100%"></md-input>
-                            </div>
-                            <!--<input type="hidden" pattern=".{6,}"   required title="6 characters minimum"/>-->
-                            
+                                <md-input 
+                                    placeholder="Password"
+                                    name="password"
+                                    ngModel
+                                    required
+                                    minLength = "6"
+                                    [type]="showPass ? 'text': 'password'" 
+                                    style="width: 100%">
+                                </md-input>
+                            </div>                            
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
@@ -61,13 +76,13 @@ import { Router } from '@angular/router';
 
 export class SignIn{
 
-    url:string = 'account/login';
+    urlLogin:string = 'account/login';
 
     inputPass:string = 'inputPass';
 
     showPass: boolean = false;
 
-    constructor(private router:Router){console.log('hello login-manager');}
+    constructor(private router:Router, private loginService:LoginService){console.log('hello login-manager');}
 
 
     newUser(){
@@ -76,6 +91,24 @@ export class SignIn{
 
     resetPass(){
         this.router.navigate(["./reset-password"]);
+    }
+
+    onSubmit(value:any){
+        console.log('onSubmit ', value);
+
+        this.loginService.loginServer(value).subscribe((res)=>{
+            console.log('onSubmit res', res);
+        }, (err)=>{
+            console.log('onSubmit error ', err);
+            this.handleError(err); // = <any>err;
+        });
+    }
+
+    private handleError (error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        console.error(errMsg);
+        return errMsg;
     }
 
 }

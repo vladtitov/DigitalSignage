@@ -15,6 +15,7 @@ import { LoginManager }       from './login-manager';
 import {SignIn} from "./login/sign-in";
 import {NewUser} from "./login/new-user";
 import {ResetPassword} from "./login/reset-password";
+import {LoginService} from "./login/login-service";
 
 // import {DeviceEditor} from "./device/device-editor";
 // import {DevicesList} from "./device/devices-list";
@@ -46,6 +47,7 @@ import {ResetPassword} from "./login/reset-password";
     ],
     providers: [
         loginRoutingProviders,
+        LoginService
      //   DialogService
     ],
     bootstrap: [ LoginManager ]

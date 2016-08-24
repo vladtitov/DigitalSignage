@@ -96,6 +96,7 @@ var User = (function () {
     };
     User.prototype.login = function (username, password, sid, ip) {
         var _this = this;
+        console.log('user ', username, password);
         var pass = crypto.createHash('md5').update(password).digest('hex');
         var def = Q.defer();
         var db = new ObjectDatabase_1.ObjectDatabase(null, 'users');

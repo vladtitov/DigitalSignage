@@ -1,6 +1,7 @@
 
 import {Component} from "@angular/core";
 import { Router } from '@angular/router';
+import {LoginService} from "./login-service";
 
 @Component({
     selector: 'new-user'
@@ -18,18 +19,32 @@ import { Router } from '@angular/router';
                     <div class="panel" id="login">
                         <h3>Create Account</h3>
                         <hr>
-                        <form action="/login" method="post" role="form">          
+                        <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input placeholder="Email address" type="email" style="width: 100%"></md-input>
+                                <md-input 
+                                    placeholder="Email address" 
+                                    name="username" 
+                                    ngModel 
+                                    required
+                                    type="email" 
+                                    style="width: 100%">
+                                </md-input>
                             </div>
                             <div class="form-group">
-                                <md-input placeholder="Password" [type]="showPass ? 'text': 'password'" style="width: 100%"></md-input>
-                            </div>
-                            
+                                <md-input 
+                                    placeholder="Password"
+                                    name="password"
+                                    ngModel
+                                    required
+                                    minLength = "6"
+                                    [type]="showPass ? 'text': 'password'" 
+                                    style="width: 100%">
+                                </md-input>
+                            </div>                            
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Log In">Create Account</button>
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="New User">Create Account</button>
                         </form>
                         <a class="panel-footer" (click)="back()">Back</a>
                     </div>
@@ -52,10 +67,28 @@ import { Router } from '@angular/router';
 
 export class NewUser{
 
-    constructor(private router:Router){console.log('hello new-user!');}
+    constructor(private router:Router, private loginService:LoginService){console.log('hello new-user!');}
 
     back(){
         this.router.navigate(["./sign-in"]);
+    }
+
+    onSubmit(value:any){
+        console.log('onSubmit ', value);
+
+        this.loginService.createAccount(value).subscribe((res)=>{
+            console.log('onSubmit res', res);
+        }, (err)=>{
+            console.log('onSubmit error ', err);
+            this.handleError(err); // = <any>err;
+        });
+    }
+
+    private handleError (error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        console.error(errMsg);
+        return errMsg;
     }
     
 }

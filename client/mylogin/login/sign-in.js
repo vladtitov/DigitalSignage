@@ -16,10 +16,12 @@ var core_1 = require('@angular/core');
 // import {MATERIAL_DIRECTIVES} from "ng2-material/index";
 // import {MdToolbar} from '@angular2-material/toolbar';
 var router_1 = require('@angular/router');
+var login_service_1 = require("./login-service");
 var SignIn = (function () {
-    function SignIn(router) {
+    function SignIn(router, loginService) {
         this.router = router;
-        this.url = 'account/login';
+        this.loginService = loginService;
+        this.urlLogin = 'account/login';
         this.inputPass = 'inputPass';
         this.showPass = false;
         console.log('hello login-manager');
@@ -30,13 +32,29 @@ var SignIn = (function () {
     SignIn.prototype.resetPass = function () {
         this.router.navigate(["./reset-password"]);
     };
+    SignIn.prototype.onSubmit = function (value) {
+        var _this = this;
+        console.log('onSubmit ', value);
+        this.loginService.loginServer(value).subscribe(function (res) {
+            console.log('onSubmit res', res);
+        }, function (err) {
+            console.log('onSubmit error ', err);
+            _this.handleError(err); // = <any>err;
+        });
+    };
+    SignIn.prototype.handleError = function (error) {
+        var errMsg = (error.message) ? error.message :
+            error.status ? error.status + " - " + error.statusText : 'Server error';
+        console.error(errMsg);
+        return errMsg;
+    };
     SignIn = __decorate([
         core_1.Component({
             selector: 'sign-in',
-            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <!--<a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>-->\n            <!--<a [routerLink]=\"['./restore-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>-->\n\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Sign in to your account</h3>\n                        <hr>\n                        <form action=\"account/login\" method=\"post\" role=\"form\">                \n                            <div class=\"form-group\">\n                                <md-input placeholder=\"Email address\" type=\"email\" style=\"width: 100%\"></md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input placeholder=\"Password\" [type]=\"showPass ? 'text': 'password'\" style=\"width: 100%\"></md-input>\n                            </div>\n                            <!--<input type=\"hidden\" pattern=\".{6,}\"   required title=\"6 characters minimum\"/>-->\n                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"Log In\">Sign In</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"newUser()\">Create Account</a>\n                    </div>\n                    <a (click)=\"resetPass()\">Reset Password</a>\n                </div>\n                \n            </div>\n\n\n</div>",
+            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <!--<a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>-->\n            <!--<a [routerLink]=\"['./restore-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>-->\n\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Sign in to your account</h3>\n                        <hr>\n                        <!--<form action=\"account/login\" method=\"post\" role=\"form\" #loginForm=\"ngForm\">-->\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    ngModel \n                                    required\n                                    type=\"email\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"Log In\">Sign In</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"newUser()\">Create Account</a>\n                    </div>\n                    <a (click)=\"resetPass()\">Reset Password</a>\n                </div>\n                \n            </div>\n\n\n</div>",
             styles: ["\n\n    "]
         }), 
-        __metadata('design:paramtypes', [router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, login_service_1.LoginService])
     ], SignIn);
     return SignIn;
 }());
