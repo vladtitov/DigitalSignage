@@ -130,6 +130,7 @@ export class  VideoProcess {
     };
 
 
+
     insertInDB(asset:VOAsset) {
         var deferred: Q.Deferred<any> = Q.defer();
         var mytable: TableModel = new TableModel(this.folder, "assets");

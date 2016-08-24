@@ -17,6 +17,8 @@ var AssetCard = (function () {
     function AssetCard() {
     }
     AssetCard.prototype.ngOnInit = function () {
+        if (!this.item.label)
+            this.item.label = this.item.originalname;
         switch (this.item.type) {
             case 'video':
                 if (this.item.thumb)

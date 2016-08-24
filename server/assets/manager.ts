@@ -330,6 +330,8 @@ router.delete('/byid/:id', function (request:express.Request, response:express.R
 
 router.post('/upload', function(req:express.Request,response:express.Response) {
     var folder:string = req.session['user_folder'];
+
+
     var fp:FileProcessing = new FileProcessing(folder);
 
     fp.uploadFile(req, response).then(function (asset:VOAsset) {//, fileType:string

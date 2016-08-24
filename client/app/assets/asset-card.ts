@@ -45,6 +45,8 @@ export class AssetCard implements OnInit{
     duration:number;
 
     ngOnInit(){
+
+        if(!this.item.label) this.item.label = this.item.originalname;
         switch(this.item.type){
             case 'video':
                 if(this.item.thumb) this.image = this.item.thumb.split(',')[0];

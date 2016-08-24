@@ -7,7 +7,7 @@ export class VOAsset {
     height:number;
     mime:string;
     dimension:string;
-    original_name:string;
+    originalname:string;
     filename:string;
     selected:boolean;
     path:string;
@@ -18,9 +18,8 @@ export class VOAsset {
     metadata:string;
     description:string;
     usedPlayList:VOPlayListProps[];
-    constructor(obj:any){
-        for(var str in obj) this[str] = obj[str];
-        if(!this.label) this.label = this.original_name;
+    constructor(obj:any) {
+        for (var str in obj) this[str] = obj[str];
     }
 }
 
