@@ -58,6 +58,8 @@ router.post('/login', function (request:express.Request, response:express.Respon
     var body:any=request.body;
     var  sid = request.session['id'];
 
+    console.log('login body', body);
+
     var ip:string =  request.connection.remoteAddress;
     var password = body.password;
     if(password && password.length>5){

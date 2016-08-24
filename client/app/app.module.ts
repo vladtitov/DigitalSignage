@@ -8,9 +8,20 @@ import { FormsModule }    from '@angular/forms';
 import { AppComponent }       from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 import { HttpModule, JsonpModule } from '@angular/http';
-import {DeviceEditor} from "./device/device-editor";
-import {DevicesList} from "./device/devices-list";
+
+import {ContentManager} from "./assets/content-manager";
+import {PlayListLibrary} from "./play-list/playlist-library";
+import {PlayListEditor} from "./playlist-editor/playlist-editor";
 import {PlaylistEditable} from "./playlist-editor/playlist-editable";
+import {LayoutsAssembled} from "./layouts/layouts-assembled";
+import {LayoutEditor} from "./layout-editor/layout-editor";
+import {LayoutsTemplate} from "./layouts/layouts-template";
+import {DevicesManager} from "./device/devices-manager";
+import {DevicesList} from "./device/devices-list";
+import {DeviceEditor} from "./device/device-editor";
+
+
+
 //import { HeroesModule } from './heroes/heroes.module';
 //import { LoginComponent } from './login.component';
 //import { DialogService }  from './dialog.service';
@@ -25,9 +36,18 @@ import {PlaylistEditable} from "./playlist-editor/playlist-editable";
       //  HeroesModule
     ],
     declarations: [
-        PlaylistEditable
-     //   DevicesList,
-     //   DeviceEditor
+        AppComponent,
+        ContentManager,
+        PlayListLibrary,
+        PlayListEditor,
+        PlaylistEditable,
+        LayoutsAssembled,
+        LayoutEditor,
+        LayoutsTemplate,
+        DevicesManager,
+        DevicesList,
+        DeviceEditor
+
 
        // AppComponent,
      //   LoginComponent

@@ -264,6 +264,60 @@ body {
 
 /*          --------------------          end tooltip          --------------------          */
 
+/*          --------------------          login form          --------------------          */
+
+.loginform {
+    position: relative;
+    height: 100%;
+    text-align: center;
+    padding-top: 60px;
+}
+.loginform .logo {
+    margin: 0 0 20px;
+}
+.loginform h3 {
+    color: #337ab7;
+}
+.loginform hr {
+    width: 300px;
+}
+.loginform .panel {
+    max-width: 430px;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+    border: 2px solid #337ab7;
+    box-shadow: grey 5px 5px 10px;
+}
+.loginform .panel form {
+    padding: 0 40px;
+}
+.loginform .md-input-placeholder.md-focused {
+    color: #337ab7 !important;
+}
+.loginform .md-input-ripple.md-focused {
+    background-color: #337ab7 !important;
+}
+md-checkbox{
+    float: left;
+    margin-bottom: 25px;
+}
+.md-checkbox-label{
+    color: rgba(0, 0, 0, 0.38)
+}
+.loginform .panel .panel-footer {
+    padding: 20px;
+    display: block;
+    font-size: 17px;
+    color: #878797;
+    font-weight: 100;
+}
+.loginform a {
+    cursor: pointer;
+}
+
+
+/*          --------------------          end login form          --------------------          */
+
 
 
 

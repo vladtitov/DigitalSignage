@@ -45,6 +45,7 @@ router.get('/logout', function (request, response) {
 router.post('/login', function (request, response) {
     var body = request.body;
     var sid = request.session['id'];
+    console.log('login body', body);
     var ip = request.connection.remoteAddress;
     var password = body.password;
     if (password && password.length > 5) {

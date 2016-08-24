@@ -17,7 +17,16 @@ var forms_1 = require('@angular/forms');
 var app_component_1 = require('./app.component');
 var app_routing_1 = require('./app.routing');
 var http_1 = require('@angular/http');
+var content_manager_1 = require("./assets/content-manager");
+var playlist_library_1 = require("./play-list/playlist-library");
+var playlist_editor_1 = require("./playlist-editor/playlist-editor");
 var playlist_editable_1 = require("./playlist-editor/playlist-editable");
+var layouts_assembled_1 = require("./layouts/layouts-assembled");
+var layout_editor_1 = require("./layout-editor/layout-editor");
+var layouts_template_1 = require("./layouts/layouts-template");
+var devices_manager_1 = require("./device/devices-manager");
+var devices_list_1 = require("./device/devices-list");
+var device_editor_1 = require("./device/device-editor");
 //import { HeroesModule } from './heroes/heroes.module';
 //import { LoginComponent } from './login.component';
 //import { DialogService }  from './dialog.service';
@@ -34,7 +43,17 @@ var AppModule = (function () {
                 app_routing_1.routing
             ],
             declarations: [
-                playlist_editable_1.PlaylistEditable
+                app_component_1.AppComponent,
+                content_manager_1.ContentManager,
+                playlist_library_1.PlayListLibrary,
+                playlist_editor_1.PlayListEditor,
+                playlist_editable_1.PlaylistEditable,
+                layouts_assembled_1.LayoutsAssembled,
+                layout_editor_1.LayoutEditor,
+                layouts_template_1.LayoutsTemplate,
+                devices_manager_1.DevicesManager,
+                devices_list_1.DevicesList,
+                device_editor_1.DeviceEditor
             ],
             providers: [
                 app_routing_1.appRoutingProviders,
