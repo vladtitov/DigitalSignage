@@ -57,7 +57,10 @@ export class  ImageProcess {
 
 
             p.write(WWW+'/'+thumb, (err) => {
-                if(err) def.reject(err);
+                if(err){
+                    console.error(err);
+                    def.reject(err);
+                }
                 else{
                     asset.thumb = thumb;
                     def.resolve(asset);
@@ -76,7 +79,7 @@ export class  ImageProcess {
         // console.log('details\n', details);
         this.makeThumbnail(asset).then( (asset:VOAsset)=> {
             console.log('ip.makeThumbnail done ');
-            var newPath:string = this.folder + 'userImages/'+asset.filename;
+            var newPath:string = this.folder + '/userImages/'+asset.filename;
             fs.rename(asset.path, WWW+newPath, (err)=> {
                 if(err) deferred.reject(err);
                 else{
@@ -92,17 +95,22 @@ export class  ImageProcess {
 
     processImage2(asset) {
         var def: Q.Deferred<any> = Q.defer();
-        // console.log('details\n', details);
-        var newPath:string = this.folder + 'userImages/'+asset.filename;
+    // console.log('processImage2', asset);
+        var newPath:string = this.folder + '/userImages/'+asset.filename;
 
-            fs.rename(WWW+'/'+asset.path, WWW+'/'+newPath, (err)=> {
-                if(err) def.reject(err);
+
+            fs.rename(asset.path,path.resolve(WWW+'/'+newPath), (err)=> {
+                if(err){
+                    console.log(err);
+                    def.reject(err);
+                }
                 else{
 
                     asset.path = newPath;
                     this.makeThumbnail(asset).then(
 
                         (asset:VOAsset)=> {
+                           // console.log('processImage23', asset);
                                 this.insertInDB(asset).then(
                                     res=> def.resolve(res)
                                     ,(err)=> {def.reject(err)});

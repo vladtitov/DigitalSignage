@@ -144,6 +144,7 @@ router.post('/upload', function (req, response) {
             response.status(400);
             response.json({ error: 'Unknown type ' + asset.mimetype });
         }
+        console.log(asset);
         if (asset.type === 'image') {
             var ip = new ImageProcess_1.ImageProcess(folder);
             ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });

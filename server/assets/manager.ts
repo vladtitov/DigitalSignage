@@ -347,6 +347,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
             response.json({error:'Unknown type '+asset.mimetype})
         }
 
+        console.log(asset)
         if(asset.type === 'image'){
 
             var ip:ImageProcess = new ImageProcess(folder);

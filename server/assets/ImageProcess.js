@@ -34,8 +34,10 @@ var ImageProcess = (function () {
                 y = (image.bitmap.height - _this.thumbSize) / 2;
             }
             p.write(WWW + '/' + thumb, function (err) {
-                if (err)
+                if (err) {
+                    console.error(err);
                     def.reject(err);
+                }
                 else {
                     asset.thumb = thumb;
                     def.resolve(asset);
@@ -52,7 +54,7 @@ var ImageProcess = (function () {
         var deferred = Q.defer();
         this.makeThumbnail(asset).then(function (asset) {
             console.log('ip.makeThumbnail done ');
-            var newPath = _this.folder + 'userImages/' + asset.filename;
+            var newPath = _this.folder + '/userImages/' + asset.filename;
             fs.rename(asset.path, WWW + newPath, function (err) {
                 if (err)
                     deferred.reject(err);
@@ -69,10 +71,12 @@ var ImageProcess = (function () {
     ImageProcess.prototype.processImage2 = function (asset) {
         var _this = this;
         var def = Q.defer();
-        var newPath = this.folder + 'userImages/' + asset.filename;
-        fs.rename(WWW + '/' + asset.path, WWW + '/' + newPath, function (err) {
-            if (err)
+        var newPath = this.folder + '/userImages/' + asset.filename;
+        fs.rename(asset.path, path.resolve(WWW + '/' + newPath), function (err) {
+            if (err) {
+                console.log(err);
                 def.reject(err);
+            }
             else {
                 asset.path = newPath;
                 _this.makeThumbnail(asset).then(function (asset) {

@@ -94,19 +94,25 @@ export class FileProcessing {
 
     uploadFile2(req:express.Request, res:express.Response,folder:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
-        var upload:express.RequestHandler = multer({ dest: WWW+'/'+folder}).single('file');
+
+        var upload:express.RequestHandler = multer({ dest: WWW+'/'+folder+'/uploads'}).single('file');
+
         upload(req,res,(err)=>{
             var newname:string = '_'+Math.round(Date.now()/1000)+'_'+req.file.originalname;
             var file = req.file;
-            fs.rename(WWW+'/'+file.path,WWW+'/'+file.destination+'/'+newname,(err)=>{
+
+            var newdestination:string =  path.resolve(file.destination+'/'+newname);
+
+
+            fs.rename(file.path,newdestination,(err)=>{
                 if(err)def.reject(err);
                 else{
                     delete file.fieldname;
                     delete file.destination;
-
                     var asset:VOAsset = new VOAsset(file);
-                    asset.path = file.destination+'/'+newname;
+                    asset.path = newdestination;
                     asset.filename = newname;
+
                     def.resolve(asset);
                 }
             })
