@@ -19,7 +19,8 @@ var AssetCard = (function () {
     AssetCard.prototype.ngOnInit = function () {
         switch (this.item.type) {
             case 'video':
-                this.image = this.item.thumb.split(',')[0];
+                if (this.item.thumb)
+                    this.image = this.item.thumb.split(',')[0];
                 this.duration = this.item.duration;
                 break;
             case 'image':
