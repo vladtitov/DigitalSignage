@@ -151,7 +151,7 @@ app.use('/api',function(req:Request, res:Response, next) {
 
     if(!folder){
         console.log(' user not loged in go to /clientAssets/folder_hbrowser')
-        req.session['user_folder'] = '/clientAssets/folder_hbrowser/';
+        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
     }
     next();
 });

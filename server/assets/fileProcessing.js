@@ -37,12 +37,12 @@ var FileProcessing = (function () {
             }
             else {
                 var asset = new models_1.VOAsset({});
-                asset.original_name = req.file.originalname;
+                asset.originalname = req.file.originalname;
                 asset.size = req.file.size;
                 asset.path = req.file.path;
-                asset.mime = req.file.mimetype;
+                asset.mimetype = req.file.mimetype;
                 asset.filename = req.file.filename;
-                var ext = asset.original_name.substr(asset.original_name.length - 3);
+                var ext = asset.originalname.substr(asset.originalname.length - 3);
                 if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
                     asset.type = 'image';
                 }
@@ -65,6 +65,27 @@ var FileProcessing = (function () {
             }
         });
         return deferred.promise;
+    };
+    FileProcessing.prototype.uploadFile2 = function (req, res, folder) {
+        var def = Q.defer();
+        var upload = multer({ dest: WWW + '/' + folder }).single('file');
+        upload(req, res, function (err) {
+            var newname = '_' + Math.round(Date.now() / 1000) + '_' + req.file.originalname;
+            var file = req.file;
+            fs.rename(WWW + '/' + file.path, WWW + '/' + file.destination + '/' + newname, function (err) {
+                if (err)
+                    def.reject(err);
+                else {
+                    delete file.fieldname;
+                    delete file.destination;
+                    var asset = new models_1.VOAsset(file);
+                    asset.path = file.destination + '/' + newname;
+                    asset.filename = newname;
+                    def.resolve(asset);
+                }
+            });
+        });
+        return def.promise;
     };
     FileProcessing.prototype.deleteFile = function (thumbnailPath, originaImagePath) {
         var deferred = Q.defer();

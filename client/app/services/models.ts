@@ -5,7 +5,7 @@ export class VOAsset {
     label:string;
     duration: number;
     height:number;
-    mime:string;
+    mimetype:string;
     dimension:string;
     originalname:string;
     filename:string;

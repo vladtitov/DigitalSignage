@@ -44,7 +44,7 @@ router.post('/save-asset', function (req, res) {
     var data = new models_1.VOAsset(req.body);
     var folder = req.session['user_folder'];
     var mytable = new TableModel_1.TableModel(folder, "assets");
-    if (!data.mime) {
+    if (!data.mimetype) {
         res.json({ error: "mime not found" });
         return;
     }
@@ -130,16 +130,23 @@ router.delete('/byid/:id', function (request, response) {
 });
 router.post('/upload', function (req, response) {
     var folder = req.session['user_folder'];
+    var token = req.session['user_token'];
     var fp = new fileProcessing_1.FileProcessing(folder);
-    fp.uploadFile(req, response).then(function (asset) {
+    fp.uploadFile2(req, response, folder).then(function (asset) {
+        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
+        if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
+            asset.type = 'image';
+        }
+        else if (ext === 'ime' || ext === 'avi') {
+            asset.type = 'video';
+        }
+        else {
+            response.status(400);
+            response.json({ error: 'Unknown type ' + asset.mimetype });
+        }
         if (asset.type === 'image') {
             var ip = new ImageProcess_1.ImageProcess(folder);
-            ip.processImage(asset).then(function (res) {
-                response.json({ data: res });
-            }, function (err) {
-                console.error(err);
-                response.json({ error: err });
-            });
+            ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         else if (asset.type === 'video') {
             response.json({ data: 'success' });
