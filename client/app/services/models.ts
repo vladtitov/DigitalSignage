@@ -4,6 +4,7 @@ export class VOAsset {
     active: number;
     label:string;
     duration: number;
+    status:string;
     height:number;
     mimetype:string;
     dimension:string;
@@ -11,6 +12,10 @@ export class VOAsset {
     filename:string;
     selected:boolean;
     path:string;
+    destination:string;
+    workingFolder:string;
+    token:string;
+    folder:string;
     size:number;
     thumb:string;
     width:number;

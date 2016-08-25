@@ -73,7 +73,6 @@ var FileProcessing = (function () {
         upload(req, res, function (err) {
             var newname = '_' + Math.round(Date.now() / 1000) + '_' + req.file.originalname;
             var file = req.file;
-            console.log(file);
             var newpath = path.resolve(file.destination + '/' + newname);
             fs.rename(file.path, newpath, function (err) {
                 if (err)

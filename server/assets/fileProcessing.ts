@@ -101,7 +101,7 @@ export class FileProcessing {
         upload(req,res,(err)=>{
             var newname:string = '_'+Math.round(Date.now()/1000)+'_'+req.file.originalname;
             var file = req.file;
-console.log(file);
+//console.log(file);
             var newpath:string =  path.resolve(file.destination+'/'+newname);
 
 
@@ -113,7 +113,6 @@ console.log(file);
                     var asset:VOAsset = new VOAsset(file);
                     asset.filename = newname;
                     asset.path = uploadFolder+'/'+asset.filename;
-
 
                     def.resolve(asset);
                 }

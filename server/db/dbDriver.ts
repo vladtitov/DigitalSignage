@@ -27,7 +27,7 @@ export class DBDriver {
     static getDb(folder:string){
         if(!DBDriver.dbs[folder]){
             var filename =  path.resolve(folder+'/ads.db');
-            console.log(filename);
+            console.log('database: '+filename);
             DBDriver.dbs[folder] =  new sqlite.Database(filename);
         }
         return DBDriver.dbs[folder];
@@ -69,6 +69,20 @@ export class DBDriver {
         return deferred.promise;
     }
 
+    selectById(id:number,table:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'SELECT * FROM '+table+' WHERE id='+Number(id);
+        this.getdb().get(sql, function(error,row) {
+            if (error) {
+                def.reject(error);
+            } else {
+                def.resolve(row);
+            }
+        });
+
+        return def.promise;
+
+    }
 
     queryOne(sql: string): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
@@ -207,7 +221,12 @@ export class DBDriver {
     }
 
     updateRow(row:any,table:string): Q.Promise<UpdateResult>{
-        var id = row.id;
+        var id = Number(row.id);
+        if(isNaN(id)){
+            var d:Q.Deferred<any> = Q.defer();
+            d.reject(row.id)
+            return  d.promise;
+        }
         delete row.id;
         var ar1:string[] = [];
         var ar2:string[] = [];
@@ -220,10 +239,38 @@ export class DBDriver {
             var sql: string = 'UPDATE '+ table + ' SET '+ar1.join(', ')+' WHERE id = ' + id;
             var data: any[] = ar3;
             return this.updateOne(sql, data);
+        }else{
+            var d:Q.Deferred<any> = Q.defer();
+            d.reject(ar3);
+            return  d.promise
         }
-        var d:Q.Deferred<any> = Q.defer();
-        d.resolve({changes:0});
-        return  d.promise
+
+    }
+    updateRowByColumn(row:any,column:string,table:string): Q.Promise<UpdateResult>{
+        var id = Number(row[column]);
+        if(isNaN(id)){
+            var d:Q.Deferred<any> = Q.defer();
+            d.reject(row[column])
+            return  d.promise;
+        }
+        delete row[column];
+
+        var ar1:string[] = [];
+        var ar2:string[] = [];
+        var ar3:any[] = [];
+        for(var str in row){
+            ar1.push(str + ' = ?');
+            ar3.push(row[str]);
+        }
+        if(ar3.length){
+            var sql: string = 'UPDATE '+ table + ' SET '+ar1.join(', ')+' WHERE '+column+' = ' + id;
+            var data: any[] = ar3;
+            return this.updateOne(sql, data);
+        }else{
+            var d:Q.Deferred<any> = Q.defer();
+            d.reject(ar3);
+            return  d.promise
+        }
 
     }
 
@@ -242,6 +289,7 @@ export class DBDriver {
 
     }
 
+
     insertRow(row:any,table:string): Q.Promise<UpdateResult> {
         delete row.id;
         var ar1:string[] = [];
@@ -254,6 +302,7 @@ export class DBDriver {
         }
         var sql: string = 'INSERT INTO '+table+' ('+ar1.join(',')+') VALUES ('+ar2.join(',')+')';
 
+        //console.log(sql);
         return this.insertOne(sql, ar3);
     }
 
@@ -280,9 +329,9 @@ export class DBDriver {
 
     updateOne(sql:string, data?:any[]): Q.Promise<UpdateResult> {
         var deferred: Q.Deferred<any> = Q.defer();
-
         this.getdb().run(sql, data, function(error) {
             if (error) {
+                console.log(error)
                 deferred.reject(error);
             } else {
                 deferred.resolve({ changes: this.changes });

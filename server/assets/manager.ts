@@ -337,6 +337,8 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
 
     fp.uploadFile2(req, response,folder).then(function (asset:VOAsset) {//, fileType:string
 
+        asset.folder = folder;
+
         var ext = asset.mimetype.substr(asset.mimetype.length - 3);
         if(ext === 'jpg' || ext === 'peg' || ext === 'png'){
             asset.type = 'image';
@@ -359,7 +361,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
         } else if(asset.type === 'video'){
             response.json({data:'success'});
             var vp:VideoProcess = new VideoProcess(folder);
-            vp.processVideo(asset).then(function (res) {
+            vp.saveInDatabase(asset).then(function (res) {
                 // response.json({data:res});
             }, function (err) {
                 console.error(err);

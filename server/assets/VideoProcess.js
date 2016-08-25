@@ -1,10 +1,11 @@
 "use strict";
 var Q = require('q');
 var dbDriver_1 = require("../db/dbDriver");
+var path = require('path');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(SERVER + "/ffmpeg/bin/ffmpeg.exe");
-ffmpeg.setFfprobePath(SERVER + "/ffmpeg/bin/ffprobe.exe");
+ffmpeg.setFfmpegPath(path.resolve(SERVER + "/ffmpeg/bin/ffmpeg.exe"));
+ffmpeg.setFfprobePath(path.resolve(SERVER + "/ffmpeg/bin/ffprobe.exe"));
 var VideoProcess = (function () {
     function VideoProcess(folder) {
         this.folder = folder;
@@ -12,9 +13,8 @@ var VideoProcess = (function () {
     VideoProcess.prototype.makeThumbnails = function (asset) {
         var deferred = Q.defer();
         var filename = asset.filename;
-        var srcPath = asset.path;
-        var cientFolder = this.folder + 'userVideos/';
-        var destPath = cientFolder + filename;
+        var src = path.resolve(asset.workingFolder + '/' + asset.filename);
+        var currentFolder = this.folder + 'userVideos/';
         var thumbs;
         var w = 256;
         var k = w / asset.width;
@@ -24,10 +24,10 @@ var VideoProcess = (function () {
             k = h / asset.height;
             w = Math.round(asset.width * k);
         }
-        var proc = ffmpeg(WWW + srcPath)
+        var proc = ffmpeg(src)
             .on('filenames', function (filenames) {
             thumbs = filenames.map(function (val) {
-                return cientFolder + val;
+                return val;
             });
             asset.thumb = thumbs.join(', ');
         })
@@ -42,20 +42,19 @@ var VideoProcess = (function () {
             filename: filename + '.png',
             timemarks: ['10%', '30%', '50%'],
             size: w + 'x' + h
-        }, WWW + cientFolder);
+        }, asset.workingFolder);
         return deferred.promise;
     };
     VideoProcess.prototype.convertVideo = function (asset) {
         var def = Q.defer();
         var filename = asset.filename;
-        var srcPath = asset.path;
-        var cientFolder = this.folder + 'userVideos/';
-        var destPath = cientFolder + filename.substr(0, filename.lastIndexOf('.')) + '.mp4';
-        var cientFolder = this.folder + 'userVideos/';
-        ffmpeg(srcPath)
+        var src = path.resolve(asset.workingFolder + '/' + asset.filename);
+        var newName = asset.filename.substr(0, asset.filename.lastIndexOf('.')) + '.mp4';
+        var destPath = path.resolve(asset.workingFolder + '/' + newName);
+        ffmpeg(src)
             .on('end', function () {
             console.log('end convert');
-            asset.path = destPath;
+            asset.filename = newName;
             def.resolve(asset);
         })
             .on('error', function (err) {
@@ -63,12 +62,13 @@ var VideoProcess = (function () {
         })
             .videoCodec('libx264')
             .format('mp4')
-            .save(WWW + destPath);
+            .save(destPath);
         return def.promise;
     };
     VideoProcess.prototype.getMetadata = function (asset) {
         var deferred = Q.defer();
-        this.metadata = ffmpeg.ffprobe(asset.path, function (err, mdata) {
+        var src = path.resolve(asset.workingFolder + '/' + asset.filename);
+        this.metadata = ffmpeg.ffprobe(src, function (err, mdata) {
             if (err) {
                 deferred.reject(err);
                 return;
@@ -83,8 +83,22 @@ var VideoProcess = (function () {
     };
     VideoProcess.prototype.processVideo = function (asset) {
         var _this = this;
+        var deferred = Q.defer();
+        this.getMetadata(asset).then(function (asset) {
+            _this.convertVideo(asset).then(function (asset) {
+                _this.makeThumbnails(asset).then(function (asset) {
+                    deferred.resolve(asset);
+                }, function (err) { deferred.reject(err); });
+            }, function (err) { deferred.reject(err); });
+        }, function (err) { deferred.reject(err); });
+        return deferred.promise;
+    };
+    ;
+    VideoProcess.prototype.saveInDatabase = function (asset) {
+        var _this = this;
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
+        asset.status = 'newvideo';
         asset.timestamp = Math.round(Date.now() / 1000);
         db.insertRow(asset, 'process').done(function (res) {
             var db = new dbDriver_1.DBDriver(_this.folder);

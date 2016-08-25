@@ -133,6 +133,7 @@ router.post('/upload', function (req, response) {
     var token = req.session['user_token'];
     var fp = new fileProcessing_1.FileProcessing(folder);
     fp.uploadFile2(req, response, folder).then(function (asset) {
+        asset.folder = folder;
         var ext = asset.mimetype.substr(asset.mimetype.length - 3);
         if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
             asset.type = 'image';
@@ -152,7 +153,7 @@ router.post('/upload', function (req, response) {
         else if (asset.type === 'video') {
             response.json({ data: 'success' });
             var vp = new VideoProcess_1.VideoProcess(folder);
-            vp.processVideo(asset).then(function (res) {
+            vp.saveInDatabase(asset).then(function (res) {
             }, function (err) {
                 console.error(err);
                 response.json({ error: err });

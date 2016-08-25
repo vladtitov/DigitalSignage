@@ -5,14 +5,15 @@ import Q = require('q');
 import {VOAsset} from "../../client/app/services/models";
 import {UpdateResult, DBDriver} from "../db/dbDriver";
 import {TableModel} from "../db/TableModel";
+import * as path from 'path';
 
 declare var WWW:string;
 declare var SERVER:string;
 
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(SERVER + "/ffmpeg/bin/ffmpeg.exe");
-ffmpeg.setFfprobePath(SERVER + "/ffmpeg/bin/ffprobe.exe");
+ffmpeg.setFfmpegPath(path.resolve(SERVER + "/ffmpeg/bin/ffmpeg.exe"));
+ffmpeg.setFfprobePath(path.resolve(SERVER+"/ffmpeg/bin/ffprobe.exe"));
 
 export class  VideoProcess {
 
@@ -24,9 +25,10 @@ export class  VideoProcess {
         var deferred: Q.Deferred<any> = Q.defer();
 
         var filename:string = asset.filename;
-        var srcPath = asset.path;
-        var cientFolder = this.folder + 'userVideos/';
-        var destPath = cientFolder + filename;
+        var src:string = path.resolve(asset.workingFolder+'/'+asset.filename);
+
+       var currentFolder = this.folder + 'userVideos/';
+       // var destPath = cientFolder + filename;
         var thumbs: string[];
         var w = 256;
         var k=w/asset.width;
@@ -37,10 +39,10 @@ export class  VideoProcess {
             w=Math.round(asset.width*k);
         }
 
-        var proc = ffmpeg(WWW+srcPath)
+        var proc = ffmpeg(src)
             .on('filenames', function(filenames) {
                 thumbs = filenames.map(function(val) {
-                    return cientFolder + val;
+                    return val;
                 });
                 asset.thumb = thumbs.join(', ');
                 // console.log('screenshots are ' + thumbs.join(', '));
@@ -59,7 +61,7 @@ export class  VideoProcess {
                     timemarks: ['10%','30%','50%'],
                     size: w+'x'+h
                 },
-                WWW + cientFolder
+                asset.workingFolder
             )
 
         return deferred.promise;
@@ -68,15 +70,22 @@ export class  VideoProcess {
     convertVideo(asset:VOAsset): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var filename:string = asset.filename;
-        var srcPath = asset.path;
-        var cientFolder = this.folder + 'userVideos/';
-        var destPath = cientFolder + filename.substr(0, filename.lastIndexOf('.'))+'.mp4';
 
-        var cientFolder = this.folder + 'userVideos/';
-        ffmpeg(srcPath)
+        var src:string = path.resolve(asset.workingFolder+'/'+asset.filename);
+       // var cientFolder = this.folder + 'userVideos/';
+
+        var newName:string = asset.filename.substr(0,asset.filename.lastIndexOf('.'))+'.mp4';
+
+        var destPath =  path.resolve(asset.workingFolder+'/'+newName);
+
+
+
+      //  var cientFolder = this.folder + 'userVideos/';
+        ffmpeg(src)
             .on('end', function() {
                console.log('end convert');
-                asset.path = destPath;
+               // asset.path = destPath;
+                asset.filename = newName;
                 def.resolve(asset);
 
             })
@@ -87,14 +96,15 @@ export class  VideoProcess {
             .videoCodec('libx264')
             .format('mp4')
 
-            .save(WWW+destPath);
+            .save(destPath);
 
         return def.promise
 }
     getMetadata(asset:VOAsset): Q.Promise<any>  {
         var deferred: Q.Deferred<any> = Q.defer();
+        var src:string = path.resolve(asset.workingFolder+'/'+asset.filename);
         // console.log('tempDir+filename = ', this.tempDir+filename);
-        this.metadata = ffmpeg.ffprobe(asset.path, function(err, mdata) {
+        this.metadata = ffmpeg.ffprobe(src, function(err, mdata) {
             if(err) { deferred.reject(err); return; }
             // console.log('metadata ', mdata);
             var stream = mdata.streams[0];
@@ -110,30 +120,31 @@ export class  VideoProcess {
     }
 
 
-  /*  processVideo(asset:VOAsset): Q.Promise<any> {
+   processVideo(asset:VOAsset): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
 
         this.getMetadata(asset).then( (asset:VOAsset)=> {
             // console.log('metadata ', vp.metadata);
             this.convertVideo(asset).then( (asset:VOAsset)=> {
                 this.makeThumbnails(asset).then( (asset:VOAsset)=> {
+                    deferred.resolve(asset);
                     // console.log('vp.makeThumbnail done ', asset);
-                    this.insertInDB(asset).then(function (result:UpdateResult) {
+                  /*  this.insertInDB(asset).then(function (result:UpdateResult) {
                         deferred.resolve(result);
                     }, (err)=> {deferred.reject(err)});
-
+*/
                 }, (err)=> {deferred.reject(err)});
             }, (err)=> {deferred.reject(err)});
         }, (err)=> {deferred.reject(err)});
         // console.log('processVideo');
         return deferred.promise;
-    };*/
+    };
 
 
-    processVideo(asset:VOAsset): Q.Promise<any> {
+    saveInDatabase(asset:VOAsset): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
         var db = new DBDriver(null);
-
+        asset.status = 'newvideo';
         asset.timestamp = Math.round(Date.now()/1000);
         db.insertRow(asset,'process').done(
             res=>{
