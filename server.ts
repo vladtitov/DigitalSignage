@@ -24,12 +24,16 @@ interface MyRequest extends express.Request{
 var fs = require('fs-extra');
 var request = require('request');
 var httpProxy = require('http-proxy');
+
+
 var proxy = httpProxy.createProxyServer({
     changeOrigin:true,
     port:80
 });
 
+
 var path = require('path');
+
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
@@ -119,6 +123,9 @@ app.use('/account',bodyParser.urlencoded({extended: true}));
 app.use('/account',bodyParser.json());
 app.use('/account', require('./server/account/manager'));
 
+app.use('/videoserver',bodyParser.urlencoded({extended: true}));
+app.use('/videoserver',bodyParser.json());
+app.use('/videoserver', require('./server/videoserver/manager'));
 
 app.use('/player/:token/', function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];

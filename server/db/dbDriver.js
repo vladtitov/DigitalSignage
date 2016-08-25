@@ -186,6 +186,19 @@ var DBDriver = (function () {
         d.resolve({ changes: 0 });
         return d.promise;
     };
+    DBDriver.prototype.deleteById = function (id, table) {
+        var def = Q.defer();
+        var sql = 'DELETE FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().run(sql, function (error) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+        return def.promise;
+    };
     DBDriver.prototype.insertRow = function (row, table) {
         delete row.id;
         var ar1 = [];

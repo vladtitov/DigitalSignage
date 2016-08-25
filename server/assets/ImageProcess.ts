@@ -99,7 +99,7 @@ export class  ImageProcess {
         var newPath:string = this.folder + '/userImages/'+asset.filename;
 
 
-            fs.rename(asset.path,path.resolve(WWW+'/'+newPath), (err)=> {
+            fs.rename(path.resolve(WWW+'/'+asset.path),path.resolve(WWW+'/'+newPath), (err)=> {
                 if(err){
                     console.log(err);
                     def.reject(err);

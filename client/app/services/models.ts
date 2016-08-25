@@ -17,6 +17,8 @@ export class VOAsset {
     type:string;
     metadata:string;
     description:string;
+    process_id:number;
+    timestamp:number;
     usedPlayList:VOPlayListProps[];
     constructor(obj:any) {
         for (var str in obj) this[str] = obj[str];

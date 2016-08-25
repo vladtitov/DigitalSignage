@@ -3,7 +3,7 @@
 
 import Q = require('q');
 import {VOAsset} from "../../client/app/services/models";
-import {UpdateResult} from "../db/dbDriver";
+import {UpdateResult, DBDriver} from "../db/dbDriver";
 import {TableModel} from "../db/TableModel";
 
 declare var WWW:string;
@@ -110,7 +110,7 @@ export class  VideoProcess {
     }
 
 
-    processVideo(asset:VOAsset): Q.Promise<any> {
+  /*  processVideo(asset:VOAsset): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
 
         this.getMetadata(asset).then( (asset:VOAsset)=> {
@@ -127,19 +127,26 @@ export class  VideoProcess {
         }, (err)=> {deferred.reject(err)});
         // console.log('processVideo');
         return deferred.promise;
-    };
+    };*/
 
 
+    processVideo(asset:VOAsset): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var db = new DBDriver(null);
 
-    insertInDB(asset:VOAsset) {
-        var deferred: Q.Deferred<any> = Q.defer();
-        var mytable: TableModel = new TableModel(this.folder, "assets");
+        asset.timestamp = Math.round(Date.now()/1000);
+        db.insertRow(asset,'process').done(
+            res=>{
+                var db = new DBDriver(this.folder);
+                asset.process_id = res.insertId;
+                db.insertRow(asset,'assets').done(
+                    res=>def.resolve(res)
+                    ,err=> def.reject(err)
+                )
+            }
+        ,err=> def.reject(err)
+        )
 
-        var promise = mytable.insertContent(asset);
-        promise.then(function (result: UpdateResult) {
-            deferred.resolve(result);
-            // onSuccess(out, res);
-        }, (err)=> {deferred.reject(err)});
-        return deferred.promise;
+        return def.promise;
     };
 }

@@ -227,6 +227,20 @@ export class DBDriver {
 
     }
 
+    deleteById(id:number,table:string): Q.Promise<UpdateResult> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'DELETE FROM '+table+' WHERE id='+Number(id);
+        this.getdb().run(sql, function(error) {
+            if (error) {
+                def.reject(error);
+            } else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+
+        return def.promise;
+
+    }
 
     insertRow(row:any,table:string): Q.Promise<UpdateResult> {
         delete row.id;

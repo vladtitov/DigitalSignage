@@ -1,6 +1,6 @@
 "use strict";
 var Q = require('q');
-var TableModel_1 = require("../db/TableModel");
+var dbDriver_1 = require("../db/dbDriver");
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(SERVER + "/ffmpeg/bin/ffmpeg.exe");
@@ -83,27 +83,15 @@ var VideoProcess = (function () {
     };
     VideoProcess.prototype.processVideo = function (asset) {
         var _this = this;
-        var deferred = Q.defer();
-        this.getMetadata(asset).then(function (asset) {
-            _this.convertVideo(asset).then(function (asset) {
-                _this.makeThumbnails(asset).then(function (asset) {
-                    _this.insertInDB(asset).then(function (result) {
-                        deferred.resolve(result);
-                    }, function (err) { deferred.reject(err); });
-                }, function (err) { deferred.reject(err); });
-            }, function (err) { deferred.reject(err); });
-        }, function (err) { deferred.reject(err); });
-        return deferred.promise;
-    };
-    ;
-    VideoProcess.prototype.insertInDB = function (asset) {
-        var deferred = Q.defer();
-        var mytable = new TableModel_1.TableModel(this.folder, "assets");
-        var promise = mytable.insertContent(asset);
-        promise.then(function (result) {
-            deferred.resolve(result);
-        }, function (err) { deferred.reject(err); });
-        return deferred.promise;
+        var def = Q.defer();
+        var db = new dbDriver_1.DBDriver(null);
+        asset.timestamp = Math.round(Date.now() / 1000);
+        db.insertRow(asset, 'process').done(function (res) {
+            var db = new dbDriver_1.DBDriver(_this.folder);
+            asset.process_id = res.insertId;
+            db.insertRow(asset, 'assets').done(function (res) { return def.resolve(res); }, function (err) { return def.reject(err); });
+        }, function (err) { return def.reject(err); });
+        return def.promise;
     };
     ;
     return VideoProcess;

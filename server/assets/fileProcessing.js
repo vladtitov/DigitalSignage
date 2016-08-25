@@ -68,20 +68,22 @@ var FileProcessing = (function () {
     };
     FileProcessing.prototype.uploadFile2 = function (req, res, folder) {
         var def = Q.defer();
-        var upload = multer({ dest: WWW + '/' + folder + '/uploads' }).single('file');
+        var uploadFolder = folder + '/uploads';
+        var upload = multer({ dest: WWW + '/' + uploadFolder }).single('file');
         upload(req, res, function (err) {
             var newname = '_' + Math.round(Date.now() / 1000) + '_' + req.file.originalname;
             var file = req.file;
-            var newdestination = path.resolve(file.destination + '/' + newname);
-            fs.rename(file.path, newdestination, function (err) {
+            console.log(file);
+            var newpath = path.resolve(file.destination + '/' + newname);
+            fs.rename(file.path, newpath, function (err) {
                 if (err)
                     def.reject(err);
                 else {
                     delete file.fieldname;
                     delete file.destination;
                     var asset = new models_1.VOAsset(file);
-                    asset.path = newdestination;
                     asset.filename = newname;
+                    asset.path = uploadFolder + '/' + asset.filename;
                     def.resolve(asset);
                 }
             });
