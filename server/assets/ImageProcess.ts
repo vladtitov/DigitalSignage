@@ -6,7 +6,7 @@ import Q = require('q');
 import * as express from 'express';
 import {VOAsset} from "../../client/app/services/models";
 import {TableModel} from "../db/TableModel";
-import {UpdateResult} from "../db/dbDriver";
+import {UpdateResult, DBDriver} from "../db/dbDriver";
 
 declare var WWW:string;
 declare var SERVER:string;
@@ -17,22 +17,21 @@ var fs = require('fs');
 
 export class  ImageProcess {
 
-    tempFolder: string;
+  //  tempFolder: string;
 
     thumbSize: number = 128;
 
     constructor(private folder:string) {
-        this.tempFolder = SERVER + '/uploads/thumbnails/';
+     //   this.tempFolder = SERVER + '/uploads/thumbnails/';
     }
 
     makeThumbnail(asset:VOAsset): Q.Promise<any>{
 
-        // this.pathDest = this.tempFolder + filename;
-        // this.filename = filename;
-        var deferred: Q.Deferred<any> = Q.defer();
 
+        var def: Q.Deferred<any> = Q.defer();
+        var thumb:string = asset.path.replace('/userImages/','/thumbnails/');
 
-        Jimp.read(asset.path).then((image)=> {
+        Jimp.read(WWW+'/'+asset.path).then((image)=> {
             asset.width = image.bitmap.width;
             asset.height = image.bitmap.height;
 
@@ -41,7 +40,7 @@ export class  ImageProcess {
                 var p:any = isLandScape ? image.resize(Jimp.AUTO, this.thumbSize) :
                     image.resize(this.thumbSize, Jimp.AUTO);
             } catch (e) {
-                deferred.reject(e);
+                def.reject(e);
                 return;
             }
 
@@ -55,18 +54,24 @@ export class  ImageProcess {
             }
 
             // p.crop(x,y,this.thumbSize,this.thumbSize)
-            asset.thumb = this.folder+'thumbnails/'+asset.filename;
 
-            p.write(WWW+asset.thumb, (err) => {
-                if(err) deferred.reject(err);
-                else deferred.resolve(asset);
+
+            p.write(WWW+'/'+thumb, (err) => {
+                if(err){
+                    console.error(err);
+                    def.reject(err);
+                }
+                else{
+                    asset.thumb = thumb;
+                    def.resolve(asset);
+                }
             });
         }).catch(function (err) {
             console.error(err);
-            deferred.reject(err);
+            def.reject(err);
         });
 
-        return deferred.promise;
+        return def.promise;
     }
 
     processImage(asset) {
@@ -74,7 +79,7 @@ export class  ImageProcess {
         // console.log('details\n', details);
         this.makeThumbnail(asset).then( (asset:VOAsset)=> {
             console.log('ip.makeThumbnail done ');
-            var newPath:string = this.folder + 'userImages/'+asset.filename;
+            var newPath:string = this.folder + '/userImages/'+asset.filename;
             fs.rename(asset.path, WWW+newPath, (err)=> {
                 if(err) deferred.reject(err);
                 else{
@@ -88,15 +93,39 @@ export class  ImageProcess {
         return deferred.promise;
     }
 
-    insertInDB(asset:VOAsset): Q.Promise<any>  {
-        var deferred: Q.Deferred<any> = Q.defer();
-        var mytable: TableModel = new TableModel(this.folder, "assets");
+    processImage2(asset) {
+        var def: Q.Deferred<any> = Q.defer();
+    // console.log('processImage2', asset);
+        var newPath:string = this.folder + '/userImages/'+asset.filename;
 
-        var promise = mytable.insertContent(asset);
-        promise.then(function (result: UpdateResult) {
-            deferred.resolve(result);
-            // onSuccess(out, res);
-        }, (err)=> {deferred.reject(err)});
-        return deferred.promise;
+
+            fs.rename(asset.path,path.resolve(WWW+'/'+newPath), (err)=> {
+                if(err){
+                    console.log(err);
+                    def.reject(err);
+                }
+                else{
+
+                    asset.path = newPath;
+                    this.makeThumbnail(asset).then(
+
+                        (asset:VOAsset)=> {
+                           // console.log('processImage23', asset);
+                                this.insertInDB(asset).then(
+                                    res=> def.resolve(res)
+                                    ,(err)=> {def.reject(err)});
+
+                    }, (err)=> {def.reject(err)});
+                }
+            });
+
+        return def.promise;
+    }
+
+
+    insertInDB(asset:VOAsset): Q.Promise<any>  {
+
+        var db:DBDriver = new DBDriver(this.folder);
+        return db.insertRow(asset,'assets');
     };
 }

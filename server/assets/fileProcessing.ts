@@ -26,8 +26,8 @@ var multer = require('multer');
 
 export class FileProcessing {
 
-    fileReq: IFileReq;
-    filesReq: IFileReq[];
+   // fileReq: IFileReq;
+   // filesReq: IFileReq[];
 
     constructor(private folder:string) { }
 
@@ -62,13 +62,13 @@ export class FileProcessing {
                 deferred.reject(err);
             } else {
                 var asset: VOAsset = new VOAsset({});
-                asset.original_name = req.file.originalname;
+                asset.originalname = req.file.originalname;
                 asset.size = req.file.size;
                 asset.path = req.file.path;
-                asset.mime = req.file.mimetype;
+                asset.mimetype = req.file.mimetype;
                 asset.filename = req.file.filename;
 
-                var ext = asset.original_name.substr(asset.original_name.length - 3);
+                var ext = asset.originalname.substr(asset.originalname.length - 3);
                 if(ext === 'jpg' || ext === 'peg' || ext === 'png'){
                     asset.type = 'image';
                 } else if (ext === 'mov' || ext === 'avi') {
@@ -92,6 +92,35 @@ export class FileProcessing {
         return deferred.promise;
     }
 
+    uploadFile2(req:express.Request, res:express.Response,folder:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+
+        var upload:express.RequestHandler = multer({ dest: WWW+'/'+folder+'/uploads'}).single('file');
+
+        upload(req,res,(err)=>{
+            var newname:string = '_'+Math.round(Date.now()/1000)+'_'+req.file.originalname;
+            var file = req.file;
+
+            var newdestination:string =  path.resolve(file.destination+'/'+newname);
+
+
+            fs.rename(file.path,newdestination,(err)=>{
+                if(err)def.reject(err);
+                else{
+                    delete file.fieldname;
+                    delete file.destination;
+                    var asset:VOAsset = new VOAsset(file);
+                    asset.path = newdestination;
+                    asset.filename = newname;
+
+                    def.resolve(asset);
+                }
+            })
+
+        })
+
+        return def.promise;
+    }
     deleteFile(thumbnailPath:string, originaImagePath:string) {
         var deferred: Q.Deferred<any> = Q.defer();
 

@@ -3,8 +3,6 @@ var VOAsset = (function () {
     function VOAsset(obj) {
         for (var str in obj)
             this[str] = obj[str];
-        if (!this.label)
-            this.label = this.original_name;
     }
     return VOAsset;
 }());

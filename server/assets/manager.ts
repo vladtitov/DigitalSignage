@@ -147,7 +147,7 @@ router.post('/save-asset', function (req:express.Request, res:express.Response) 
     var mytable: TableModel = new TableModel(folder,"assets");
     // console.log('data ', data);
 
-    if(!data.mime){
+    if(!data.mimetype){
         res.json({error:"mime not found"});
         return;
     }
@@ -330,17 +330,32 @@ router.delete('/byid/:id', function (request:express.Request, response:express.R
 
 router.post('/upload', function(req:express.Request,response:express.Response) {
     var folder:string = req.session['user_folder'];
+    var token:string = req.session['user_token'];
+
     var fp:FileProcessing = new FileProcessing(folder);
 
-    fp.uploadFile(req, response).then(function (asset:VOAsset) {//, fileType:string
+
+    fp.uploadFile2(req, response,folder).then(function (asset:VOAsset) {//, fileType:string
+
+        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
+        if(ext === 'jpg' || ext === 'peg' || ext === 'png'){
+            asset.type = 'image';
+        } else if (ext === 'ime' || ext === 'avi') {
+            asset.type = 'video';
+        }else{
+            response.status(400);
+            response.json({error:'Unknown type '+asset.mimetype})
+        }
+
+        console.log(asset)
         if(asset.type === 'image'){
+
             var ip:ImageProcess = new ImageProcess(folder);
-            ip.processImage(asset).then(function (res) {
-                response.json({data:res});
-            }, function (err) {
-                console.error(err);
-                response.json({error: err});
-            });
+            ip.processImage2(asset).then(
+                res=>  response.json({data:res})
+                ,err=> response.json({error: err})
+            );
+
         } else if(asset.type === 'video'){
             response.json({data:'success'});
             var vp:VideoProcess = new VideoProcess(folder);
