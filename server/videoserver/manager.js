@@ -10,12 +10,17 @@ router.get('/get-new-file', function (request, response) {
 router.post('/ready', function (request, response) {
     var asset = new models_1.VOAsset(request.body);
     delete asset.workingFolder;
+    var token = asset.token;
+    delete asset.token;
+    asset.path = asset.folder + '/' + asset.filename;
+    asset.status = 'processed';
     console.log(asset);
     var man = new VideoManager_1.VideoManager();
-    man.registerReady(asset).done(function (asset2) {
-        man.downloadFiles(asset2, asset2.folder).done(function (res) {
-            asset2.status = 'ready';
-            man.finalize(asset2, asset2.folder).done(function (res) { return response.json({ data: asset2 }); }, function (err) { return response.json({ error: err }); });
+    man.registerProcessed(asset).done(function (folder) {
+        asset.folder = folder;
+        man.downloadFiles(asset, folder).done(function (res) {
+            asset.status = 'ready';
+            man.finalize(asset, folder).done(function (res) { return response.json({ data: asset }); }, function (err) { return response.json({ error: err }); });
         }, function (err) { return response.json({ error: err }); });
     }, function (err) { return response.json({ error: err }); });
 });

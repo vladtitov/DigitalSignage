@@ -53,20 +53,30 @@ export class FileDownloader{
 
 export  class VideoManager{
 
+    folder:string;
 
     downloadFiles(asset:VOAsset,folder:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
 
 
-        folder+='/userVideos';
+       folder+='/userVideos';
+        var thumbs:string[] = asset.thumb.split(',');
 
         var down:FileDownloader = new FileDownloader(asset.folder+'/'+asset.filename,folder,asset.filename);
         down.onComplete=(err)=>{
             if(err)def.reject(err);
-            else def.resolve(asset)
+            else {
+                asset.path = folder+'/'+asset.filename;
+                var ar = thumbs.map(function (item) {
+                    return folder +'/'+item;
+                })
+                asset.thumb= ar.join(',');
+                def.resolve(asset)
+            }
         }
         down.getFile();
-        var thumbs:string[] = asset.thumb.split(',');
+
+
         thumbs.forEach((filename:string)=>{
             var d:FileDownloader = new FileDownloader(asset.folder+'/'+filename,folder,filename);
             d.getFile();
@@ -78,7 +88,7 @@ export  class VideoManager{
     }
 
 
-    updateDatabases(asset:VOAsset,folder:string): Q.Promise<any>{
+  /*  updateDatabases(asset:VOAsset,folder:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
         var db2:DBDriver = new DBDriver(folder);
@@ -92,6 +102,7 @@ export  class VideoManager{
                 asset2.process_id = asset.id;
                 delete asset2.id;
                 delete asset2.token;
+
                 db2.updateRowByColumn(asset2,'process_id','assets').done(
                res=> def.resolve(res)
                 ,err=>def.reject(err)
@@ -103,22 +114,67 @@ export  class VideoManager{
 
         return def.promise;
     }
+*/
 
+  updateStatus(asset:VOAsset,folder:string):Q.Promise<any>{
+      var def: Q.Deferred<any> = Q.defer();
+
+      var db:DBDriver = new DBDriver(null);
+      db.updateRow({id:asset.id,status:asset.status},'process').done(
+          res=>{
+              var db2:DBDriver = new DBDriver(folder);
+              db2.updateRowByColumn({process_id:asset.id,status:asset.status},'process_id','assets').done(
+                  res=>def.resolve(asset)
+                  ,err=>def.reject(err)
+              )
+          }
+          ,err=>def.reject(err)
+      )
+
+
+      return def.promise;
+  }
     finalize(asset:VOAsset,folder:string): Q.Promise<any>{
-        var asset2:VOAsset = new VOAsset({id:asset.id,status:asset.status});
-        return this.updateDatabases(asset2,folder)
+        var def: Q.Deferred<any> = Q.defer();
+
+        this.saveAssetData(asset,folder).done(
+           res=> this.updateStatus(asset,folder).done(
+               res=>def.resolve(asset)
+               ,err=>def.reject(err)
+           )
+            ,err=>def.reject(err)
+        )
+        ///TODO clenup db and drive
+
+
+        return def.promise;
     }
 
-    registerReady(asset:VOAsset): Q.Promise<any>{
+    saveAssetData(asset:VOAsset,folder:string): Q.Promise<any>{
+        var db2:DBDriver = new DBDriver(folder);
+        asset.process_id = asset.id;
+        return  db2.updateRowByColumn(new VOAsset(asset),'process_id','assets')
+    }
+
+
+    registerProcessed(asset:VOAsset): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
-        db.selectById(asset.id,'process').done(
+
+        db.selectById(asset.id,'process').done( ///need select to confirm folder for security reason
             row =>{
                if(row){
-                   this.updateDatabases(asset,row.folder).done(
-                       res=>def.resolve(asset)
+                   var folder:string = row.folder;
+                   this.updateStatus(asset,folder).done(
+                       res=>def.resolve(folder)
                        ,err=>def.reject(err)
                    )
+                  /* db.updateRow({id:asset.id,status:asset.status},'process');
+
+                   this.saveAssetData(asset,folder).done(
+                       res=>def.resolve(asset)
+                       ,err=>def.reject(err)
+                   )*/
 
                }else def.reject('notexists')
             }
@@ -128,10 +184,14 @@ export  class VideoManager{
 
         return def.promise;
     }
+
+
+
+
     getNextVideo(): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
-        var sql:string = 'SELECT * FROM process';
+        var sql:string = "SELECT * FROM process WHERE status='newvideo'";
 
         db.queryAll(sql).done(
             res=>{
@@ -143,6 +203,9 @@ export  class VideoManager{
                         out = asset
                         break
                     }else db.deleteById(asset.id,'process');
+                }
+                if(out){
+                    db.updateRow({id:out.id,status:'requested'},'process')
                 }
                 def.resolve(out);
             }

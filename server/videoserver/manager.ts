@@ -26,16 +26,27 @@ router.get('/get-new-file', function(request:express.Request, response:express.R
 router.post('/ready', function(request:express.Request, response:express.Response){
     var asset:VOAsset = new VOAsset(request.body);
     delete  asset.workingFolder;
+    var token:string = asset.token;
+    delete asset.token;
+
+    asset.path = asset.folder+'/'+asset.filename;
+
+    asset.status='processed';
     console.log(asset);
     var man:VideoManager = new VideoManager();
-    man.registerReady(asset).done(
-        asset2=>{
+
+
+
+    man.registerProcessed(asset).done(
+        folder=>{
+            asset.folder = folder;
             //console.log(asset2);
-            man.downloadFiles(asset2,asset2.folder).done(
+
+            man.downloadFiles(asset,folder).done(
                 res=>{
-                    asset2.status='ready';
-                    man.finalize(asset2,asset2.folder).done(
-                    res=>response.json({data:asset2})
+                    asset.status='ready';
+                    man.finalize(asset,folder).done(
+                    res=>response.json({data:asset})
                     ,err=>response.json({error:err})
                 )
                 }

@@ -43,47 +43,55 @@ var VideoManager = (function () {
     VideoManager.prototype.downloadFiles = function (asset, folder) {
         var def = Q.defer();
         folder += '/userVideos';
+        var thumbs = asset.thumb.split(',');
         var down = new FileDownloader(asset.folder + '/' + asset.filename, folder, asset.filename);
         down.onComplete = function (err) {
             if (err)
                 def.reject(err);
-            else
+            else {
+                asset.path = folder + '/' + asset.filename;
+                var ar = thumbs.map(function (item) {
+                    return folder + '/' + item;
+                });
+                asset.thumb = ar.join(',');
                 def.resolve(asset);
+            }
         };
         down.getFile();
-        var thumbs = asset.thumb.split(',');
         thumbs.forEach(function (filename) {
             var d = new FileDownloader(asset.folder + '/' + filename, folder, filename);
             d.getFile();
         });
         return def.promise;
     };
-    VideoManager.prototype.updateDatabases = function (asset, folder) {
+    VideoManager.prototype.updateStatus = function (asset, folder) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
-        var db2 = new dbDriver_1.DBDriver(folder);
-        console.log('  updateDatabases  folder   ' + folder);
         db.updateRow({ id: asset.id, status: asset.status }, 'process').done(function (res) {
-            console.log(res);
-            var asset2 = new models_1.VOAsset(asset);
-            asset2.process_id = asset.id;
-            delete asset2.id;
-            delete asset2.token;
-            db2.updateRowByColumn(asset2, 'process_id', 'assets').done(function (res) { return def.resolve(res); }, function (err) { return def.reject(err); });
+            var db2 = new dbDriver_1.DBDriver(folder);
+            db2.updateRowByColumn({ process_id: asset.id, status: asset.status }, 'process_id', 'assets').done(function (res) { return def.resolve(asset); }, function (err) { return def.reject(err); });
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
     VideoManager.prototype.finalize = function (asset, folder) {
-        var asset2 = new models_1.VOAsset({ id: asset.id, status: asset.status });
-        return this.updateDatabases(asset2, folder);
+        var _this = this;
+        var def = Q.defer();
+        this.saveAssetData(asset, folder).done(function (res) { return _this.updateStatus(asset, folder).done(function (res) { return def.resolve(asset); }, function (err) { return def.reject(err); }); }, function (err) { return def.reject(err); });
+        return def.promise;
     };
-    VideoManager.prototype.registerReady = function (asset) {
+    VideoManager.prototype.saveAssetData = function (asset, folder) {
+        var db2 = new dbDriver_1.DBDriver(folder);
+        asset.process_id = asset.id;
+        return db2.updateRowByColumn(new models_1.VOAsset(asset), 'process_id', 'assets');
+    };
+    VideoManager.prototype.registerProcessed = function (asset) {
         var _this = this;
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         db.selectById(asset.id, 'process').done(function (row) {
             if (row) {
-                _this.updateDatabases(asset, row.folder).done(function (res) { return def.resolve(asset); }, function (err) { return def.reject(err); });
+                var folder = row.folder;
+                _this.updateStatus(asset, folder).done(function (res) { return def.resolve(folder); }, function (err) { return def.reject(err); });
             }
             else
                 def.reject('notexists');
@@ -93,7 +101,7 @@ var VideoManager = (function () {
     VideoManager.prototype.getNextVideo = function () {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
-        var sql = 'SELECT * FROM process';
+        var sql = "SELECT * FROM process WHERE status='newvideo'";
         db.queryAll(sql).done(function (res) {
             var out;
             for (var i = 0, n = res.length; i < n; i++) {
@@ -104,6 +112,9 @@ var VideoManager = (function () {
                 }
                 else
                     db.deleteById(asset.id, 'process');
+            }
+            if (out) {
+                db.updateRow({ id: out.id, status: 'requested' }, 'process');
             }
             def.resolve(out);
         }, function (err) { return def.reject(err); });

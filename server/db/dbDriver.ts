@@ -248,6 +248,7 @@ export class DBDriver {
     }
     updateRowByColumn(row:any,column:string,table:string): Q.Promise<UpdateResult>{
         var id = Number(row[column]);
+        delete row.id;
         if(isNaN(id)){
             var d:Q.Deferred<any> = Q.defer();
             d.reject(row[column])

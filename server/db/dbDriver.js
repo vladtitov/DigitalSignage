@@ -208,6 +208,7 @@ var DBDriver = (function () {
     };
     DBDriver.prototype.updateRowByColumn = function (row, column, table) {
         var id = Number(row[column]);
+        delete row.id;
         if (isNaN(id)) {
             var d = Q.defer();
             d.reject(row[column]);
