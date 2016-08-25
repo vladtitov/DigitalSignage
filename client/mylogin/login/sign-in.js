@@ -37,6 +37,7 @@ var SignIn = (function () {
         console.log('onSubmit ', value);
         this.loginService.loginServer(value).subscribe(function (res) {
             console.log('onSubmit res', res);
+            _this.router.navigate(["./content-manager", 'view', 0]);
         }, function (err) {
             console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;

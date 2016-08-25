@@ -75,6 +75,13 @@ app.get('/', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
 });
 
+app.get('/loginHello', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+});
+app.get('/loginHello/*', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+});
+
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
@@ -150,8 +157,8 @@ app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
 
     if(!folder){
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser')
-        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
+        console.log(' user not loged in go to /clientAssets/folder_template_dev')
+        req.session['user_folder'] = 'clientAssets/folder_template_dev';
     }
     next();
 });

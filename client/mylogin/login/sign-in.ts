@@ -98,6 +98,7 @@ export class SignIn{
 
         this.loginService.loginServer(value).subscribe((res)=>{
             console.log('onSubmit res', res);
+            this.router.navigate(["./content-manager",'view',0]);
         }, (err)=>{
             console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
