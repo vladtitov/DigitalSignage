@@ -3,8 +3,8 @@ var Q = require('q');
 var TableModel_1 = require("../db/TableModel");
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(SERVER + "/ffmpeg/bin/ffmpeg.exe");
-ffmpeg.setFfprobePath(SERVER + "/ffmpeg/bin/ffprobe.exe");
+ffmpeg.setFfmpegPath(ROOT + "/ffmpeg_win64/bin/ffmpeg.exe");
+ffmpeg.setFfprobePath(ROOT + "/ffmpeg_win_64/bin/ffprobe.exe");
 var VideoProcess = (function () {
     function VideoProcess(folder) {
         this.folder = folder;

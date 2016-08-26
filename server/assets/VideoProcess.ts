@@ -8,11 +8,13 @@ import {TableModel} from "../db/TableModel";
 
 declare var WWW:string;
 declare var SERVER:string;
+declare var ROOT:string;
 
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(SERVER + "/ffmpeg/bin/ffmpeg.exe");
-ffmpeg.setFfprobePath(SERVER + "/ffmpeg/bin/ffprobe.exe");
+
+ffmpeg.setFfmpegPath(ROOT + "/ffmpeg_win64/bin/ffmpeg.exe");
+ffmpeg.setFfprobePath(ROOT + "/ffmpeg_win_64/bin/ffprobe.exe");
 
 export class  VideoProcess {
 
