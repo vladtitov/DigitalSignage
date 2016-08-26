@@ -12,11 +12,24 @@ declare var WWW:string;
 
 const router = express.Router();
 
-
-router.get('/get-new-file', function(request:express.Request, response:express.Response){
-
+router.get('/get-status/:id', function(request:express.Request, response:express.Response){
+    var id:number = Number(request.params.id);
+    if(isNaN(id)){
+        response.json({error:request.params.id});
+        return
+    }
     var man:VideoManager = new VideoManager()
-    man.getNextVideo().done(
+    man.getStatus(id).done(
+        res=>response.json({data:res})
+        ,err=>response.json({error:err})
+    )
+});
+
+router.get('/get-new-file/:status', function(request:express.Request, response:express.Response){
+
+    var status:string = request.params.status;
+    var man:VideoManager = new VideoManager()
+    man.getNextVideo(status).done(
         res=>response.json({data:res})
         ,err=>response.json({error:err})
     )

@@ -49,6 +49,19 @@ var DBDriver = (function () {
         });
         return deferred.promise;
     };
+    DBDriver.prototype.selectColumsById = function (id, columns, table) {
+        var def = Q.defer();
+        var sql = 'SELECT ' + columns + ' FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().get(sql, function (error, row) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve(row);
+            }
+        });
+        return def.promise;
+    };
     DBDriver.prototype.selectById = function (id, table) {
         var def = Q.defer();
         var sql = 'SELECT * FROM ' + table + ' WHERE id=' + Number(id);
@@ -305,4 +318,3 @@ var DBDriver = (function () {
     return DBDriver;
 }());
 exports.DBDriver = DBDriver;
-//# sourceMappingURL=dbDriver.js.map

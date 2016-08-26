@@ -64,6 +64,10 @@ var VideoManager = (function () {
         });
         return def.promise;
     };
+    VideoManager.prototype.getStatus = function (id) {
+        var db = new dbDriver_1.DBDriver(null);
+        return db.selectColumsById(id, 'status', 'process');
+    };
     VideoManager.prototype.updateStatus = function (asset, folder) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
@@ -98,11 +102,11 @@ var VideoManager = (function () {
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
-    VideoManager.prototype.getNextVideo = function () {
+    VideoManager.prototype.getNextVideo = function (status) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
-        var sql = "SELECT * FROM process WHERE status='newvideo'";
-        db.queryAll(sql).done(function (res) {
+        var sql = 'SELECT * FROM process WHERE status=?';
+        db.selectAll(sql, [status]).done(function (res) {
             var out;
             for (var i = 0, n = res.length; i < n; i++) {
                 var asset = res[i];
@@ -116,7 +120,7 @@ var VideoManager = (function () {
             if (out) {
                 db.updateRow({ id: out.id, status: 'requested' }, 'process');
             }
-            def.resolve(out);
+            def.resolve(out || {});
         }, function (err) { return def.reject(err); });
         return def.promise;
     };

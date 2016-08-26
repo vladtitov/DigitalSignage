@@ -69,6 +69,20 @@ export class DBDriver {
         return deferred.promise;
     }
 
+    selectColumsById(id:number,columns:string,table:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'SELECT '+columns+' FROM '+table+' WHERE id='+Number(id);
+        this.getdb().get(sql, function(error,row) {
+            if (error) {
+                def.reject(error);
+            } else {
+                def.resolve(row);
+            }
+        });
+
+        return def.promise;
+
+    }
     selectById(id:number,table:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
         var sql:string =  'SELECT * FROM '+table+' WHERE id='+Number(id);

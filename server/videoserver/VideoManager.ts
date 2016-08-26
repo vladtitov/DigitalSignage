@@ -116,6 +116,11 @@ export  class VideoManager{
     }
 */
 
+
+  getStatus(id:number):Q.Promise<any>{
+      var db:DBDriver = new DBDriver(null);
+      return db.selectColumsById(id,'status','process');
+    }
   updateStatus(asset:VOAsset,folder:string):Q.Promise<any>{
       var def: Q.Deferred<any> = Q.defer();
 
@@ -188,12 +193,12 @@ export  class VideoManager{
 
 
 
-    getNextVideo(): Q.Promise<any>{
+
+    getNextVideo(status:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
-        var sql:string = "SELECT * FROM process WHERE status='newvideo'";
-
-        db.queryAll(sql).done(
+        var sql:string = 'SELECT * FROM process WHERE status=?';
+        db.selectAll(sql,[status]).done(
             res=>{
                 var out:VOAsset;
                 for(var i=0,n= res.length;i<n;i++){
@@ -207,7 +212,7 @@ export  class VideoManager{
                 if(out){
                     db.updateRow({id:out.id,status:'requested'},'process')
                 }
-                def.resolve(out);
+                def.resolve(out|| {});
             }
             ,err=>def.reject(err)
         )
