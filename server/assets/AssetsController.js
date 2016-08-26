@@ -25,4 +25,3 @@ var AssetsController = (function () {
     return AssetsController;
 }());
 exports.AssetsController = AssetsController;
-//# sourceMappingURL=AssetsController.js.map
