@@ -52,9 +52,7 @@ app.use(session({
 var cmd='reload';
 app.get('/reload/:timestamp', function(req:express.Request, res:express.Response){
         res.send(cmd);
-
     cmd='hehe';
-
 })
 
 app.post('/debug', function(req:express.Request, res:express.Response){

@@ -2,3 +2,6 @@
 node_modules/
 /client/node_modules/
 /.idea
+/videos/
+/client/clientAssets/folder_hbrowser/uploads/
+/client/clientAssets/folder_hbrowser/

@@ -13,3 +13,5 @@
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="sqlite3/sqlite3.d.ts" />
 /// <reference path="fs-extra/fs-extra.d.ts" />
+/// <reference path="form-data/form-data.d.ts" />
+/// <reference path="request/request.d.ts" />

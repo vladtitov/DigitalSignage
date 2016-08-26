@@ -4,6 +4,7 @@ export class VOAsset {
     active: number;
     label:string;
     duration: number;
+    status:string;
     height:number;
     mimetype:string;
     dimension:string;
@@ -11,12 +12,18 @@ export class VOAsset {
     filename:string;
     selected:boolean;
     path:string;
+    destination:string;
+    workingFolder:string;
+    token:string;
+    folder:string;
     size:number;
     thumb:string;
     width:number;
     type:string;
     metadata:string;
     description:string;
+    process_id:number;
+    timestamp:number;
     usedPlayList:VOPlayListProps[];
     constructor(obj:any) {
         for (var str in obj) this[str] = obj[str];
