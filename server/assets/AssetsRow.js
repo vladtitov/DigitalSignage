@@ -28,3 +28,4 @@ var AssetRow = (function () {
     return AssetRow;
 }());
 exports.AssetRow = AssetRow;
+//# sourceMappingURL=AssetsRow.js.map

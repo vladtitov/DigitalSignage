@@ -17,3 +17,4 @@ app.listen(port, function () {
 });
 var manager = new MyVideos_1.MyVideos();
 manager.getNewVideo();
+//# sourceMappingURL=server.js.map

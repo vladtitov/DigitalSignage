@@ -1,8 +1,10 @@
 /// <reference path="../../typings/express/express.d.ts" />
+///<reference path="../../typings/express-session/express-session.d.ts"/>
+
 
 import * as express from 'express';
-import Request = Express.Request;
-import Response = Express.Response;
+//import Request = Express.Request;
+//import Response = Express.Response;
 import Q = require('q');
 // import mytablePI = require("../db/TableModel");
 
@@ -53,18 +55,6 @@ var fs = require('fs');
 //     thumbPath: string;  // path to thumbnail
 //     imagePath: string;  // path to original image
 // }
-
-class ISResult {
-    // success: string = "success";
-    constructor(public data: any) {}
-}
-
-var onSuccess = function (result: any, res:express.Response) {
-    console.log('onSuccess result\n', result);
-    // res.json({success:'success', result: result});
-    // result.success = "success";
-    res.json(new ISResult(result));
-};
 
 /**
  * @api {get} api/assets/select-all Get All Assets
@@ -349,7 +339,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
             response.json({error:'Unknown type '+asset.mimetype})
         }
 
-        console.log(asset)
+      ///  console.log(asset)
         if(asset.type === 'image'){
 
             var ip:ImageProcess = new ImageProcess(folder);
@@ -368,7 +358,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
                 response.json({error: err});
             });
         }
-        console.log('result uploadFile done\n');
+        console.log('uploadFile done');
         // console.log('asset\n', asset);
     }, function (error) {
         console.error(error);

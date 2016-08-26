@@ -8,16 +8,6 @@ var models_1 = require("../../client/app/services/models");
 var AssetsController_1 = require("./AssetsController");
 var router = express.Router();
 var fs = require('fs');
-var ISResult = (function () {
-    function ISResult(data) {
-        this.data = data;
-    }
-    return ISResult;
-}());
-var onSuccess = function (result, res) {
-    console.log('onSuccess result\n', result);
-    res.json(new ISResult(result));
-};
 router.get('/select-all', function (req, res) {
     var folder = req.session['user_folder'];
     var mytable = new TableModel_1.TableModel(folder, "assets");
@@ -145,7 +135,6 @@ router.post('/upload', function (req, response) {
             response.status(400);
             response.json({ error: 'Unknown type ' + asset.mimetype });
         }
-        console.log(asset);
         if (asset.type === 'image') {
             var ip = new ImageProcess_1.ImageProcess(folder);
             ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
@@ -159,7 +148,7 @@ router.post('/upload', function (req, response) {
                 response.json({ error: err });
             });
         }
-        console.log('result uploadFile done\n');
+        console.log('uploadFile done');
     }, function (error) {
         console.error(error);
         response.json({ error: error });
