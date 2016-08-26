@@ -11,15 +11,16 @@ declare var WWW:string;
 declare var SERVER:string;
 
 var fs = require('fs');
-var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(path.resolve(SERVER + "/ffmpeg/bin/ffmpeg.exe"));
-ffmpeg.setFfprobePath(path.resolve(SERVER+"/ffmpeg/bin/ffprobe.exe"));
+//var ffmpeg = require('fluent-ffmpeg');
+//ffmpeg.setFfmpegPath(path.resolve(SERVER + "/ffmpeg/bin/ffmpeg.exe"));
+//ffmpeg.setFfprobePath(path.resolve(SERVER+"/ffmpeg/bin/ffprobe.exe"));
 
 export class  VideoProcess {
 
     metadata: {};
 
     constructor(private folder:string) {}
+/*
 
     makeThumbnails(asset:VOAsset): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
@@ -129,16 +130,17 @@ export class  VideoProcess {
                 this.makeThumbnails(asset).then( (asset:VOAsset)=> {
                     deferred.resolve(asset);
                     // console.log('vp.makeThumbnail done ', asset);
-                  /*  this.insertInDB(asset).then(function (result:UpdateResult) {
+                  /!*  this.insertInDB(asset).then(function (result:UpdateResult) {
                         deferred.resolve(result);
                     }, (err)=> {deferred.reject(err)});
-*/
+*!/
                 }, (err)=> {deferred.reject(err)});
             }, (err)=> {deferred.reject(err)});
         }, (err)=> {deferred.reject(err)});
         // console.log('processVideo');
         return deferred.promise;
     };
+*/
 
 
     saveInDatabase(asset:VOAsset): Q.Promise<any> {

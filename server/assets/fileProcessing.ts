@@ -31,7 +31,7 @@ export class FileProcessing {
 
     constructor(private folder:string) { }
 
-    uploadFile(req:express.Request, res:express.Response): Q.Promise<any> {
+   /* uploadFile(req:express.Request, res:express.Response): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
 
         var storage = multer.diskStorage({
@@ -90,7 +90,7 @@ export class FileProcessing {
         });
 
         return deferred.promise;
-    }
+    }*/
 
     uploadFile2(req:express.Request, res:express.Response,folder:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
