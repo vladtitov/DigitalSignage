@@ -16,6 +16,8 @@ import {SignIn} from "./login/sign-in";
 import {NewUser} from "./login/new-user";
 import {ResetPassword} from "./login/reset-password";
 import {LoginService} from "./login/login-service";
+import {NgTooltip} from "../app/shared/ng-tooltip";
+import {ChangePassword} from "./login/change-password";
 
 // import {DeviceEditor} from "./device/device-editor";
 // import {DevicesList} from "./device/devices-list";
@@ -40,8 +42,8 @@ import {LoginService} from "./login/login-service";
         LoginManager,
         SignIn,
         NewUser,
-        ResetPassword
-
+        ResetPassword,
+        ChangePassword
        // AppComponent,
      //   LoginComponent
     ],

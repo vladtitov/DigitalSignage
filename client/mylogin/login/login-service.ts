@@ -15,11 +15,13 @@ export class LoginService {
     private dataUrl = 'account/';
     private loginUrl ='login';
     private createUrl ='new-user-player';
+    private resetPassUrl = 'reset-password';
+    private changePassUrl = 'change-password';
 
     loginServer(data:any){
 
         let body = JSON.stringify(data);
-        console.log('body ', body);
+        // console.log('body ', body);
         let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
         let options = new RequestOptions({ headers: headers });
 
@@ -31,11 +33,35 @@ export class LoginService {
     createAccount(data:any){
 
         let body = JSON.stringify(data);
-        console.log('body ', body);
+        // console.log('body ', body);
         let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post(this.dataUrl+this.createUrl, body, options)
+            .map(this.parseOne)
+            .catch(this.handleError);
+    }
+
+    resetPassword(data:any){
+
+        let body = JSON.stringify(data);
+        // console.log('body ', body);
+        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.dataUrl+this.resetPassUrl, body, options)
+            .map(this.parseOne)
+            .catch(this.handleError);
+    }
+
+    changePassword(data:any){
+
+        let body = JSON.stringify(data);
+        // console.log('body ', body);
+        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.dataUrl+this.changePassUrl, body, options)
             .map(this.parseOne)
             .catch(this.handleError);
     }

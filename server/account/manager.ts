@@ -8,22 +8,29 @@ import {User} from "./User";
 import {error} from "util";
 import {RUsers} from "../db/dbmodels";
 
-
 const router = express.Router();
 
 router.get('/login/:token',function (request:express.Request, response:express.Response) {
     var folder:string = request.session['user_folder'];
-    if(!folder){
-        var token = request.params.token;
-        if(!token){
-            response.json({error:'token'});
-            return
-        }
+    console.log('folder ', folder);
 
-        var ctr:User = new User();
-        ctr.getUserByToken(token).done(
-            (user)=> {
-                var out: any = {};
+    if(folder){
+        response.json({error:'logoutfirst'});
+        return;
+    }
+
+    var token = request.params.token;
+    if(!token){
+        response.json({error:'token'});
+        return;
+    }
+
+    var ctr:User = new User();
+    ctr.getUserByToken(token).done(
+        (user)=> {
+            console.log('user ', user);
+            if(user) {
+                var out:any = {};
                 out.result = 'logedin';
                 out.token = user.token;
                 out.sid = user.sid;
@@ -33,21 +40,21 @@ router.get('/login/:token',function (request:express.Request, response:express.R
                 request.session['user_role'] = user.role;
                 request.session['user_ID'] = user.id;
                 request.session.save(err=> {
-                    if(err)response.json({error:err});
+                    if (err)response.json({error: err});
                     else {
-                        console.log('User loggedin ',out);
-                        response.json({data:out});
+                        console.log('User loggedin ', out);
+                        response.json({data: out});
                     }
                 })
-            }
-            ,error=>response.json({error:error})
-        )
-    } response.json({error:'logoutfirst'});
-
+            } else response.json({error:'wrong user'});
+        }
+        ,error=>response.json({error:error})
+    )
 });
 
 router.get('/logout',function (request:express.Request, response:express.Response) {
-    request.session['user_folder'] = 'folder_dev';
+    // request.session['user_folder'] = 'folder_template_dev';
+    console.log('user_folder', request.session['user_folder']);
     request.session.destroy((err)=>{
         if(err)response.json({err:err})
         else response.json({data:'logoutsuccess'});
@@ -57,40 +64,105 @@ router.get('/logout',function (request:express.Request, response:express.Respons
 router.post('/login', function (request:express.Request, response:express.Response) {
     var body:any=request.body;
     var  sid = request.session['id'];
-
-    console.log('login body', body);
-
     var ip:string =  request.connection.remoteAddress;
     var password = body.password;
-    console.log('password ', password);
-    if(password && password.length>5){
-        var ctr:User = new User();
-        ctr.login(body.username,body.password,sid,ip).done(
-            (user)=> {
-                var out: any = {};
-                out.result = 'logedin';
-                out.token = user.token;
-                out.sid = user.sid;
-                out.namesp = user.folder;
-                out.role = user.role;
-                request.session['user_folder'] = user.folder;
-                request.session['user_role'] = user.role;
-                request.session['user_ID'] = user.id;
-                request.session.save(err=> {
-                    if(err)response.json({error:err});
-                    else {
-                        console.log('User loggedin ',out);
-                        response.json({data:out});
-                    }
-                })
-            }
-            ,error=>response.json({error:error})
+    var username = body.username;
 
-        )
+    console.log('sid: ', sid);
+    console.log('login body', body);
 
+    if(!username || !password || password.length<6){
+        response.json({error:'reqired'});
+        return;
+    }
 
-    }else  response.json({error:'reqired'})
-})
+    var ctr:User = new User();
+    ctr.login(body.username,body.password,sid,ip).done(
+        (user)=> {
+            var out: any = {};
+            out.result = 'logedin';
+            out.namesp = user.folder;
+            out.token = user.token;
+            out.sid = user.sid;
+            out.role = user.role;
+            console.log('out ', out);
+            request.session['user_folder'] = user.folder;
+            request.session['user_role'] = user.role;
+            request.session['user_ID'] = user.id;
+            console.log('session: ', request.session);
+            request.session.save(err=> {
+                if(err)response.json({error:err});
+                else {
+                    console.log('User  loggedin ',out);
+                    response.json({data:out});
+                }
+            })
+        }
+        ,error=>{console.log('error user', error);response.json({error:error})}
+
+    );
+
+    // if(password && password.length>5){
+    // }else  response.json({error:'reqired'})
+});
+
+router.post('/reset-password', function (request:express.Request, response:express.Response) {
+    var body:any=request.body;
+    var username = body.username;
+
+    // console.log('reset-password', username);
+
+    if(!username){
+        response.json({error:'reqired'});
+        return;
+    }
+
+    var user:User = new User();
+
+    user.resetPass(username).done(
+        (sended)=>{
+            // console.log('sended ', sended);
+            response.json({data:sended});
+        }
+        ,error=>response.json({error:error})
+    );
+
+    // if(password && password.length>5){
+    // }else  response.json({error:'reqired'})
+});
+
+router.post('/change-password', function (request:express.Request, response:express.Response) {
+    var body:any=request.body;
+    // var username = body.username;
+    var password = body.password;
+    var token = body.token;
+
+    // console.log('change-password', username);
+
+    if(!token || !password){
+        response.json({error:'reqired'});
+        return;
+    }
+
+    var user:User = new User();
+
+    // user.updateUserPassByToken(password, token).done(
+    user.getUserByToken(token).done(
+        (res:RUsers)=>{
+            if(res){
+                // console.log('res ', res);
+                user.updateUserPass(res.id, password).done(
+                    final => response.json({data:final.changes})
+                    ,error=>response.json({error:error})
+                )
+            } else response.json({error:error});
+        }
+        ,error=>response.json({error:error})
+    )
+
+    // if(password && password.length>5){
+    // }else  response.json({error:'reqired'})
+});
 
 router.post('/loginplayer', function (request:express.Request, response:express.Response) {
     var body:any=request.body;
@@ -127,7 +199,7 @@ router.post('/loginplayer', function (request:express.Request, response:express.
 })
 router.post('/new-user-player', function (request:express.Request, response:express.Response) {
     var body:any=request.body;
-   var ip:string =  request.connection.remoteAddress;
+    var ip:string =  request.connection.remoteAddress;
     var password = body.password;
     if(password && password.length>5){
 
@@ -135,7 +207,7 @@ router.post('/new-user-player', function (request:express.Request, response:expr
 
         user.createUser(body.username,body.password,ip,'player').done(
             (newuser:RUsers)=>{
-                console.log(newuser);
+                console.log('new user', newuser);
                 user.createAccount(newuser).done(
                     final => response.json({data:final})
                     ,error=>response.json({error:error})
@@ -168,6 +240,8 @@ router.get('/userdevices', function (request:express.Request, response:express.R
         ,err=>response.json({error:err})
     )
 });
+
+
 
 
 

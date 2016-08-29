@@ -24,16 +24,12 @@ interface MyRequest extends express.Request{
 var fs = require('fs-extra');
 var request = require('request');
 var httpProxy = require('http-proxy');
-
-
 var proxy = httpProxy.createProxyServer({
     changeOrigin:true,
     port:80
 });
 
-
 var path = require('path');
-
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
@@ -77,6 +73,13 @@ app.use(express.static(WWW));
 
 app.get('/', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
+});
+
+app.get('/loginHello', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': WWW});
+});
+app.get('/loginHello/*', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': WWW});
 });
 
 
@@ -123,9 +126,6 @@ app.use('/account',bodyParser.urlencoded({extended: true}));
 app.use('/account',bodyParser.json());
 app.use('/account', require('./server/account/manager'));
 
-app.use('/videoserver',bodyParser.urlencoded({extended: true}));
-app.use('/videoserver',bodyParser.json());
-app.use('/videoserver', require('./server/videoserver/manager'));
 
 app.use('/player/:token/', function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
@@ -157,8 +157,8 @@ app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
 
     if(!folder){
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser')
-        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
+        console.log(' user not loged in go to /clientAssets/folder_template_dev')
+        req.session['user_folder'] = 'clientAssets/folder_template_dev';
     }
     next();
 });

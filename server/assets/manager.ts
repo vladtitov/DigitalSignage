@@ -69,7 +69,7 @@ var fs = require('fs');
  *         "data": [
  *            {
  *               "id": 1,
- *               "original_name": "face.png",
+ *               "originalname": "face.png",
  *               "path": "/clientAssets/uploads/userImages/_1468357328476_face.png",
  *               "thumb": "/clientAssets/uploads/thumbnails/_1468357328476_face.png",
  *               "size": 132545,
@@ -82,7 +82,7 @@ var fs = require('fs');
  *            },
  *            {
  *                "id": 2,
- *                "original_name": "face.png",
+ *                "originalname": "face.png",
  *                "path": "/clientAssets/uploads/userImages/_1468359521555_face.png",
  *                "thumb": "/clientAssets/uploads/thumbnails/_1468359521555_face.png",
  *                "size": 132545,
@@ -200,7 +200,7 @@ router.post('/delete-asset', function (req:express.Request, res:express.Response
  *      {
  *          "data": {
  *               "id": 1,
- *               "original_name": "face.png",
+ *               "originalname": "face.png",
  *               "path": "/clientAssets/uploads/userImages/_1468357328476_face.png",
  *               "thumb": "/clientAssets/uploads/thumbnails/_1468357328476_face.png",
  *               "size": 132545,

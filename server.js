@@ -34,6 +34,12 @@ app.use(express.static(WWW));
 app.get('/', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });
+app.get('/loginHello', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': WWW });
+});
+app.get('/loginHello/*', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': WWW });
+});
 app.get('/dashboard', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });
@@ -65,9 +71,6 @@ app.all('/proxy/*', function (req, res) {
 app.use('/account', bodyParser.urlencoded({ extended: true }));
 app.use('/account', bodyParser.json());
 app.use('/account', require('./server/account/manager'));
-app.use('/videoserver', bodyParser.urlencoded({ extended: true }));
-app.use('/videoserver', bodyParser.json());
-app.use('/videoserver', require('./server/videoserver/manager'));
 app.use('/player/:token/', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (folder)
@@ -94,8 +97,8 @@ app.use('/api', bodyParser.json());
 app.use('/api', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (!folder) {
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser');
-        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
+        console.log(' user not loged in go to /clientAssets/folder_template_dev');
+        req.session['user_folder'] = 'clientAssets/folder_template_dev';
     }
     next();
 });

@@ -19,7 +19,7 @@ var ContentSearchPipe = (function () {
         if (args === "")
             return value;
         return value.filter(function (item) {
-            var str = " " + item.original_name + item.label;
+            var str = " " + item.originalname + item.label;
             return str.indexOf(args) !== -1;
         });
     };

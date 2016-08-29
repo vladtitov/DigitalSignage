@@ -23,6 +23,7 @@ var sign_in_1 = require("./login/sign-in");
 var new_user_1 = require("./login/new-user");
 var reset_password_1 = require("./login/reset-password");
 var login_service_1 = require("./login/login-service");
+var change_password_1 = require("./login/change-password");
 // import {DeviceEditor} from "./device/device-editor";
 // import {DevicesList} from "./device/devices-list";
 // import {PlaylistEditable} from "./playlist-editor/playlist-editable";
@@ -47,7 +48,8 @@ var LoginModule = (function () {
                 login_manager_1.LoginManager,
                 sign_in_1.SignIn,
                 new_user_1.NewUser,
-                reset_password_1.ResetPassword
+                reset_password_1.ResetPassword,
+                change_password_1.ChangePassword
             ],
             providers: [
                 login_routing_1.loginRoutingProviders,
