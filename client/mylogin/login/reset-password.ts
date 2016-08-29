@@ -62,13 +62,15 @@ export class ResetPassword{
     }
 
     onSubmit(value:any){
-        console.log('onSubmit ', value);
+        // console.log('onSubmit ', value);
         this.loginService.resetPassword(value).subscribe((res)=>{
 
             console.log('res ', res);
+            this.errorMessage = false;
             this.message = true;
         }, (err)=>{
             console.log('error ', err);
+            this.message = false;
             this.errorMessage = true;
             this.handleError(err); // = <any>err;
         });

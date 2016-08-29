@@ -24,12 +24,14 @@ var ResetPassword = (function () {
     };
     ResetPassword.prototype.onSubmit = function (value) {
         var _this = this;
-        console.log('onSubmit ', value);
+        // console.log('onSubmit ', value);
         this.loginService.resetPassword(value).subscribe(function (res) {
             console.log('res ', res);
+            _this.errorMessage = false;
             _this.message = true;
         }, function (err) {
             console.log('error ', err);
+            _this.message = false;
             _this.errorMessage = true;
             _this.handleError(err); // = <any>err;
         });

@@ -88,14 +88,12 @@ router.post('/login', function (request, response) {
 router.post('/reset-password', function (request, response) {
     var body = request.body;
     var username = body.username;
-    console.log('reset-password', username);
     if (!username) {
         response.json({ error: 'reqired' });
         return;
     }
     var user = new User_1.User();
     user.resetPass(username).done(function (sended) {
-        console.log('sended ', sended);
         response.json({ data: sended });
     }, function (error) { return response.json({ error: error }); });
 });
@@ -103,14 +101,13 @@ router.post('/change-password', function (request, response) {
     var body = request.body;
     var password = body.password;
     var token = body.token;
-    if (!token) {
+    if (!token || !password) {
         response.json({ error: 'reqired' });
         return;
     }
     var user = new User_1.User();
     user.getUserByToken(token).done(function (res) {
         if (res) {
-            console.log('res ', res);
             user.updateUserPass(res.id, password).done(function (final) { return response.json({ data: final.changes }); }, function (error) { return response.json({ error: error }); });
         }
         else

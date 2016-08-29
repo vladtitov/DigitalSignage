@@ -65,7 +65,6 @@ var User = (function () {
         users.username = email;
         this.isUsernameExists(users.username).done(function (res) {
             if (res) {
-                console.log('res: ', res);
                 _this.sendMail(res.username, res.token).done(function (info) {
                     def.resolve(info);
                 }, function (err) { return def.reject(err); });
@@ -77,33 +76,21 @@ var User = (function () {
     };
     User.prototype.sendMail = function (email, token) {
         var def = Q.defer();
-        console.log('token ', token);
-        var smtpConfig = {
-            host: 'secure140.servconfig.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: 'support@iottech.ca',
-                pass: 'Zaq12wsx'
-            }
-        };
+        var configFile = fs.readFileSync("server/account/smtpConfig.json", "utf8");
+        var smtpConfig = JSON.parse(configFile);
         var transporter = nodemailer.createTransport(smtpConfig);
         var emailText = fs.readFileSync("server/emailTemplate.html", "utf8");
-        console.log('emailText ', emailText);
         var text = emailText.replace('__token__', token);
-        var mailOptions = {
-            from: 'support@iottech.ca',
-            to: email,
-            subject: 'Choose a new password',
-            html: text
-        };
+        var mailOptionsFile = fs.readFileSync("server/account/mailOptions.json", "utf8");
+        var mailOptions = JSON.parse(mailOptionsFile);
+        mailOptions.to = email;
+        mailOptions.html = text;
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
                 def.reject(error);
             }
             else {
-                console.log('Message sent: ' + info);
                 def.resolve(info);
             }
             ;
@@ -123,7 +110,6 @@ var User = (function () {
     User.prototype.isUsernameExists = function (email) {
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT *  FROM users WHERE username =?';
-        console.log(sql + email);
         return db.selectOne(sql, [email]);
     };
     User.prototype.getAllDevices = function (folder) {
@@ -142,7 +128,6 @@ var User = (function () {
     User.prototype.getUserByToken = function (token) {
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT *  FROM users WHERE token =?';
-        console.log(sql + token);
         return db.selectOne(sql, [token]);
     };
     User.prototype.updateUserPass = function (id, password) {
@@ -150,17 +135,14 @@ var User = (function () {
         var timestamp = Math.round(Date.now() / 1000);
         password = crypto.createHash('md5').update(password).digest('hex');
         var sql = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
-        console.log(sql);
         return db.runQuery(sql);
     };
     User.prototype.login = function (username, password, sid, ip) {
         password = crypto.createHash('md5').update(password).digest('hex');
-        console.log('password: ', password);
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT id, role, folder, token, sid  FROM users WHERE username =? AND password=?';
         db.selectOne(sql, [username, password]).done(function (user) {
-            console.log('user ', user);
             if (user) {
                 var timestamp = Math.round(Date.now() / 1000);
                 db.updateRow({ id: user.id, timestamp: timestamp, ip: ip }, 'users');

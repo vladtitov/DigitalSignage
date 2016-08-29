@@ -35,9 +35,11 @@ var ChangePassword = (function () {
         this.loginService.changePassword(value).subscribe(function (res) {
             console.log('res ', res);
             if (res == 1) {
+                _this.errorMessage = false;
                 _this.message = true;
             }
             else {
+                _this.message = false;
                 _this.errorMessage = true;
                 console.log('wrong');
             }

@@ -97,10 +97,12 @@ export class ChangePassword{
             console.log('res ', res);
 
             if(res == 1){
+                this.errorMessage = false;
                 this.message = true;
                 // localStorage.setItem('email', this.userEmail);
                 // console.log('onSubmit res', res);
             } else {
+                this.message = false;
                 this.errorMessage = true;
                 console.log('wrong');
             }

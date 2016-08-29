@@ -103,7 +103,7 @@ export class User{
         this.isUsernameExists(users.username).done(
             res=>{
                 if(res){
-                    console.log('res: ', res);
+                    // console.log('res: ', res);
                     this.sendMail(res.username, res.token).done(
                         (info)=> {
                             def.resolve(info)
@@ -120,42 +120,56 @@ export class User{
     sendMail(email:string, token:string):Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
 
-        console.log('token ', token);
+        // console.log('token ', token);
 
-        var smtpConfig = {
-            host: 'secure140.servconfig.com',
-            port: 465,
-            secure: true, // use SSL
-            auth: {
-                user: 'support@iottech.ca',
-                pass: 'Zaq12wsx'
-            }
-        };
+        var configFile = fs.readFileSync("server/account/smtpConfig.json", "utf8");
+
+        // console.log('configFile', configFile);
+
+        var smtpConfig = JSON.parse(configFile);
+
+        // var smtpConfig = {
+        //     host: 'secure140.servconfig.com',
+        //     port: 465,
+        //     secure: true, // use SSL
+        //     auth: {
+        //         user: 'support@iottech.ca',
+        //         pass: 'Zaq12wsx'
+        //     }
+        // };
+
+        // console.log('smtpConfig', smtpConfig);
 
         var transporter = nodemailer.createTransport(smtpConfig);
 
 
         var emailText = fs.readFileSync("server/emailTemplate.html", "utf8");
-
-        console.log('emailText ', emailText);
-
         var text:string = emailText.replace('__token__', token);
 
-        var mailOptions = {
-            from: 'support@iottech.ca', // sender address
-            to: email, // list of receivers
-            subject: 'Choose a new password', // Subject line
-            // text: 'Reset You Password', //, // plaintext body
-            html:  text// You can choose to send an HTML body instead
-        };
+        // console.log('emailText ', emailText);
 
+        var mailOptionsFile = fs.readFileSync("server/account/mailOptions.json", "utf8");
+
+        var mailOptions = JSON.parse(mailOptionsFile);
+        mailOptions.to = email;
+        mailOptions.html = text;
+
+        // var mailOptions = {
+        //     from: 'support@iottech.ca', // sender address
+        //     to: email, // list of receivers
+        //     subject: 'Choose a new password', // Subject line
+        //     // text: 'Reset You Password', //, // plaintext body
+        //     html:  text// You can choose to send an HTML body instead
+        // };
+
+        // console.log('smtpConfig', mailOptions);
 
         transporter.sendMail(mailOptions, function(error, info){
             if(error){
                 console.log(error);
                 def.reject(error);
             }else{
-                console.log('Message sent: ' + info);
+                // console.log('Message sent: ' + info);
                 def.resolve(info);
             };
         });
@@ -178,7 +192,7 @@ export class User{
     isUsernameExists(email:string):Promise<any>{
         var db = new DBDriver(null);
         var sql:string ='SELECT *  FROM users WHERE username =?';
-        console.log(sql+email);
+        // console.log(sql+email);
         return db.selectOne(sql,[email]);
     }
 
@@ -200,7 +214,7 @@ export class User{
     getUserByToken(token:string):Promise<any> {
         var db = new DBDriver(null);
         var sql:string = 'SELECT *  FROM users WHERE token =?';
-        console.log(sql + token);
+        // console.log(sql + token);
         return db.selectOne(sql, [token]);
     }
     updateUserPass(id:number, password:string):Promise<any> {
@@ -209,7 +223,7 @@ export class User{
         password = crypto.createHash('md5').update(password).digest('hex');
 
         var sql:string = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
-        console.log(sql);
+        // console.log(sql);
         return db.runQuery(sql);
     }
     // getUserByToken(token:string):Promise<any>{
@@ -220,14 +234,14 @@ export class User{
     // }
     login(username:string,password:string,sid:string,ip:string):Promise<any>{
         password = crypto.createHash('md5').update(password).digest('hex');
-        console.log('password: ', password);
+        // console.log('password: ', password);
         var def: Q.Deferred<any> = Q.defer();
 
         var db = new DBDriver(null);
         var sql:string ='SELECT id, role, folder, token, sid  FROM users WHERE username =? AND password=?';
         db.selectOne(sql,[username,password]).done(
             user=>{
-                console.log('user ', user);
+                // console.log('user ', user);
                 if(user){
                     var timestamp:number = Math.round(Date.now()/1000);
                     db.updateRow({id:user.id,timestamp:timestamp, ip:ip},'users');

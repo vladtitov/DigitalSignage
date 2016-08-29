@@ -110,7 +110,7 @@ router.post('/reset-password', function (request:express.Request, response:expre
     var body:any=request.body;
     var username = body.username;
 
-    console.log('reset-password', username);
+    // console.log('reset-password', username);
 
     if(!username){
         response.json({error:'reqired'});
@@ -121,15 +121,11 @@ router.post('/reset-password', function (request:express.Request, response:expre
 
     user.resetPass(username).done(
         (sended)=>{
-            console.log('sended ', sended);
-            response.json({data:sended})
-            // user.createAccount(newuser).done(
-            //     final => response.json({data:final})
-            //     ,error=>response.json({error:error})
-            // );
+            // console.log('sended ', sended);
+            response.json({data:sended});
         }
         ,error=>response.json({error:error})
-    )
+    );
 
     // if(password && password.length>5){
     // }else  response.json({error:'reqired'})
@@ -143,7 +139,7 @@ router.post('/change-password', function (request:express.Request, response:expr
 
     // console.log('change-password', username);
 
-    if(!token){
+    if(!token || !password){
         response.json({error:'reqired'});
         return;
     }
@@ -154,16 +150,12 @@ router.post('/change-password', function (request:express.Request, response:expr
     user.getUserByToken(token).done(
         (res:RUsers)=>{
             if(res){
-                console.log('res ', res);
+                // console.log('res ', res);
                 user.updateUserPass(res.id, password).done(
                     final => response.json({data:final.changes})
                     ,error=>response.json({error:error})
                 )
             } else response.json({error:error});
-            // user.createAccount(newuser).done(
-            //     final => response.json({data:final})
-            //     ,error=>response.json({error:error})
-            // );
         }
         ,error=>response.json({error:error})
     )
