@@ -278,6 +278,7 @@ var DBDriver = (function () {
             ar3.push(row[str]);
         }
         var sql = 'INSERT INTO ' + table + ' (' + ar1.join(',') + ') VALUES (' + ar2.join(',') + ')';
+        //console.log(sql);
         return this.insertOne(sql, ar3);
     };
     DBDriver.prototype.insertOne = function (sql, data) {
@@ -328,3 +329,4 @@ var DBDriver = (function () {
     return DBDriver;
 }());
 exports.DBDriver = DBDriver;
+//# sourceMappingURL=dbDriver.js.map
