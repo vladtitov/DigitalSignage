@@ -278,8 +278,20 @@ body {
 .loginform h3 {
     color: #337ab7;
 }
+.loginform h5 {
+    color: #FF0000;
+}
+.loginform h5.errorMessage {
+    color: #FF0000;
+}
+.loginform h5.message {
+    color: #008000;
+}
+
 .loginform hr {
     width: 300px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .loginform .panel {
     max-width: 430px;
@@ -313,6 +325,10 @@ md-checkbox{
 }
 .loginform a {
     cursor: pointer;
+}
+
+.loginform span {
+    margin-right: 8px;
 }
 
 

@@ -19,14 +19,18 @@ import {LoginService} from "./login-service";
                     <div class="panel" id="login">
                         <h3>Create Account</h3>
                         <hr>
+                        <div *ngIf="errorMessage" class="errorMessage">
+                            <h5> This username already exists </h5>
+                            <hr>
+                        </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
                                 <md-input 
                                     placeholder="Email address" 
                                     name="username" 
-                                    ngModel 
+                                    [(ngModel)] = "userEmail"
                                     required
-                                    type="email" 
+                                    type="email"
                                     style="width: 100%">
                                 </md-input>
                             </div>
@@ -44,9 +48,9 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="New User">Create Account</button>
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="New User"><span class="fa fa-user-plus"></span>Create Account</button>
                         </form>
-                        <a class="panel-footer" (click)="back()">Back</a>
+                        <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Back</a>
                     </div>
                 </div>
                 
@@ -55,17 +59,14 @@ import {LoginService} from "./login-service";
 </div>`
 
     , styles:[`
-
-            sup.required {
-                color: #D64242;
-                font-size: 95%;
-                top: -2px;
-            }
     
     `]
 })
 
 export class NewUser{
+
+    userEmail:string;
+    errorMessage: boolean = false;
 
     constructor(private router:Router, private loginService:LoginService){console.log('hello new-user!');}
 
@@ -77,7 +78,14 @@ export class NewUser{
         console.log('onSubmit ', value);
 
         this.loginService.createAccount(value).subscribe((res)=>{
-            console.log('onSubmit res', res);
+            if(res.token){
+                localStorage.setItem('email', this.userEmail);
+                console.log('onSubmit res', res);
+                this.back();
+            } else {
+                this.errorMessage = true;
+                console.log('wrong');
+            }
         }, (err)=>{
             console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;

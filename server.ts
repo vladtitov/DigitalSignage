@@ -76,10 +76,10 @@ app.get('/', function(req:express.Request, res:express.Response){
 });
 
 app.get('/loginHello', function(req:express.Request, res:express.Response){
-    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+    res.sendFile('mylogin.html',{ 'root': WWW});
 });
 app.get('/loginHello/*', function(req:express.Request, res:express.Response){
-    res.sendFile('mylogin.html',{ 'root': path.resolve(WWW + '/mylogin/')});
+    res.sendFile('mylogin.html',{ 'root': WWW});
 });
 
 

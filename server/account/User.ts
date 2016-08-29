@@ -5,6 +5,7 @@ import {RUsers} from "../db/dbmodels";
 ///<reference path="../../server.ts"/>
 declare var DBALL:string;
 
+import * as express from 'express';
 
 import {ObjectDatabase, IndexTable} from "../db/ObjectDatabase";
 import Q = require('q');
@@ -16,6 +17,8 @@ declare var WWW:string;
 var crypto = require('crypto');
 
 var fs = require('fs-extra');
+
+var nodemailer = require("nodemailer");
 
 export class User{
     secret = 'abcdefg';
@@ -42,8 +45,8 @@ export class User{
         var def: Q.Deferred<any> = Q.defer();
 
         user.folder = 'clientAssets/folder_'+user.id;
-        console.log(user.folder);
-        console.log(user)
+        // console.log(user.folder);
+        // console.log(user);
 
        this.copyFolder(user.folder).done(
            res=>this.updateUsers(user).done(
@@ -65,7 +68,8 @@ export class User{
 
     createUser(email:string,password:string,ip:string,role:string):Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
-        var users:RUsers = new RUsers()
+        var users:RUsers = new RUsers();
+        password = crypto.createHash('md5').update(password).digest('hex');
         users.username = email;
         users.email = email;
         users.password = password;
@@ -76,7 +80,7 @@ export class User{
                 if(res){
                     def.reject({exists:email});
                 }
-                else  this.insertNewUaser(users).done(
+                else  this.insertNewUser(users).done(
                     (insert:UpdateResult)=> {
                         if(insert.insertId){
                             users.id = insert.insertId;
@@ -91,12 +95,80 @@ export class User{
         return def.promise
     }
 
+    resetPass(email:string):Promise<any>{
+        var def: Q.Deferred<any> = Q.defer();
+        var users:RUsers = new RUsers();
+        users.username = email;
+        // users.email = email;
+        this.isUsernameExists(users.username).done(
+            res=>{
+                if(res){
+                    console.log('res: ', res);
+                    this.sendMail(res.username, res.token).done(
+                        (info)=> {
+                            def.resolve(info)
+                        }
+                        ,err=>def.reject(err)
+                    )
+                } else def.reject({notExists:email});
+            }
+            , err=>def.reject(err)
+        );
+        return def.promise;
+    }
+
+    sendMail(email:string, token:string):Promise<any>{
+        var def: Q.Deferred<any> = Q.defer();
+
+        console.log('token ', token);
+
+        var smtpConfig = {
+            host: 'secure140.servconfig.com',
+            port: 465,
+            secure: true, // use SSL
+            auth: {
+                user: 'support@iottech.ca',
+                pass: 'Zaq12wsx'
+            }
+        };
+
+        var transporter = nodemailer.createTransport(smtpConfig);
+
+
+        var emailText = fs.readFileSync("server/emailTemplate.html", "utf8");
+
+        console.log('emailText ', emailText);
+
+        var text:string = emailText.replace('__token__', token);
+
+        var mailOptions = {
+            from: 'support@iottech.ca', // sender address
+            to: email, // list of receivers
+            subject: 'Choose a new password', // Subject line
+            // text: 'Reset You Password', //, // plaintext body
+            html:  text// You can choose to send an HTML body instead
+        };
+
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                console.log(error);
+                def.reject(error);
+            }else{
+                console.log('Message sent: ' + info);
+                def.resolve(info);
+            };
+        });
+
+        return def.promise;
+    }
+
 
     private updateUsers(user:RUsers):Promise<any>{
         var db = new DBDriver(null);
         return db.updateRow(user,'users');
     }
-    private insertNewUaser(user:RUsers):Promise<any>{
+    private insertNewUser(user:RUsers):Promise<any>{
 
         var db = new DBDriver(null);
         user.token = this.generateToken(user.username);
@@ -104,7 +176,6 @@ export class User{
         return db.insertRow(user,'users');
     }
     isUsernameExists(email:string):Promise<any>{
-
         var db = new DBDriver(null);
         var sql:string ='SELECT *  FROM users WHERE username =?';
         console.log(sql+email);
@@ -126,30 +197,45 @@ export class User{
     generateToken(str:string):string{
         return crypto.createHmac('sha256', this.secret).update(str).digest('hex');
     }
-    getUserByToken(token:string):Promise<any>{
-        var db:ObjectDatabase = new ObjectDatabase(null,'users');
-        return db.selectByValues({
-            token:token
-        })
-
+    getUserByToken(token:string):Promise<any> {
+        var db = new DBDriver(null);
+        var sql:string = 'SELECT *  FROM users WHERE token =?';
+        console.log(sql + token);
+        return db.selectOne(sql, [token]);
     }
-    login(username:string,password:string,sid:string,ip:string):Promise<any>{
+    updateUserPass(id:number, password:string):Promise<any> {
+        var db = new DBDriver(null);
+        var timestamp:number = Math.round(Date.now()/1000);
         password = crypto.createHash('md5').update(password).digest('hex');
 
+        var sql:string = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
+        console.log(sql);
+        return db.runQuery(sql);
+    }
+    // getUserByToken(token:string):Promise<any>{
+    //     var db:ObjectDatabase = new ObjectDatabase(null,'users');
+    //     return db.selectByValues({
+    //         token:token
+    //     })
+    // }
+    login(username:string,password:string,sid:string,ip:string):Promise<any>{
+        password = crypto.createHash('md5').update(password).digest('hex');
+        console.log('password: ', password);
         var def: Q.Deferred<any> = Q.defer();
 
         var db = new DBDriver(null);
         var sql:string ='SELECT id, role, folder, token, sid  FROM users WHERE username =? AND password=?';
         db.selectOne(sql,[username,password]).done(
             user=>{
+                console.log('user ', user);
                 if(user){
                     var timestamp:number = Math.round(Date.now()/1000);
                     db.updateRow({id:user.id,timestamp:timestamp, ip:ip},'users');
                     def.resolve(user);
-                }else err=>def.reject('wrong');
+                }else {console.log('err '); def.reject('wrong');}
             }
             ,err=>def.reject(err)
-        )
+        );
 
         return def.promise
     }

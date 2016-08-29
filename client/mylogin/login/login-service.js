@@ -20,10 +20,12 @@ var LoginService = (function () {
         this.dataUrl = 'account/';
         this.loginUrl = 'login';
         this.createUrl = 'new-user-player';
+        this.resetPassUrl = 'reset-password';
+        this.changePassUrl = 'change-password';
     }
     LoginService.prototype.loginServer = function (data) {
         var body = JSON.stringify(data);
-        console.log('body ', body);
+        // console.log('body ', body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.dataUrl + this.loginUrl, body, options)
@@ -32,10 +34,28 @@ var LoginService = (function () {
     };
     LoginService.prototype.createAccount = function (data) {
         var body = JSON.stringify(data);
-        console.log('body ', body);
+        // console.log('body ', body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.dataUrl + this.createUrl, body, options)
+            .map(this.parseOne)
+            .catch(this.handleError);
+    };
+    LoginService.prototype.resetPassword = function (data) {
+        var body = JSON.stringify(data);
+        // console.log('body ', body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.dataUrl + this.resetPassUrl, body, options)
+            .map(this.parseOne)
+            .catch(this.handleError);
+    };
+    LoginService.prototype.changePassword = function (data) {
+        var body = JSON.stringify(data);
+        // console.log('body ', body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.dataUrl + this.changePassUrl, body, options)
             .map(this.parseOne)
             .catch(this.handleError);
     };

@@ -33,6 +33,7 @@
     "moment-jalaali": "^0.4.0",
     "multer": "^1.1.0",
     "node-phantom": "^0.2.5",
+    "nodemailer": "^2.5.0",
     "phantom": "^2.1.12",
     "q": "^1.4.1",
     "request": "^2.73.0",

@@ -35,10 +35,10 @@ app.get('/', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });
 app.get('/loginHello', function (req, res) {
-    res.sendFile('mylogin.html', { 'root': path.resolve(WWW + '/mylogin/') });
+    res.sendFile('mylogin.html', { 'root': WWW });
 });
 app.get('/loginHello/*', function (req, res) {
-    res.sendFile('mylogin.html', { 'root': path.resolve(WWW + '/mylogin/') });
+    res.sendFile('mylogin.html', { 'root': WWW });
 });
 app.get('/dashboard', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });

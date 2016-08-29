@@ -13,7 +13,7 @@ export class ContentSearchPipe implements PipeTransform {
     transform(value: VOAsset[], args:string): VOAsset[] {
         if (args === "") return value;
         return value.filter((item:VOAsset) => {
-            var str = " " + item.original_name + item.label;
+            var str = " " + item.originalname + item.label;
             return str.indexOf(args) !== -1;
         });
     }

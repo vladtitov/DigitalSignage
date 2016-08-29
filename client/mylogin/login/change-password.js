@@ -1,0 +1,66 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var core_1 = require("@angular/core");
+var router_1 = require('@angular/router');
+var login_service_1 = require("./login-service");
+var ChangePassword = (function () {
+    function ChangePassword(router, route, loginService) {
+        this.router = router;
+        this.route = route;
+        this.loginService = loginService;
+        this.message = false;
+        this.errorMessage = false;
+    }
+    ChangePassword.prototype.ngOnInit = function () {
+        var _this = this;
+        this.sub = this.route.params.subscribe(function (params) {
+            _this.token = params['token'];
+        });
+    };
+    ChangePassword.prototype.back = function () {
+        this.router.navigate(["./sign-in"]);
+    };
+    ChangePassword.prototype.onSubmit = function (value) {
+        var _this = this;
+        value.token = this.token;
+        // console.log('onSubmit ', value);
+        this.loginService.changePassword(value).subscribe(function (res) {
+            console.log('res ', res);
+            if (res == 1) {
+                _this.message = true;
+            }
+            else {
+                _this.errorMessage = true;
+                console.log('wrong');
+            }
+        }, function (err) {
+            console.log('onSubmit error ', err);
+            _this.handleError(err); // = <any>err;
+        });
+    };
+    ChangePassword.prototype.handleError = function (error) {
+        var errMsg = (error.message) ? error.message :
+            error.status ? error.status + " - " + error.statusText : 'Server error';
+        console.error(errMsg);
+        return errMsg;
+    };
+    ChangePassword = __decorate([
+        core_1.Component({
+            selector: 'change-password',
+            template: "\n<div>\n            \n<!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Back</a>-->\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Change Password</h3>\n                        <hr>\n                        <div *ngIf=\"errorMessage || message\">\n                            <h5 *ngIf=\"errorMessage\" [class.errorMessage]=\"errorMessage\"> Error </h5>\n                            <h5 *ngIf=\"message\" [class.message]=\"message\"> Please Sign In </h5>\n                            <hr>\n                        </div>\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <!--<div class=\"form-group\">-->\n                                <!--<md-input -->\n                                    <!--placeholder=\"Email address\" -->\n                                    <!--name=\"username\" -->\n                                    <!--[(ngModel)] = \"userEmail\"-->\n                                    <!--required-->\n                                    <!--type=\"email\"-->\n                                    <!--style=\"width: 100%\">-->\n                                <!--</md-input>-->\n                            <!--</div>-->\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"New Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"Change Password\"><span class=\"fa fa-unlock\"></span>Change Password</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"back()\"><span class=\"fa fa-arrow-left\"></span>Sign In</a>\n                    </div>\n                </div>\n                \n            </div>\n\n</div>",
+            styles: ["\n    \n    "]
+        }), 
+        __metadata('design:paramtypes', [router_1.Router, router_1.ActivatedRoute, login_service_1.LoginService])
+    ], ChangePassword);
+    return ChangePassword;
+}());
+exports.ChangePassword = ChangePassword;
+//# sourceMappingURL=change-password.js.map
