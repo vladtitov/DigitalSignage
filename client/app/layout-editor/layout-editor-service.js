@@ -61,21 +61,13 @@ var LayoutEditorService = (function () {
         // this.setSelectedById(id);
     };
     LayoutEditorService.prototype.saveOnServer = function (layout) {
-        var _this = this;
         if (layout)
             this.currentItem = layout;
         var id = this.currentItem ? this.currentItem.props.id : -1;
         layout = new models_1.VOLayout(this.currentItem);
-        this.http.post(this.serviceUrl + '/' + id, layout)
+        return this.http.post(this.serviceUrl + '/' + id, layout)
             .map(function (res) { return res.json().data; })
-            .catch(this.handleError).
-            subscribe(function (data) {
-            console.log(data);
-            if (data.insertId)
-                _this.getLayoutById(data.insertId);
-            else
-                _this.getLayoutById();
-        });
+            .catch(this.handleError);
     };
     LayoutEditorService.prototype.setId = function (id) {
         this.currentItem.props.id = id;

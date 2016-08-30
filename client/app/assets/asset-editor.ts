@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {AssetCard} from "./asset-card";
 import {NgTooltip} from "../shared/ng-tooltip";
+
 // import {MY_DIRECTIVES} from "../app.directives";
 
 
@@ -59,17 +60,19 @@ import {NgTooltip} from "../shared/ng-tooltip";
                                     type="button"
                                     class="btn btn-primary save"
                                     [class.disabled]="disabled"
-                                    (click)="saveAsset(inputItem.value, textareaItem.value)">
+                                    (click)="saveAsset(inputItem.value, textareaItem.value)"
+                                    [ng2-md-tooltip]="tooltipMessage" placement="right" [tooltipColor]="color"
+                                    >
                                     Save on server
                                 </button>
-                                <div class="mytooltip">
-                                    <span 
-                                        class="tooltiptext"
-                                        [ng-tooltip]="tooltipMessage"
-                                        [isTooltip]="isTooltip">
-                                        {{tooltipMessage}}
-                                    </span>
-                                </div>
+                                <!--<div class="mytooltip">-->
+                                    <!--<span -->
+                                        <!--class="tooltiptext"-->
+                                        <!--[ng-tooltip]="tooltipMessage"-->
+                                        <!--[isTooltip]="isTooltip">-->
+                                        <!--{{tooltipMessage}}-->
+                                    <!--</span>-->
+                                <!--</div>-->
                                 <button type="button" class="btn btn-default clos pull-right" data-dismiss="modal"(click)="hideEdit()">Close</button> 
                             </div>
                         </div>
@@ -189,8 +192,11 @@ export class AssetEditor implements OnInit {
     success: boolean;
     error: boolean;
     disabled: boolean;
-    tooltipMessage:string;
     isTooltip:boolean;
+
+    color:string;
+    tooltipMessage:string;
+
     private sub: Subscription;
 
     currentAsset:VOAsset;
@@ -226,20 +232,27 @@ export class AssetEditor implements OnInit {
 
     saveAsset (name:string, description:string) {
         this.currentAsset.label = this.itemLabel;
-        // if (name || description) {
-        //     this.currentAsset.label = name;
+        if (name || description) {
+            this.currentAsset.label = name;
             this.currentAsset.description = description;
             this.assetService.saveItem(this.currentAsset)
                 .subscribe(
                     (res:UpdateResult)=> {
                         if (res && res.changes){
-                            this.showSuccess();
+                            // this.showSuccess();
+                            this.showTooltip('green','Success');
                             // this.assetService.
-                        }  else this.showError();
+                        }  else{
+                            // this.showError();
+                            this.showTooltip('red', 'Error');
+                        }
 
                     },
-                    error => this.errorMessage = <any>error);
-        // }
+                    error => {
+                        this.showTooltip('red', 'Error');
+                        this.errorMessage = <any>error
+                    });
+        } else this.showTooltip('red', 'Error');
     }
 
     hideEdit() {
@@ -248,29 +261,41 @@ export class AssetEditor implements OnInit {
         // this.router.navigate(["./content-manager",'hideEditor',0]);
     }
 
-    showSuccess () {
-        this.success = true;
-        this.isTooltip = true;
-        this.tooltipMessage = 'success';
-        this.disableSave ();
+    showTooltip(color:string, message:string){
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
+        setTimeout(()=>{
+            this.tooltipMessage = '';
+        }, 3000);
     }
 
-    showError () {
-        this.error = true;
-        this.isTooltip = true;
-        this.tooltipMessage = 'error';
-        this.disableSave ();
-    }
-
-    disableSave () {
-        this.disabled = true;
-        setTimeout( ()=> {
-            this.success = false;
-            this.error = false;
-            this.disabled = false;
-            this.isTooltip = false;
-        }, 3000)
-    }
+    // showSuccess () {
+    //     this.color = 'green';
+    //     this.success = true;
+    //     this.isTooltip = true;
+    //     this.tooltipMessage = 'success';
+    //     this.disableSave ();
+    // }
+    //
+    // showError () {
+    //     this.color = 'red';
+    //     this.error = true;
+    //     this.isTooltip = true;
+    //     this.tooltipMessage = 'error';
+    //     this.disableSave ();
+    // }
+    //
+    // disableSave () {
+    //     this.disabled = true;
+    //     setTimeout( ()=> {
+    //         this.success = false;
+    //         this.error = false;
+    //         this.disabled = false;
+    //         this.isTooltip = false;
+    //     }, 3000)
+    // }
 
     onEditClick () {
         //this.fullItem = this.currentItem;

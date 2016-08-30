@@ -35,7 +35,7 @@ var PlayListItem = (function () {
     PlayListItem.prototype.ngOnInit = function () {
         // this.item.position = this.position;
         //  this.id=this.position;
-        console.log('this.item ', this.item);
+        //  console.log('this.item ', this.item);
         var asset = new models_1.VOAsset(this.item);
         // console.log('asset ', asset);
         if (!asset.duration || isNaN(asset.duration))

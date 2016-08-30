@@ -86,7 +86,7 @@ export class PlaylistsService {
 
     private parseAll(res: Response) {
         let body:VOPlaylist [] = res.json().data || [];
-        console.log('body ', body);
+        // console.log('body ', body);
         var playlistOBJ = {};
         var addItem = function (item:any) {
             if(!playlistOBJ[item.playlist_id]) playlistOBJ[item.playlist_id] = new VOPlaylist({props:item})

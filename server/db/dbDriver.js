@@ -169,7 +169,7 @@ var DBDriver = (function () {
                 deferred.reject(error);
             }
             else {
-                console.log(row);
+                // console.log(row);
                 deferred.resolve(row);
             }
         });

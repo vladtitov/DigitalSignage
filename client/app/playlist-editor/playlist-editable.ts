@@ -23,8 +23,10 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
             <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
-            <a class="btn btn-default" (click)="saveOnServer()"><span class="fa fa-life-saver"></span> Save on Server</a>
-        
+            <a class="btn btn-default" (click)="saveOnServer()"
+                [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
+            <span class="fa fa-life-saver"></span> Save on Server</a>
+                    
         
             <label class="PNameLabel" for="PName">Playlist Name</label>
            <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
@@ -119,6 +121,9 @@ export class PlaylistEditable implements OnInit{
 
     toolsDisadled:boolean;
 
+    color:string;
+    tooltipMessage:string;
+
    // private dragItem:VOPlayLists_Assets;
     private selectedItem:VOPlayLists_Assets
 
@@ -133,8 +138,6 @@ export class PlaylistEditable implements OnInit{
         this.selectInnerEmitter.next(item);
     }
 
-
-
     calculateDuration():void{
         if(!this.playlist) return;
         var total:number=0;
@@ -142,7 +145,7 @@ export class PlaylistEditable implements OnInit{
             total+=item.lasting;
         })
         this.playlistProps.duration = total;
-        console.log('total', total);
+        // console.log('total', total);
     }
 
     createCover(){
@@ -176,14 +179,27 @@ export class PlaylistEditable implements OnInit{
         this.playlistservice.saveDataOnServer()
             .subscribe(
                 (result:UpdateResult)=> {
+                    // console.log('save: ', result);
+                    this.showTooltip('green','Success');
                     if (result.insertId) {
-                        console.log(result);
+                        // console.log('save: ', result);
                         this.router.navigate(['./playlist-editor',result.insertId])
-
                     }
-                })
+                },
+                error => {
+                    this.showTooltip('red', 'Error');
+                });
                    // this.getDataFromServer();
 
+    }
+    showTooltip(color:string, message:string){
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
+        setTimeout(()=>{
+            this.tooltipMessage = '';
+        }, 3000);
     }
     onItemDragend(evt:DragEvent):void{
 

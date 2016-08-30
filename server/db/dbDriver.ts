@@ -199,7 +199,7 @@ export class DBDriver {
                 console.log('selectOne ', error);
                 deferred.reject(error);
             } else {
-                console.log(row);
+                // console.log(row);
                 deferred.resolve(row);
             }
         });

@@ -95,7 +95,6 @@ router.post('/byid/:id', function (req, res) {
     var playlisTable = new PlaylistsTable_1.PlaylistsTable(req.session['user_folder']);
     playlisTable.updateContentById(pl.props, id)
         .done(function (result) {
-        console.log(result);
         if (result.insertId)
             id = result.insertId;
         playlist_assets.updatePalylist(pl.list, id)

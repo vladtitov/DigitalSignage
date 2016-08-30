@@ -42,7 +42,7 @@ var LayoutEditor = (function () {
             if (params['type'] == 'template') {
                 _this.toolsDisadled = true;
                 _this.templatesService.getTemplateById(id).subscribe(function (res) {
-                    console.log(res);
+                    // console.log(res);
                     var layout = new models_1.VOLayout({ viewports: res.viewports });
                     layout.props.width = res.width;
                     layout.props.height = res.height;
@@ -70,7 +70,7 @@ var LayoutEditor = (function () {
         this.currentLayout = item;
         this.mySizeW = item.props.width / 2;
         this.mySizeH = item.props.height / 2;
-        console.log(item);
+        // console.log(item);
         this.deviceEditorService.getUsedDevice(item.props)
             .subscribe(function (devices) {
             item.usedDevice = devices;
@@ -83,8 +83,8 @@ var LayoutEditor = (function () {
             else {
                 _this.devicesLabels = 'no devices';
             }
-            console.log('res ', _this.currentLayout.usedDevice);
-            console.log('devicesLabels ', _this.devicesLabels);
+            // console.log('res ', this.currentLayout.usedDevice);
+            // console.log('devicesLabels ', this.devicesLabels);
         });
         this.currentViewPorts = item.viewports;
     };
@@ -129,17 +129,37 @@ var LayoutEditor = (function () {
             _this.currentLayout.props.image = dataUrl;
             _this.currentLayout.props.type = 'lite';
             _this.currentLayout.viewports = _this.currentViewPorts;
-            _this.editorService.saveOnServer(_this.currentLayout);
+            _this.editorService.saveOnServer(_this.currentLayout)
+                .subscribe(function (data) {
+                console.log(data);
+                _this.showTooltip('green', 'Success');
+                if (data.insertId)
+                    _this.editorService.getLayoutById(data.insertId);
+                else
+                    _this.editorService.getLayoutById();
+            }, function (error) {
+                _this.showTooltip('red', 'Error');
+            });
         });
         // this.layoutService
         //this.asseblerService.setlayout(this.currentLayout);
         //console.log(this.layoutService.selectedItem)
         // console.log(this.currentLayout);
     };
+    LayoutEditor.prototype.showTooltip = function (color, message) {
+        var _this = this;
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
+        setTimeout(function () {
+            _this.tooltipMessage = '';
+        }, 3000);
+    };
     LayoutEditor = __decorate([
         core_1.Component({
             selector: 'layout-editor',
-            template: "\n<div>\n            <div class =\"panel-heading\">\n                <h3>Layout assembler</h3>\n                <nav>                 \n                    <a [routerLink]=\"['/layout-template/',-1]\" class=\"btn btn-default\"><span class=\"fa fa-plus\"></span> Create New Layout</a>                           \n                    <a #mybtn class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"onDeleteClick($evtnt,mybtn)\"><span class=\"fa fa-minus\"></span> Delete Layout</a>\n                    <a class=\"btn btn-default\" (click) = \"onServerSaveClick()\"><span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">                 \n                <div>\n                    <playlists-list-dragable></playlists-list-dragable>                \n                </div>\n                <hr size=\"3\">\n                <div class=\"layout\">\n                    <div class=\"form-group\">\n                        <label>Layout Name</label>\n                       <input type=\"text\" [(ngModel)]=\"currentLayout.props.label\" name=\"layoutname\" />\n                        <label *ngIf=\"devicesLabels\">Used devices: <span>{{devicesLabels}}</span> </label>\n                    </div>\n                    <div  id=\"SnapshotDiv\" [style.width.px]=\"mySizeW\" [style.height.px]=\"mySizeH\">\n                        <div id=\"PictureDiv\" [style.width.px]=\"mySizeW\" [style.height.px]=\"mySizeH\"> \n                            <div id=\"ViewPortsDiv\">\n                                <div  *ngFor=\"let myitem of currentViewPorts\">                           \n                                    <layout-editor-viewport [item]=\"myitem\"  (onview)=\"onClickViewport()\"></layout-editor-viewport>                                  \n                                </div>\n                            </div>\n                        </div>\n                       \n                    </div>\n                    <div id=\"SnapResult\">\n                   \n                   \n                    </div>\n                </div>\n               \n            </div>\n</div>                  \n             ",
+            template: "\n<div>\n            <div class =\"panel-heading\">\n                <h3>Layout assembler</h3>\n                <nav>                 \n                    <a [routerLink]=\"['/layout-template/',-1]\" class=\"btn btn-default\"><span class=\"fa fa-plus\"></span> Create New Layout</a>                           \n                    <a #mybtn class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"onDeleteClick($evtnt,mybtn)\"><span class=\"fa fa-minus\"></span> Delete Layout</a>\n                    <a class=\"btn btn-default\" (click) = \"onServerSaveClick()\"\n                        [ng2-md-tooltip]=\"tooltipMessage\" placement=\"top\" [tooltipColor]=\"color\">\n                    <span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">                 \n                <div>\n                    <playlists-list-dragable></playlists-list-dragable>                \n                </div>\n                <hr size=\"3\">\n                <div class=\"layout\">\n                    <div class=\"form-group\">\n                        <label>Layout Name</label>\n                       <input type=\"text\" [(ngModel)]=\"currentLayout.props.label\" name=\"layoutname\" />\n                        <label *ngIf=\"devicesLabels\">Used devices: <span>{{devicesLabels}}</span> </label>\n                    </div>\n                    <div  id=\"SnapshotDiv\" [style.width.px]=\"mySizeW\" [style.height.px]=\"mySizeH\">\n                        <div id=\"PictureDiv\" [style.width.px]=\"mySizeW\" [style.height.px]=\"mySizeH\"> \n                            <div id=\"ViewPortsDiv\">\n                                <div  *ngFor=\"let myitem of currentViewPorts\">                           \n                                    <layout-editor-viewport [item]=\"myitem\"  (onview)=\"onClickViewport()\"></layout-editor-viewport>                                  \n                                </div>\n                            </div>\n                        </div>\n                       \n                    </div>\n                    <div id=\"SnapResult\">\n                   \n                   \n                    </div>\n                </div>\n               \n            </div>\n</div>                  \n             ",
             styles: ["\n\n            .layout{\n                text-align: center;\n            }\n            #SnapshotDiv{\n                position: relative;\n                margin: auto;\n                box-shadow: grey 5px 5px 10px;\n              /*  width: 824px;\n                height: 400px;*/\n            }\n            #PictureDiv{\n                position: absolute;\n                top:0;\n                left: 0;\n            }\n           #ViewPortsDiv{\n                position: absolute;\n                top:0;\n                left: 0;\n                transform: scale(0.5);            \n            }\n            \n            "],
             directives: [router_1.ROUTER_DIRECTIVES, playlists_list_dragable_1.AssemblerPlayLists, layout_editor_viewport_1.LayoutEditorViewport],
             providers: [layout_editor_service_1.LayoutEditorService, device_editor_service_1.DeviceEditorService, layouts_templates_service_1.LayoutsTemlatesService, drag_playlist_service_1.DragPlayListService]

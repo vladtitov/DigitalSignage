@@ -127,7 +127,7 @@ export class PlayListItem implements OnInit{
     ngOnInit():void{
        // this.item.position = this.position;
        //  this.id=this.position;
-        console.log('this.item ', this.item);
+       //  console.log('this.item ', this.item);
         var asset:VOAsset = new VOAsset(this.item);
         // console.log('asset ', asset);
 
