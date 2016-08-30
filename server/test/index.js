@@ -6,3 +6,4 @@ router.get('/get', function (req, res) {
     res.json({ hello: 'world' });
 });
 module.exports = router;
+//# sourceMappingURL=index.js.map
