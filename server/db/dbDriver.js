@@ -17,7 +17,7 @@ var DBDriver = (function () {
     DBDriver.getDb = function (folder) {
         if (!DBDriver.dbs[folder]) {
             var filename = path.resolve(folder + '/ads.db');
-            console.log(filename);
+            console.log('database: ' + filename);
             DBDriver.dbs[folder] = new sqlite.Database(filename);
         }
         return DBDriver.dbs[folder];
@@ -48,6 +48,32 @@ var DBDriver = (function () {
                 deferred.reject({ error: 'error' });
         });
         return deferred.promise;
+    };
+    DBDriver.prototype.selectColumsById = function (id, columns, table) {
+        var def = Q.defer();
+        var sql = 'SELECT ' + columns + ' FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().get(sql, function (error, row) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve(row);
+            }
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.selectById = function (id, table) {
+        var def = Q.defer();
+        var sql = 'SELECT * FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().get(sql, function (error, row) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve(row);
+            }
+        });
+        return def.promise;
     };
     DBDriver.prototype.queryOne = function (sql) {
         var deferred = Q.defer();
@@ -168,7 +194,12 @@ var DBDriver = (function () {
         return deferred.promise;
     };
     DBDriver.prototype.updateRow = function (row, table) {
-        var id = row.id;
+        var id = Number(row.id);
+        if (isNaN(id)) {
+            var d = Q.defer();
+            d.reject(row.id);
+            return d.promise;
+        }
         delete row.id;
         var ar1 = [];
         var ar2 = [];
@@ -182,9 +213,51 @@ var DBDriver = (function () {
             var data = ar3;
             return this.updateOne(sql, data);
         }
-        var d = Q.defer();
-        d.resolve({ changes: 0 });
-        return d.promise;
+        else {
+            var d = Q.defer();
+            d.reject(ar3);
+            return d.promise;
+        }
+    };
+    DBDriver.prototype.updateRowByColumn = function (row, column, table) {
+        var id = Number(row[column]);
+        delete row.id;
+        if (isNaN(id)) {
+            var d = Q.defer();
+            d.reject(row[column]);
+            return d.promise;
+        }
+        delete row[column];
+        var ar1 = [];
+        var ar2 = [];
+        var ar3 = [];
+        for (var str in row) {
+            ar1.push(str + ' = ?');
+            ar3.push(row[str]);
+        }
+        if (ar3.length) {
+            var sql = 'UPDATE ' + table + ' SET ' + ar1.join(', ') + ' WHERE ' + column + ' = ' + id;
+            var data = ar3;
+            return this.updateOne(sql, data);
+        }
+        else {
+            var d = Q.defer();
+            d.reject(ar3);
+            return d.promise;
+        }
+    };
+    DBDriver.prototype.deleteById = function (id, table) {
+        var def = Q.defer();
+        var sql = 'DELETE FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().run(sql, function (error) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+        return def.promise;
     };
     DBDriver.prototype.insertRow = function (row, table) {
         delete row.id;
@@ -220,6 +293,7 @@ var DBDriver = (function () {
         var deferred = Q.defer();
         this.getdb().run(sql, data, function (error) {
             if (error) {
+                console.log(error);
                 deferred.reject(error);
             }
             else {
@@ -244,4 +318,3 @@ var DBDriver = (function () {
     return DBDriver;
 }());
 exports.DBDriver = DBDriver;
-//# sourceMappingURL=dbDriver.js.map

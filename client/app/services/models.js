@@ -122,4 +122,3 @@ var VOUserData = (function () {
     return VOUserData;
 }());
 exports.VOUserData = VOUserData;
-//# sourceMappingURL=models.js.map

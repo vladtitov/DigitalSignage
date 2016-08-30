@@ -72,7 +72,7 @@ var ImageProcess = (function () {
         var _this = this;
         var def = Q.defer();
         var newPath = this.folder + '/userImages/' + asset.filename;
-        fs.rename(asset.path, path.resolve(WWW + '/' + newPath), function (err) {
+        fs.rename(path.resolve(WWW + '/' + asset.path), path.resolve(WWW + '/' + newPath), function (err) {
             if (err) {
                 console.log(err);
                 def.reject(err);
@@ -94,4 +94,3 @@ var ImageProcess = (function () {
     return ImageProcess;
 }());
 exports.ImageProcess = ImageProcess;
-//# sourceMappingURL=ImageProcess.js.map

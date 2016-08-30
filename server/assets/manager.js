@@ -3,21 +3,11 @@ var express = require('express');
 var fileProcessing_1 = require("./fileProcessing");
 var ImageProcess_1 = require("./ImageProcess");
 var TableModel_1 = require("../db/TableModel");
-var VideoProcess_1 = require("./VideoProcess");
 var models_1 = require("../../client/app/services/models");
 var AssetsController_1 = require("./AssetsController");
+var VideoServerConnect_1 = require("../videos/VideoServerConnect");
 var router = express.Router();
 var fs = require('fs');
-var ISResult = (function () {
-    function ISResult(data) {
-        this.data = data;
-    }
-    return ISResult;
-}());
-var onSuccess = function (result, res) {
-    console.log('onSuccess result\n', result);
-    res.json(new ISResult(result));
-};
 router.get('/select-all', function (req, res) {
     var folder = req.session['user_folder'];
     var mytable = new TableModel_1.TableModel(folder, "assets");
@@ -133,6 +123,7 @@ router.post('/upload', function (req, response) {
     var token = req.session['user_token'];
     var fp = new fileProcessing_1.FileProcessing(folder);
     fp.uploadFile2(req, response, folder).then(function (asset) {
+        asset.folder = folder;
         var ext = asset.mimetype.substr(asset.mimetype.length - 3);
         if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
             asset.type = 'image';
@@ -144,25 +135,18 @@ router.post('/upload', function (req, response) {
             response.status(400);
             response.json({ error: 'Unknown type ' + asset.mimetype });
         }
-        console.log(asset);
         if (asset.type === 'image') {
             var ip = new ImageProcess_1.ImageProcess(folder);
             ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         else if (asset.type === 'video') {
-            response.json({ data: 'success' });
-            var vp = new VideoProcess_1.VideoProcess(folder);
-            vp.processVideo(asset).then(function (res) {
-            }, function (err) {
-                console.error(err);
-                response.json({ error: err });
-            });
+            var video = new VideoServerConnect_1.VideoServerConnect();
+            video.insertProcess(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
-        console.log('result uploadFile done\n');
+        console.log('uploadFile done');
     }, function (error) {
         console.error(error);
         response.json({ error: error });
     });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map
