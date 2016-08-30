@@ -18,7 +18,7 @@ import {UpdateResult} from "../db/dbDriver";
 import {VideoProcess} from "./VideoProcess";
 import {VOAsset} from "../../client/app/services/models";
 import {AssetsController} from "./AssetsController";
-import {VideoServerConnect} from "../videoserver/VideoServerConnect";
+import {VideoServerConnect} from "../videos/VideoServerConnect";
 
 declare var WWW:string;
 declare var SERVER:string;

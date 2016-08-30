@@ -5,7 +5,7 @@ var ImageProcess_1 = require("./ImageProcess");
 var TableModel_1 = require("../db/TableModel");
 var models_1 = require("../../client/app/services/models");
 var AssetsController_1 = require("./AssetsController");
-var VideoServerConnect_1 = require("../videoserver/VideoServerConnect");
+var VideoServerConnect_1 = require("../videos/VideoServerConnect");
 var router = express.Router();
 var fs = require('fs');
 router.get('/select-all', function (req, res) {
