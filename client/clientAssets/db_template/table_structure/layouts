@@ -1,1 +1,0 @@
-CREATE TABLE "layouts" (id INTEGER PRIMARY KEY AUTOINCREMENT,  label TEXT,  timestamp INTEGER, type TEXT, image TEXT, background TEXT, width INTEGER, height INTEGER)
