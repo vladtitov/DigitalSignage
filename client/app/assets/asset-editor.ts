@@ -180,6 +180,7 @@ import {NgTooltip} from "../shared/ng-tooltip";
 
 export class AssetEditor implements OnInit {
     @Input () set _currentAsset(item){
+        if(!item) return;
         // console.log('item ', item);
         this.currentAsset = item;
         this.itemLabel = item.label;
@@ -231,13 +232,18 @@ export class AssetEditor implements OnInit {
     }
 
     saveAsset (name:string, description:string) {
-        this.currentAsset.label = this.itemLabel;
-        if (name || description) {
+        // this.currentAsset.label = this.itemLabel;
+        if(!name){
+            this.showTooltip('red', 'Error: name is empty');
+        }
+
+        // if (name || description) {
             this.currentAsset.label = name;
             this.currentAsset.description = description;
             this.assetService.saveItem(this.currentAsset)
                 .subscribe(
                     (res:UpdateResult)=> {
+                        this.currentAsset.label = this.itemLabel;
                         if (res && res.changes){
                             // this.showSuccess();
                             this.showTooltip('green','Success');
@@ -252,7 +258,7 @@ export class AssetEditor implements OnInit {
                         this.showTooltip('red', 'Error');
                         this.errorMessage = <any>error
                     });
-        } else this.showTooltip('red', 'Error');
+        // } else this.showTooltip('red', 'Error');
     }
 
     hideEdit() {

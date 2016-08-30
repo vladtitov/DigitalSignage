@@ -26,6 +26,8 @@ var AssetEditor = (function () {
     }
     Object.defineProperty(AssetEditor.prototype, "_currentAsset", {
         set: function (item) {
+            if (!item)
+                return;
             // console.log('item ', item);
             this.currentAsset = item;
             this.itemLabel = item.label;
@@ -55,27 +57,29 @@ var AssetEditor = (function () {
     };
     AssetEditor.prototype.saveAsset = function (name, description) {
         var _this = this;
-        this.currentAsset.label = this.itemLabel;
-        if (name || description) {
-            this.currentAsset.label = name;
-            this.currentAsset.description = description;
-            this.assetService.saveItem(this.currentAsset)
-                .subscribe(function (res) {
-                if (res && res.changes) {
-                    // this.showSuccess();
-                    _this.showTooltip('green', 'Success');
-                }
-                else {
-                    // this.showError();
-                    _this.showTooltip('red', 'Error');
-                }
-            }, function (error) {
-                _this.showTooltip('red', 'Error');
-                _this.errorMessage = error;
-            });
+        // this.currentAsset.label = this.itemLabel;
+        if (!name) {
+            this.showTooltip('red', 'Error: name is empty');
         }
-        else
-            this.showTooltip('red', 'Error');
+        // if (name || description) {
+        this.currentAsset.label = name;
+        this.currentAsset.description = description;
+        this.assetService.saveItem(this.currentAsset)
+            .subscribe(function (res) {
+            _this.currentAsset.label = _this.itemLabel;
+            if (res && res.changes) {
+                // this.showSuccess();
+                _this.showTooltip('green', 'Success');
+            }
+            else {
+                // this.showError();
+                _this.showTooltip('red', 'Error');
+            }
+        }, function (error) {
+            _this.showTooltip('red', 'Error');
+            _this.errorMessage = error;
+        });
+        // } else this.showTooltip('red', 'Error');
     };
     AssetEditor.prototype.hideEdit = function () {
         //this.fullItem.selected = false;

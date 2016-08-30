@@ -42,7 +42,8 @@ var ContentManager = (function () {
                     _this.isAddContent = true;
                     break;
                 case "edit":
-                    _this.editorVisible = true;
+                    if (_this.currentAsset)
+                        _this.editorVisible = true;
                     break;
                 case "remove":
                     _this.isAddContent = false;
