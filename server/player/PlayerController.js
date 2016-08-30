@@ -65,4 +65,3 @@ var PlayerController = (function () {
     return PlayerController;
 }());
 exports.PlayerController = PlayerController;
-//# sourceMappingURL=PlayerController.js.map

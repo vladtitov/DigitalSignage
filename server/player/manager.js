@@ -83,4 +83,3 @@ router.post('/statistics/:id', function (req, response) {
     var pl = new models_1.VOLayoutProps(body);
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

@@ -126,6 +126,10 @@ app.use('/account',bodyParser.urlencoded({extended: true}));
 app.use('/account',bodyParser.json());
 app.use('/account', require('./server/account/manager'));
 
+app.use('/videos',bodyParser.urlencoded({extended: true}));
+app.use('/videos',bodyParser.json());
+app.use('/videos', require('./server/videos/manager'));
+
 
 app.use('/player/:token/', function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];

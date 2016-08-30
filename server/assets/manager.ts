@@ -18,6 +18,7 @@ import {UpdateResult} from "../db/dbDriver";
 import {VideoProcess} from "./VideoProcess";
 import {VOAsset} from "../../client/app/services/models";
 import {AssetsController} from "./AssetsController";
+import {VideoServerConnect} from "../videoserver/VideoServerConnect";
 
 declare var WWW:string;
 declare var SERVER:string;
@@ -349,14 +350,13 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
             );
 
         } else if(asset.type === 'video'){
-            response.json({data:'success'});
-            var vp:VideoProcess = new VideoProcess(folder);
-            vp.saveInDatabase(asset).then(function (res) {
-                // response.json({data:res});
-            }, function (err) {
-                console.error(err);
-                response.json({error: err});
-            });
+           // response.json({data:'success'});
+            var video:VideoServerConnect = new VideoServerConnect();
+
+            video.insertProcess(asset).then(
+                res => response.json({data:res})
+                ,err => response.json({error: err})
+            );
         }
         console.log('uploadFile done');
         // console.log('asset\n', asset);

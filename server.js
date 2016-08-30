@@ -71,6 +71,9 @@ app.all('/proxy/*', function (req, res) {
 app.use('/account', bodyParser.urlencoded({ extended: true }));
 app.use('/account', bodyParser.json());
 app.use('/account', require('./server/account/manager'));
+app.use('/videos', bodyParser.urlencoded({ extended: true }));
+app.use('/videos', bodyParser.json());
+app.use('/videos', require('./server/videos/manager'));
 app.use('/player/:token/', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (folder)
@@ -133,4 +136,3 @@ app.listen(port, function () {
     console.log('http://127.0.0.1:' + port);
     console.log('http://127.0.0.1:' + port + '/api');
 });
-//# sourceMappingURL=server.js.map
