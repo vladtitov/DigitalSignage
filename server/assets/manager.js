@@ -141,7 +141,7 @@ router.post('/upload', function (req, response) {
         }
         else if (asset.type === 'video') {
             var video = new VideoServerConnect_1.VideoServerConnect();
-            video.insertProcess(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
+            video.insertProcess(asset, folder).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         console.log('uploadFile done');
     }, function (error) {
@@ -150,3 +150,4 @@ router.post('/upload', function (req, response) {
     });
 });
 module.exports = router;
+//# sourceMappingURL=manager.js.map

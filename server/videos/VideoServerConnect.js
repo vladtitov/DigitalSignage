@@ -70,7 +70,7 @@ var VideoServerConnect = (function () {
         });
         return def.promise;
     };
-    VideoServerConnect.prototype.insertProcess = function (asset) {
+    VideoServerConnect.prototype.insertProcess = function (asset, folder) {
         var _this = this;
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
@@ -147,3 +147,4 @@ var VideoServerConnect = (function () {
     return VideoServerConnect;
 }());
 exports.VideoServerConnect = VideoServerConnect;
+//# sourceMappingURL=VideoServerConnect.js.map

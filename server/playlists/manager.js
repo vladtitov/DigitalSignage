@@ -239,3 +239,4 @@ router.get('/delete-playlist-byid/:id', function (req, res) {
     });
 });
 module.exports = router;
+//# sourceMappingURL=manager.js.map

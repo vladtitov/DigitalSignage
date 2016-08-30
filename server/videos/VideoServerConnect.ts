@@ -98,7 +98,7 @@ export  class VideoServerConnect{
         return def.promise;
     }
 
-    insertProcess(asset:VOAsset): Q.Promise<any>{
+    insertProcess(asset:VOAsset,folder:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db = new DBDriver(null);
         asset.status = 'newvideo';

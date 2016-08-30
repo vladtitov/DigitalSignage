@@ -11,10 +11,12 @@ var proxy = httpProxy.createProxyServer({
     port: 80
 });
 var path = require('path');
+var SETTINGS = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL = ROOT + '/server/db/';
+GLOBAL.SETTINGS = SETTINGS;
 GLOBAL.onError = function (err, res) {
     console.log('onError error\n', err);
     res.json({ error: 'error', reason: err });
@@ -100,8 +102,8 @@ app.use('/api', bodyParser.json());
 app.use('/api', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (!folder) {
-        console.log(' user not loged in go to /clientAssets/folder_template_dev');
-        req.session['user_folder'] = 'clientAssets/folder_template_dev';
+        console.log(' user not loged in go to ' + SETTINGS.dev_folder);
+        req.session['user_folder'] = SETTINGS.dev_folder;
     }
     next();
 });

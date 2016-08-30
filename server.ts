@@ -29,11 +29,20 @@ var proxy = httpProxy.createProxyServer({
     port:80
 });
 
+interface Settings{
+    dev_folder:string;
+}
+
+
+
 var path = require('path');
+
+const SETTINGS:Settings = JSON.parse(fs.readFileSync('settings.json','utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL =  ROOT + '/server/db/';
+GLOBAL.SETTINGS = SETTINGS;
 
 
 GLOBAL.onError = function (err: any, res:express.Response) {
@@ -161,8 +170,8 @@ app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
 
     if(!folder){
-        console.log(' user not loged in go to /clientAssets/folder_template_dev')
-        req.session['user_folder'] = 'clientAssets/folder_template_dev';
+        console.log(' user not loged in go to '+SETTINGS.dev_folder)
+        req.session['user_folder'] = SETTINGS.dev_folder;
     }
     next();
 });
