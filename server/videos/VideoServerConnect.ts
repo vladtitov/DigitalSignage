@@ -1,14 +1,14 @@
+///<reference path="../../typings/request/request.d.ts"/>
+
 import {DBDriver} from "../db/dbDriver";
 import {VOAsset} from "../../client/app/services/models";
-/**
- * Created by Vlad on 8/25/2016.
- */
 import * as fs from 'fs';
 import * as Q from 'q';
 import * as path from 'path';
 
-import * as http from 'http';
-import {IncomingMessage} from "http";
+import * as request from 'request';
+
+
 declare var WWW:string;
 
 
@@ -37,7 +37,7 @@ export class FileDownloader{
        // console.log(url,dest);
 
 
-        http.get(this.url,function(response){
+        request.get(this.url,function(response){
             response.pipe(file);
             file.on('finish', function() {
                 file.close(callBack);  // close() is async, call cb after close completes.
@@ -92,8 +92,12 @@ export  class VideoServerConnect{
     sendNotification(asset:VOAsset): Q.Promise<any>{
 
         var def: Q.Deferred<any> = Q.defer();
-        http.get(this.server+'/'+'newvideo'+'/'+asset.process_id,(res:IncomingMessage)=>{
-            def.resolve(res);
+        var url:string = this.server+'/new-video/'+asset.process_id;
+        console.log(url);
+        request.get(url,(error, response, body)=>{
+            console.log(body);
+
+            def.resolve(body);
         });
         return def.promise;
     }
@@ -105,7 +109,7 @@ export  class VideoServerConnect{
         asset.timestamp = Math.round(Date.now()/1000);
         db.insertRow(asset,'process').done(
             res=>{
-                var db = new DBDriver(this.folder);
+                var db = new DBDriver(folder);
                 asset.process_id = res.insertId;
                 this.sendNotification(asset);
                 db.insertRow(asset,'assets').done(

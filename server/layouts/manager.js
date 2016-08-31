@@ -115,13 +115,13 @@ router.post('/mydevice-new/:id', function (request, response) {
     });
 });
 router.get('/mydevice-all', function (request, response) {
-    var controllerDevice = new DevicesController_1.DevicesController(request.session['user_folder']);
-    controllerDevice.getAllDevices().done(function (res) {
-        response.json({ data: res });
-    }, function (err) {
-        console.error(err);
-        response.json({ error: err });
-    });
+    var folder = request.session['user_folder'];
+    if (!folder) {
+        response.json({ error: 'need-login' });
+        return;
+    }
+    var controllerDevice = new DevicesController_1.DevicesController(folder);
+    controllerDevice.getAllDevices().done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
 router.get('/mydevice-layout/:layout_id', function (request, response) {
     var layout_id = Number(request.params.layout_id);
@@ -138,4 +138,3 @@ router.delete('/mydevice/:id', function (request, response) {
     controllerDevice.deleteDevice(id).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

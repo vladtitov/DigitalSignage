@@ -4,7 +4,7 @@ var models_1 = require("../../client/app/services/models");
 var fs = require('fs');
 var Q = require('q');
 var path = require('path');
-var http = require('http');
+var request = require('request');
 var FileDownloader = (function () {
     function FileDownloader(url, folder, filename) {
         this.url = url;
@@ -21,7 +21,7 @@ var FileDownloader = (function () {
     FileDownloader.prototype.downloader = function (callBack) {
         var dest = path.resolve(WWW + '/' + this.folder + '/' + this.filename);
         var file = fs.createWriteStream(dest);
-        http.get(this.url, function (response) {
+        request.get(this.url, function (response) {
             response.pipe(file);
             file.on('finish', function () {
                 file.close(callBack);
@@ -65,8 +65,11 @@ var VideoServerConnect = (function () {
     };
     VideoServerConnect.prototype.sendNotification = function (asset) {
         var def = Q.defer();
-        http.get(this.server + '/' + 'newvideo' + '/' + asset.process_id, function (res) {
-            def.resolve(res);
+        var url = this.server + '/new-video/' + asset.process_id;
+        console.log(url);
+        request.get(url, function (error, response, body) {
+            console.log(body);
+            def.resolve(body);
         });
         return def.promise;
     };
@@ -77,7 +80,7 @@ var VideoServerConnect = (function () {
         asset.status = 'newvideo';
         asset.timestamp = Math.round(Date.now() / 1000);
         db.insertRow(asset, 'process').done(function (res) {
-            var db = new dbDriver_1.DBDriver(_this.folder);
+            var db = new dbDriver_1.DBDriver(folder);
             asset.process_id = res.insertId;
             _this.sendNotification(asset);
             db.insertRow(asset, 'assets').done(function (res) { return def.resolve(res); }, function (err) { return def.reject(err); });
@@ -147,4 +150,3 @@ var VideoServerConnect = (function () {
     return VideoServerConnect;
 }());
 exports.VideoServerConnect = VideoServerConnect;
-//# sourceMappingURL=VideoServerConnect.js.map
