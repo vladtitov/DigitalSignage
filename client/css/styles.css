@@ -187,6 +187,8 @@ body {
     height: 132px;
     box-shadow: grey 5px 5px 10px;
     margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .thumb-128-2 > div{
     width:132px;

@@ -52,8 +52,8 @@ export class LayoutEditorService {
             })
             .catch(this.handleError).
             subscribe((data)=>{
-            this.currentItem = data;
-            this.currentSubject.next(this.currentItem);
+                this.currentItem = data;
+                this.currentSubject.next(this.currentItem);
         })
     }
 
@@ -70,22 +70,15 @@ export class LayoutEditorService {
        // this.setSelectedById(id);
     }
 
-    saveOnServer(layout?:VOLayout):void{
+    saveOnServer(layout?:VOLayout):Observable<UpdateResult>{
         if(layout)this.currentItem = layout;
 
         var id = this.currentItem?this.currentItem.props.id:-1;
         layout = new VOLayout(this.currentItem);
 
-        this.http.post(this.serviceUrl+'/'+id,layout)
+        return this.http.post(this.serviceUrl+'/'+id,layout)
             .map(function(res:Response){ return res.json().data; })
-            .catch(this.handleError).
-        subscribe((data:UpdateResult)=>{
-            console.log(data);
-
-            if(data.insertId)  this.getLayoutById(data.insertId);
-            else this.getLayoutById();
-
-        });
+            .catch(this.handleError);
     }
 
     setId (id:number) {

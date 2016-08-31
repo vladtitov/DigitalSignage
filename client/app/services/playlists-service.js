@@ -69,7 +69,7 @@ var PlaylistsService = (function () {
     };
     PlaylistsService.prototype.parseAll = function (res) {
         var body = res.json().data || [];
-        console.log('body ', body);
+        // console.log('body ', body);
         var playlistOBJ = {};
         var addItem = function (item) {
             if (!playlistOBJ[item.playlist_id])

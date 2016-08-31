@@ -42,7 +42,9 @@ import {LayoutsListService} from "../layouts/layouts-list-service";
                 </div>
             </div>
             <div>
-                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0" (click)="onSaveClick(inpLabel.value, inpDescr.value)"><span class="fa fa-save"></span> Save</a>
+                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0 || isInProgress" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
+                [ng2-md-tooltip]="tooltipMessage" placement="bottom" [tooltipColor]="color">
+            <span class="fa fa-save"></span> Save</a>
             </div>
             </form>
 </div>
@@ -80,6 +82,11 @@ export class DeviceEditor implements OnInit{
     currentLayout: VOLayout = new VOLayout({});
     layouts:VOLayout[];
     labels: string[];
+
+    color:string;
+    tooltipMessage:string;
+
+    isInProgress:boolean = false;
 
     deviceUrl:string;
     deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/screen/mydevice/';
@@ -139,18 +146,37 @@ export class DeviceEditor implements OnInit{
     }
 
     onSaveClick(label, description){
+        this.isInProgress = true;
         if(this.currentLayout) this.currentItem.layout_id = this.currentLayout.props.id;
         if(this.currentItem.layout_id == -1) this.currentItem.layout_id = 0;
         this.currentItem.label = label;
         this.currentItem.description = description;
         this.deviceEditorService.saveData(this.currentItem)
-            .subscribe((data:UpdateResult) => {
-                var id = data.insertId ? data.insertId : this.currentItem.id;
-                this.getDataById(id);
-                this.onDataChange.emit(id);
-                // if(this.devicelist1) this.devicelist1.refreshData();
-        });
+            .subscribe(
+                (data:UpdateResult) => {
+                    this.showTooltip('green','Success');
+                    this.isInProgress = false;
+                    var id = data.insertId ? data.insertId : this.currentItem.id;
+                    this.getDataById(id);
+                    this.onDataChange.emit(id);
+                    // if(this.devicelist1) this.devicelist1.refreshData();
+                },
+                error => {
+                    this.showTooltip('red', 'Error');
+                    this.isInProgress = false;
+                });
     }
+
+    showTooltip(color:string, message:string){
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
+        setTimeout(()=>{
+            this.tooltipMessage = '';
+        }, 3000);
+    }
+
     showLayout(){
         if(!this.currentItem) return;
         var id:number = this.currentItem.layout_id;

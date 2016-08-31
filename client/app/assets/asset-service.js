@@ -51,8 +51,8 @@ var AssetService = (function () {
         });
     };
     AssetService.prototype.saveItem = function (asset) {
-        console.log('asset ', asset);
-        console.log('selectedAsset ', this.selectedAsset);
+        // console.log('asset ', asset);
+        // console.log('selectedAsset ', this.selectedAsset);
         this.selectedAssetSubject.next(asset);
         var newasset = new models_1.VOAsset(asset);
         delete newasset.selected;

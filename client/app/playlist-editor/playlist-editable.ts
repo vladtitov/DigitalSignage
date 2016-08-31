@@ -23,8 +23,10 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
             <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
-            <a class="btn btn-default" (click)="saveOnServer()"><span class="fa fa-life-saver"></span> Save on Server</a>
-        
+            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress"
+                [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
+            <span class="fa fa-life-saver"></span> Save on Server</a>
+                    
         
             <label class="PNameLabel" for="PName">Playlist Name</label>
            <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
@@ -62,7 +64,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
     styles:[`
             .pl-container{
                 width: 100%;
-                min-height: 160px;
+                min-height: 170px;
                 overflow-x: scroll;
                 display: block;
                 background-color: #e7f1ff;
@@ -118,6 +120,10 @@ export class PlaylistEditable implements OnInit{
     errorMessage:string;
 
     toolsDisadled:boolean;
+    isInProgress:boolean = false;
+
+    color:string;
+    tooltipMessage:string;
 
    // private dragItem:VOPlayLists_Assets;
     private selectedItem:VOPlayLists_Assets
@@ -133,8 +139,6 @@ export class PlaylistEditable implements OnInit{
         this.selectInnerEmitter.next(item);
     }
 
-
-
     calculateDuration():void{
         if(!this.playlist) return;
         var total:number=0;
@@ -142,11 +146,12 @@ export class PlaylistEditable implements OnInit{
             total+=item.lasting;
         })
         this.playlistProps.duration = total;
-        console.log('total', total);
+        // console.log('total', total);
     }
 
     createCover(){
-        if(!this.playlist) return;
+        if(!this.playlist.list.length) return;
+        // console.log('this.playlist', this.playlist);
         var cover:VOPlayLists_Assets;
         var image:string;
         this.playlistItems.forEach(function(item:VOPlayLists_Assets){
@@ -171,19 +176,35 @@ export class PlaylistEditable implements OnInit{
 
     saveOnServer():void{
         //console.log(this.playlistProps)
+        this.isInProgress = true;
         this.calculateDuration();
         this.createCover();
         this.playlistservice.saveDataOnServer()
             .subscribe(
                 (result:UpdateResult)=> {
+                    // console.log('save: ', result);
+                    this.isInProgress = false;
+                    this.showTooltip('green','Success');
                     if (result.insertId) {
-                        console.log(result);
+                        // console.log('save: ', result);
                         this.router.navigate(['./playlist-editor',result.insertId])
-
                     }
-                })
+                },
+                error => {
+                    this.isInProgress = false;
+                    this.showTooltip('red', 'Error');
+                });
                    // this.getDataFromServer();
 
+    }
+    showTooltip(color:string, message:string){
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
+        setTimeout(()=>{
+            this.tooltipMessage = '';
+        }, 3000);
     }
     onItemDragend(evt:DragEvent):void{
 

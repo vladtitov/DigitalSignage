@@ -27,6 +27,8 @@ var layouts_template_1 = require("./layouts/layouts-template");
 var devices_manager_1 = require("./device/devices-manager");
 var devices_list_1 = require("./device/devices-list");
 var device_editor_1 = require("./device/device-editor");
+var ng2_md_tooltip_1 = require("./shared/ng2-md-tooltip/ng2-md-tooltip");
+var tooltip_text_1 = require("./shared/ng2-md-tooltip/tooltip-text");
 //import { HeroesModule } from './heroes/heroes.module';
 //import { LoginComponent } from './login.component';
 //import { DialogService }  from './dialog.service';
@@ -53,11 +55,14 @@ var AppModule = (function () {
                 layouts_template_1.LayoutsTemplate,
                 devices_manager_1.DevicesManager,
                 devices_list_1.DevicesList,
-                device_editor_1.DeviceEditor
+                device_editor_1.DeviceEditor,
+                ng2_md_tooltip_1.Ng2MdTooltip,
+                tooltip_text_1.TooltipText
             ],
             providers: [
                 app_routing_1.appRoutingProviders,
             ],
+            entryComponents: [tooltip_text_1.TooltipText],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])

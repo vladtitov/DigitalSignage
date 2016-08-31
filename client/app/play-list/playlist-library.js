@@ -46,9 +46,11 @@ var PlayListLibrary = (function () {
                     return item.label;
                 });
                 _this.layoutsLabels = labelArr.join(', ');
+                _this.usedInLayout = true;
             }
             else {
                 _this.layoutsLabels = 'no layouts';
+                _this.usedInLayout = false;
             }
         });
     };
@@ -64,12 +66,13 @@ var PlayListLibrary = (function () {
     };
     PlayListLibrary.prototype.DeletePlaylist = function () {
         var _this = this;
+        // console.log('selecteditem', this.selecteditem);
         if (this.playlistid && confirm('Are you want to delete playlist "' + this.selecteditem.props.label + '" ?\n' +
             'Used layouts: ' + this.layoutsLabels)) {
             this.playlistService.daletePlaylist(this.selecteditem.props.id)
                 .subscribe(function (res) {
                 _this.playlistsService.getPlaylists();
-                if (_this.selecteditem.usedLayout.length) {
+                if (_this.usedInLayout) {
                     alert("resave layout: " + _this.layoutsLabels);
                 }
             });

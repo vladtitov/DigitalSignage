@@ -121,7 +121,7 @@ export class ContentManager implements OnInit {
                     this.isAddContent = true;
                     break;
                 case "edit":
-                    this.editorVisible = true;
+                    if(this.currentAsset) this.editorVisible = true;
                     break;
                 case "remove":
                     this.isAddContent = false;

@@ -49,8 +49,8 @@ export class AssetService {
     }
 
     saveItem (asset:VOAsset): Observable<UpdateResult> {
-        console.log('asset ', asset);
-        console.log('selectedAsset ', this.selectedAsset);
+        // console.log('asset ', asset);
+        // console.log('selectedAsset ', this.selectedAsset);
 
         this.selectedAssetSubject.next(asset);
         let newasset = new VOAsset(asset);

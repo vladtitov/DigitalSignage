@@ -51,8 +51,7 @@ export class PlayListService {
 
 
     saveDataOnServer():Observable<UpdateResult>{
-        console.log(this.currentItem);
-
+        // console.log(this.currentItem);
 
         return this.http.post(this.serviceUrl+'playlists/byid/'+this.Id,this.currentItem)
             .map( (res) =>{return  new UpdateResult(res.json().data)})
@@ -98,7 +97,7 @@ export class PlayListService {
             })
             .catch(this.handleError).subscribe(
             result=>{
-                console.log(result);
+                // console.log(result);
                 this.currentItem = result;
                 this.currentItemSubject.next (this.currentItem);
             }

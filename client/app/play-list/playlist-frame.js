@@ -30,7 +30,10 @@ var PlayListFrame = (function () {
                 this.image = this.item.thumb;
                 break;
         }
-        this.label = this.item.label || 'no label';
+        if (!this.item.label)
+            this.item.label = this.item.originalname;
+        if (this.item)
+            this.label = this.item.label; // || 'no label';
     };
     __decorate([
         core_1.Input(), 
