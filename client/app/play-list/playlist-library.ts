@@ -65,6 +65,7 @@ export class PlayListLibrary implements OnInit {
     playlistid:number;
 
     layoutsLabels:string;
+    usedInLayout:boolean;
 
     toolsDisadled:boolean;
 
@@ -96,9 +97,11 @@ export class PlayListLibrary implements OnInit {
                         return item.label;
                     });
                     this.layoutsLabels = labelArr.join(', ');
+                    this.usedInLayout = true;
                     // console.log('this.layoutsLabels', this.layoutsLabels);
                 } else {
                     this.layoutsLabels = 'no layouts';
+                    this.usedInLayout = false;
                 }
             });
     }
@@ -116,13 +119,14 @@ export class PlayListLibrary implements OnInit {
     }
 
     DeletePlaylist() {
+        // console.log('selecteditem', this.selecteditem);
         if (this.playlistid && confirm('Are you want to delete playlist "' + this.selecteditem.props.label + '" ?\n' +
                 'Used layouts: ' + this.layoutsLabels)){
             this.playlistService.daletePlaylist(this.selecteditem.props.id)
                 .subscribe(
                     (res:UpdateResult)=>{
                         this.playlistsService.getPlaylists();
-                        if(this.selecteditem.usedLayout.length){
+                        if(this.usedInLayout){
                             alert("resave layout: " + this.layoutsLabels);
                         }
                     }

@@ -23,7 +23,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
             <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
-            <a class="btn btn-default" (click)="saveOnServer()"
+            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress"
                 [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
             <span class="fa fa-life-saver"></span> Save on Server</a>
                     
@@ -64,7 +64,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
     styles:[`
             .pl-container{
                 width: 100%;
-                min-height: 160px;
+                min-height: 170px;
                 overflow-x: scroll;
                 display: block;
                 background-color: #e7f1ff;
@@ -120,6 +120,7 @@ export class PlaylistEditable implements OnInit{
     errorMessage:string;
 
     toolsDisadled:boolean;
+    isInProgress:boolean = false;
 
     color:string;
     tooltipMessage:string;
@@ -149,7 +150,8 @@ export class PlaylistEditable implements OnInit{
     }
 
     createCover(){
-        if(!this.playlist) return;
+        if(!this.playlist.list.length) return;
+        // console.log('this.playlist', this.playlist);
         var cover:VOPlayLists_Assets;
         var image:string;
         this.playlistItems.forEach(function(item:VOPlayLists_Assets){
@@ -174,12 +176,14 @@ export class PlaylistEditable implements OnInit{
 
     saveOnServer():void{
         //console.log(this.playlistProps)
+        this.isInProgress = true;
         this.calculateDuration();
         this.createCover();
         this.playlistservice.saveDataOnServer()
             .subscribe(
                 (result:UpdateResult)=> {
                     // console.log('save: ', result);
+                    this.isInProgress = false;
                     this.showTooltip('green','Success');
                     if (result.insertId) {
                         // console.log('save: ', result);
@@ -187,6 +191,7 @@ export class PlaylistEditable implements OnInit{
                     }
                 },
                 error => {
+                    this.isInProgress = false;
                     this.showTooltip('red', 'Error');
                 });
                    // this.getDataFromServer();

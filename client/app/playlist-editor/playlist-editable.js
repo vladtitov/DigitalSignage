@@ -26,6 +26,7 @@ var PlaylistEditable = (function () {
         this.router = router;
         this.isMove = false;
         this.playlistProps = new models_1.VOPlayListProps({});
+        this.isInProgress = false;
         this.selectInnerEmitter = new core_1.EventEmitter();
     }
     Object.defineProperty(PlaylistEditable.prototype, "dragEnter", {
@@ -60,8 +61,9 @@ var PlaylistEditable = (function () {
         // console.log('total', total);
     };
     PlaylistEditable.prototype.createCover = function () {
-        if (!this.playlist)
+        if (!this.playlist.list.length)
             return;
+        // console.log('this.playlist', this.playlist);
         var cover;
         var image;
         this.playlistItems.forEach(function (item) {
@@ -87,17 +89,20 @@ var PlaylistEditable = (function () {
     PlaylistEditable.prototype.saveOnServer = function () {
         var _this = this;
         //console.log(this.playlistProps)
+        this.isInProgress = true;
         this.calculateDuration();
         this.createCover();
         this.playlistservice.saveDataOnServer()
             .subscribe(function (result) {
             // console.log('save: ', result);
+            _this.isInProgress = false;
             _this.showTooltip('green', 'Success');
             if (result.insertId) {
                 // console.log('save: ', result);
                 _this.router.navigate(['./playlist-editor', result.insertId]);
             }
         }, function (error) {
+            _this.isInProgress = false;
             _this.showTooltip('red', 'Error');
         });
         // this.getDataFromServer();
@@ -309,8 +314,8 @@ var PlaylistEditable = (function () {
     PlaylistEditable = __decorate([
         core_1.Component({
             selector: 'playlist-editable',
-            template: "\n<div>       \n            \n            <a class=\"btn btn-default\" (click)=\"createPlayList()\"><span class=\"fa fa-plus\"> </span> Create New</a>\n            <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"deletePlayList()\"><span class=\"fa fa-remove\"></span> Delete</a>             \n            <a class=\"btn btn-default\" (click)=\"saveOnServer()\"\n                [ng2-md-tooltip]=\"tooltipMessage\" placement=\"top\" [tooltipColor]=\"color\">\n            <span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                    \n        \n            <label class=\"PNameLabel\" for=\"PName\">Playlist Name</label>\n           <input id=\"PName\" type=\"text\" [(ngModel)]=\"playlistProps.label\" name=\"plalistname\"/>\n            \n            <span> Duration:</span><span>{{playlistProps.duration}}</span>\n            \n            <div class=\"pl-container\">\n                <div class=\"pl-content\" >\n                    <div class=\"timeline\" flex layout=\"row\" >\n                        <div *ngFor=\"let mytime of timeCells\">\n                            <time-cell [timecell]=\"mytime\" ></time-cell>\n                        </div>                 \n                    </div>\n                    <div flex layout=\"row\"  class = \"cart\" (dragend)=\"onItemDragend(item)\">\n                        <div class=\"item\"  *ngFor=\"let item of playlistItems; let i = index\" layout=\"row\"  (dragend)=\"onDragItemEnd($event, item)\">\n                            <div>                                                        \n                                <playlist-editable-item\n                                    [item]=\"item\" [position]=\"i\" #myitem                               \n                                    (dragmove)=\"onDragMove$event(item)\"\n                                    (dragend)=\"onDragEnd($event,item)\" \n                                    (onremovemeDrag)=\"onremovemeDrag($event)\"\n                                    (dragstart)=\"onDragItemStart($event,item,myitem)\" \n                                    (dragover)=\"onItemDragOver($event,item)\"                                                       \n                                ></playlist-editable-item>\n                            </div>\n                        </div>\n                        <div id=\"emtyline\">\n                                                               \n                        </div>\n                    </div>\n                </div>                 \n            </div>\n</div>\n",
-            styles: ["\n            .pl-container{\n                width: 100%;\n                min-height: 160px;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n                margin-top: 10px;\n            }\n            .pl-content{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n            .title{\n            \n            }\n            .PNameLabel{\n                margin-left: 50px;\n            }\n            time-cell{\n                width: 128px;\n                height: 20px;\n                background-color: #0000AA;\n                color: white;                \n            }       \n         \n                \n"],
+            template: "\n<div>       \n            \n            <a class=\"btn btn-default\" (click)=\"createPlayList()\"><span class=\"fa fa-plus\"> </span> Create New</a>\n            <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"deletePlayList()\"><span class=\"fa fa-remove\"></span> Delete</a>             \n            <a class=\"btn btn-default\" (click)=\"saveOnServer()\" [class.disabled]=\"isInProgress\"\n                [ng2-md-tooltip]=\"tooltipMessage\" placement=\"top\" [tooltipColor]=\"color\">\n            <span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                    \n        \n            <label class=\"PNameLabel\" for=\"PName\">Playlist Name</label>\n           <input id=\"PName\" type=\"text\" [(ngModel)]=\"playlistProps.label\" name=\"plalistname\"/>\n            \n            <span> Duration:</span><span>{{playlistProps.duration}}</span>\n            \n            <div class=\"pl-container\">\n                <div class=\"pl-content\" >\n                    <div class=\"timeline\" flex layout=\"row\" >\n                        <div *ngFor=\"let mytime of timeCells\">\n                            <time-cell [timecell]=\"mytime\" ></time-cell>\n                        </div>                 \n                    </div>\n                    <div flex layout=\"row\"  class = \"cart\" (dragend)=\"onItemDragend(item)\">\n                        <div class=\"item\"  *ngFor=\"let item of playlistItems; let i = index\" layout=\"row\"  (dragend)=\"onDragItemEnd($event, item)\">\n                            <div>                                                        \n                                <playlist-editable-item\n                                    [item]=\"item\" [position]=\"i\" #myitem                               \n                                    (dragmove)=\"onDragMove$event(item)\"\n                                    (dragend)=\"onDragEnd($event,item)\" \n                                    (onremovemeDrag)=\"onremovemeDrag($event)\"\n                                    (dragstart)=\"onDragItemStart($event,item,myitem)\" \n                                    (dragover)=\"onItemDragOver($event,item)\"                                                       \n                                ></playlist-editable-item>\n                            </div>\n                        </div>\n                        <div id=\"emtyline\">\n                                                               \n                        </div>\n                    </div>\n                </div>                 \n            </div>\n</div>\n",
+            styles: ["\n            .pl-container{\n                width: 100%;\n                min-height: 170px;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n                margin-top: 10px;\n            }\n            .pl-content{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n            .title{\n            \n            }\n            .PNameLabel{\n                margin-left: 50px;\n            }\n            time-cell{\n                width: 128px;\n                height: 20px;\n                background-color: #0000AA;\n                color: white;                \n            }       \n         \n                \n"],
             directives: [playlist_editable_item_1.PlayListItem, PlayListSpacer_1.PlayListSpacer, TimeCell_1.TimeCellCompnent],
             providers: [playlist_service_1.PlayListService]
         }), 

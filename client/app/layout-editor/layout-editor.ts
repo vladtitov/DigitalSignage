@@ -33,6 +33,7 @@ declare var  domtoimage:any;
                     <a [routerLink]="['/layout-template/',-1]" class="btn btn-default"><span class="fa fa-plus"></span> Create New Layout</a>                           
                     <a #mybtn class="btn btn-default" [class.disabled]="toolsDisadled" (click)="onDeleteClick($evtnt,mybtn)"><span class="fa fa-minus"></span> Delete Layout</a>
                     <a class="btn btn-default" (click) = "onServerSaveClick()"
+                        [class.disabled]="isInProgress"
                         [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
                     <span class="fa fa-life-saver"></span> Save on Server</a>
                 </nav>
@@ -109,6 +110,8 @@ export class LayoutEditor implements OnInit {
 
     color:string;
     tooltipMessage:string;
+
+    isInProgress:boolean = false;
 
     mySizeW: number = 960;
     mySizeH: number = 540;
@@ -203,7 +206,9 @@ export class LayoutEditor implements OnInit {
             .then(function (dataUrl) {
               callBack(dataUrl);
             })
-            .catch(function (error) {
+            .catch( (error) => {
+                this.isInProgress = false;
+                this.showTooltip('red', 'Error');
                 console.error('oops, something went wrong!', error);
             });
 
@@ -221,7 +226,7 @@ export class LayoutEditor implements OnInit {
     }
     onServerSaveClick():void{
         ///console.log(this.currentViewPorts);
-
+        this.isInProgress = true;
       this.makeSnap((dataUrl)=>{
           this.currentLayout.props.image = dataUrl;
           this.currentLayout.props.type='lite';
@@ -229,14 +234,15 @@ export class LayoutEditor implements OnInit {
            this.editorService.saveOnServer(this.currentLayout)
                .subscribe(
                (data:UpdateResult)=>{
-                   console.log(data);
+                   // console.log(data);
                    this.showTooltip('green','Success');
+                   this.isInProgress = false;
                    if(data.insertId)  this.editorService.getLayoutById(data.insertId);
                    else this.editorService.getLayoutById();
-
                },
                error => {
                    this.showTooltip('red', 'Error');
+                   this.isInProgress = false;
                });
         })
 

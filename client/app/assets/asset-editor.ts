@@ -59,7 +59,7 @@ import {NgTooltip} from "../shared/ng-tooltip";
                                 <button
                                     type="button"
                                     class="btn btn-primary save"
-                                    [class.disabled]="disabled"
+                                    [class.disabled]="isInProgress"
                                     (click)="saveAsset(inputItem.value, textareaItem.value)"
                                     [ng2-md-tooltip]="tooltipMessage" placement="right" [tooltipColor]="color"
                                     >
@@ -192,11 +192,12 @@ export class AssetEditor implements OnInit {
     errorMessage: string;
     success: boolean;
     error: boolean;
-    disabled: boolean;
     isTooltip:boolean;
 
     color:string;
     tooltipMessage:string;
+
+    isInProgress:boolean = false;
 
     private sub: Subscription;
 
@@ -235,30 +236,41 @@ export class AssetEditor implements OnInit {
         // this.currentAsset.label = this.itemLabel;
         if(!name){
             this.showTooltip('red', 'Error: name is empty');
+            return;
         }
 
-        // if (name || description) {
-            this.currentAsset.label = name;
-            this.currentAsset.description = description;
-            this.assetService.saveItem(this.currentAsset)
-                .subscribe(
-                    (res:UpdateResult)=> {
-                        this.currentAsset.label = this.itemLabel;
-                        if (res && res.changes){
-                            // this.showSuccess();
-                            this.showTooltip('green','Success');
-                            // this.assetService.
-                        }  else{
-                            // this.showError();
-                            this.showTooltip('red', 'Error');
-                        }
+        this.isInProgress = true;
 
-                    },
-                    error => {
+        var oldName: string = this.currentAsset.label;
+        var oldDescription: string = this.currentAsset.description;
+
+        this.currentAsset.label = name;
+        this.currentAsset.description = description;
+        this.assetService.saveItem(this.currentAsset)
+            .subscribe(
+                (res:UpdateResult)=> {
+                    if (res && res.changes){
+                        // this.showSuccess();
+                        this.currentAsset.label = this.itemLabel;
+                        this.showTooltip('green','Success');
+                        this.isInProgress = false;
+                        // console.log('save Success', res);
+                    }  else{
+                        // this.showError();
+                        this.currentAsset.label = oldName;
+                        this.currentAsset.description = oldDescription;
                         this.showTooltip('red', 'Error');
-                        this.errorMessage = <any>error
-                    });
-        // } else this.showTooltip('red', 'Error');
+                        this.isInProgress = false;
+                    }
+
+                },
+                error => {
+                    this.currentAsset.label = oldName;
+                    this.currentAsset.description = oldDescription;
+                    this.showTooltip('red', 'Error');
+                    this.isInProgress = false;
+                    this.errorMessage = <any>error
+                });
     }
 
     hideEdit() {

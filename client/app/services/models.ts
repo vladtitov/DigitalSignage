@@ -1,29 +1,33 @@
 
 export class VOAsset {
     id:number;
-    active: number;
-    label:string;
-    duration: number;
-    status:string;
+    originalname:string;
+    path:string;
+    thumb:string;
+    size:number;
+    width:number;
     height:number;
     mimetype:string;
-    dimension:string;
-    originalname:string;
+    orig_dimension:string;
+    active: number;
+    duration: number;
+    type:string;
+
+    metadata:string;
     filename:string;
+    label:string;
+    description:string;
+    process_id:number;
+    encoding: string;
+    timestamp:number;
+    status:string;
+    folder:string;
+
     selected:boolean;
-    path:string;
     destination:string;
     workingFolder:string;
     token:string;
-    folder:string;
-    size:number;
-    thumb:string;
-    width:number;
-    type:string;
-    metadata:string;
-    description:string;
-    process_id:number;
-    timestamp:number;
+
     usedPlayList:VOPlayListProps[];
     constructor(obj:any) {
         for (var str in obj) this[str] = obj[str];
@@ -32,21 +36,26 @@ export class VOAsset {
 
 export class VOPlayLists_Assets{
     id:number;
-    active: number;
-    label:string;
-    duration: number;
-    height:number;
-    mime:string;
-    dimension:string;
-    original_name:string;
-    filename:string;
+    originalname:string;
     path:string;
-    size:number;
     thumb:string;
+    size:number;
     width:number;
+    height:number;
+    mimetype:string;
+    orig_dimension:string;
+    active: number;
+    duration: number;
     type:string;
     metadata:string;
+    filename:string;
+    label:string;
     description:string;
+    process_id:number;
+    encoding: string;
+    timestamp:number;
+    status:string;
+    folder:string;
 
     playlist_id:number;
     asset_id:number;
@@ -75,7 +84,7 @@ export class VOPlayListProps{
     created_time: number;
     duration:number;
     active: number;
-    dimension: number;
+    dimension: string;
     timestamp:number;
     image:string;
     constructor (obj:any) {

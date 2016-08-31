@@ -42,7 +42,7 @@ import {LayoutsListService} from "../layouts/layouts-list-service";
                 </div>
             </div>
             <div>
-                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
+                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0 || isInProgress" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
                 [ng2-md-tooltip]="tooltipMessage" placement="bottom" [tooltipColor]="color">
             <span class="fa fa-save"></span> Save</a>
             </div>
@@ -85,6 +85,8 @@ export class DeviceEditor implements OnInit{
 
     color:string;
     tooltipMessage:string;
+
+    isInProgress:boolean = false;
 
     deviceUrl:string;
     deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/screen/mydevice/';
@@ -144,6 +146,7 @@ export class DeviceEditor implements OnInit{
     }
 
     onSaveClick(label, description){
+        this.isInProgress = true;
         if(this.currentLayout) this.currentItem.layout_id = this.currentLayout.props.id;
         if(this.currentItem.layout_id == -1) this.currentItem.layout_id = 0;
         this.currentItem.label = label;
@@ -152,6 +155,7 @@ export class DeviceEditor implements OnInit{
             .subscribe(
                 (data:UpdateResult) => {
                     this.showTooltip('green','Success');
+                    this.isInProgress = false;
                     var id = data.insertId ? data.insertId : this.currentItem.id;
                     this.getDataById(id);
                     this.onDataChange.emit(id);
@@ -159,6 +163,7 @@ export class DeviceEditor implements OnInit{
                 },
                 error => {
                     this.showTooltip('red', 'Error');
+                    this.isInProgress = false;
                 });
     }
 
