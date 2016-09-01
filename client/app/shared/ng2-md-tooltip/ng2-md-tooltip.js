@@ -23,16 +23,16 @@ var Ng2MdTooltip = (function () {
         this.timeout = 3;
     }
     Ng2MdTooltip.prototype.ngOnChanges = function (changes) {
-        if (!changes.tooltip.currentValue)
+        if (!changes.options.currentValue)
             this.hide();
         else {
             var options;
-            if (typeof changes.tooltip.currentValue === 'object') {
-                options = changes.tooltip.currentValue;
+            if (typeof changes.options.currentValue === 'object') {
+                options = changes.options.currentValue;
             }
             else {
                 options = {};
-                options.message = changes.tooltip.currentValue;
+                options.message = changes.options.currentValue;
             }
             //console.log(options);
             options.placement = options.placement || this.placement || 'top';
@@ -69,7 +69,7 @@ var Ng2MdTooltip = (function () {
     __decorate([
         core_1.Input("ng2-md-tooltip"), 
         __metadata('design:type', Object)
-    ], Ng2MdTooltip.prototype, "tooltip", void 0);
+    ], Ng2MdTooltip.prototype, "options", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
