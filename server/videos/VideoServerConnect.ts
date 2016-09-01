@@ -1,14 +1,14 @@
-///<reference path="../../typings/request/request.d.ts"/>
-
 import {DBDriver} from "../db/dbDriver";
 import {VOAsset} from "../../client/app/services/models";
+/**
+ * Created by Vlad on 8/25/2016.
+ */
 import * as fs from 'fs';
 import * as Q from 'q';
 import * as path from 'path';
 
-import * as request from 'request';
-
-
+import * as http from 'http';
+import {IncomingMessage} from "http";
 declare var WWW:string;
 
 
@@ -37,7 +37,7 @@ export class FileDownloader{
        // console.log(url,dest);
 
 
-        request.get(this.url,function(response){
+        http.get(this.url,function(response){
             response.pipe(file);
             file.on('finish', function() {
                 file.close(callBack);  // close() is async, call cb after close completes.
@@ -53,8 +53,15 @@ export class FileDownloader{
 
 export  class VideoServerConnect{
 
-    folder:string;
-    server:string='http://192.168.1.12:56555';
+    // folder:string;
+    // server:string='http://192.168.1.12:56555';
+    // server:string='http://192.168.0.82:56555';
+    server:string='http://127.0.0.1:56555';
+
+    constructor(private folder?:string) {
+
+    }
+
 
     downloadFiles(asset:VOAsset,folder:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
@@ -90,26 +97,24 @@ export  class VideoServerConnect{
 
 
     sendNotification(asset:VOAsset): Q.Promise<any>{
-
+        console.log('sendNotification');
         var def: Q.Deferred<any> = Q.defer();
-        var url:string = this.server+'/new-video/'+asset.process_id;
-        console.log(url);
-        request.get(url,(error, response, body)=>{
-            console.log(body);
-
-            def.resolve(body);
+        http.get(this.server+'/'+'wake-up',(res:IncomingMessage)=>{
+            // console.log('sendNotification res', res);
+            def.resolve(res);
         });
         return def.promise;
     }
 
-    insertProcess(asset:VOAsset,folder:string): Q.Promise<any>{
+    insertProcess(asset:VOAsset): Q.Promise<any>{
+        console.log('insertProcess');
         var def: Q.Deferred<any> = Q.defer();
         var db = new DBDriver(null);
         asset.status = 'newvideo';
         asset.timestamp = Math.round(Date.now()/1000);
         db.insertRow(asset,'process').done(
             res=>{
-                var db = new DBDriver(folder);
+                var db = new DBDriver(this.folder);
                 asset.process_id = res.insertId;
                 this.sendNotification(asset);
                 db.insertRow(asset,'assets').done(
@@ -231,7 +236,9 @@ export  class VideoServerConnect{
 
 
 
-    getNextVideo(status:string): Q.Promise<any>{
+    getNextVideo(): Q.Promise<any>{
+        console.log('getNextVideo');
+        var status:string = 'newvideo';
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
         var sql:string = 'SELECT * FROM process WHERE status=?';
@@ -239,10 +246,10 @@ export  class VideoServerConnect{
             res=>{
                 var out:VOAsset;
                 for(var i=0,n= res.length;i<n;i++){
-                    var asset:VOAsset = res[i]
+                    var asset:VOAsset = res[i];
                     //console.log(WWW+'/'+asset.path);
                     if(fs.existsSync(WWW+'/'+asset.path)){
-                        out = asset
+                        out = asset;
                         break
                     }else db.deleteById(asset.id,'process');
                 }
