@@ -21,6 +21,7 @@ import {AssemblerPlayLists} from "./playlists-list-dragable";
 import {LayoutEditorViewport} from "./layout-editor-viewport";
 import {LayoutEditorService} from "./layout-editor-service";
 import {DeviceEditorService} from "../device/device-editor-service";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 declare var  domtoimage:any;
 @Component({
@@ -34,7 +35,7 @@ declare var  domtoimage:any;
                     <a #mybtn class="btn btn-default" [class.disabled]="toolsDisadled" (click)="onDeleteClick($evtnt,mybtn)"><span class="fa fa-minus"></span> Delete Layout</a>
                     <a class="btn btn-default" (click) = "onServerSaveClick()"
                         [class.disabled]="isInProgress"
-                        [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
+                        [ng2-md-tooltip]="tooltipSave" placement="top" >
                     <span class="fa fa-life-saver"></span> Save on Server</a>
                 </nav>
             </div>
@@ -109,7 +110,7 @@ export class LayoutEditor implements OnInit {
     toolsDisadled:boolean;
 
     color:string;
-    tooltipMessage:string;
+    tooltipSave:TooltipOptions;
 
     isInProgress:boolean = false;
 
@@ -208,7 +209,7 @@ export class LayoutEditor implements OnInit {
             })
             .catch( (error) => {
                 this.isInProgress = false;
-                this.showTooltip('red', 'Error');
+                this.tooltipSave = {message:'Error processing layout',tooltip_class:'btn-danger'};
                 console.error('oops, something went wrong!', error);
             });
 
@@ -226,6 +227,7 @@ export class LayoutEditor implements OnInit {
     }
     onServerSaveClick():void{
         ///console.log(this.currentViewPorts);
+        this.tooltipSave = null;
         this.isInProgress = true;
       this.makeSnap((dataUrl)=>{
           this.currentLayout.props.image = dataUrl;
@@ -235,13 +237,13 @@ export class LayoutEditor implements OnInit {
                .subscribe(
                (data:UpdateResult)=>{
                    // console.log(data);
-                   this.showTooltip('green','Success');
+                   this.tooltipSave = {message:'Layout saved on server',tooltip_class:'btn-success'};
                    this.isInProgress = false;
                    if(data.insertId)  this.editorService.getLayoutById(data.insertId);
                    else this.editorService.getLayoutById();
                },
                error => {
-                   this.showTooltip('red', 'Error');
+                   this.tooltipSave = {message:'Error save on server',tooltip_class:'btn-danger'}
                    this.isInProgress = false;
                });
         })
@@ -253,15 +255,7 @@ export class LayoutEditor implements OnInit {
 
     }
 
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
+
 
  }
 

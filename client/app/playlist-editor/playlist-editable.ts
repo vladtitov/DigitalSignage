@@ -13,6 +13,7 @@ import {URLSearchParams} from "@angular/http"
 import {Subscribable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Rx";
 import {UpdateResult} from "../../../server/db/dbDriver";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 
 
@@ -24,7 +25,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
             <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
             <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress"
-                [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
+                [ng2-md-tooltip]="tooltipSave" placement="top">
             <span class="fa fa-life-saver"></span> Save on Server</a>
                     
         
@@ -123,7 +124,7 @@ export class PlaylistEditable implements OnInit{
     isInProgress:boolean = false;
 
     color:string;
-    tooltipMessage:string;
+    tooltipSave:TooltipOptions;
 
    // private dragItem:VOPlayLists_Assets;
     private selectedItem:VOPlayLists_Assets
@@ -176,6 +177,7 @@ export class PlaylistEditable implements OnInit{
 
     saveOnServer():void{
         //console.log(this.playlistProps)
+        this.tooltipSave = null;
         this.isInProgress = true;
         this.calculateDuration();
         this.createCover();
@@ -184,7 +186,8 @@ export class PlaylistEditable implements OnInit{
                 (result:UpdateResult)=> {
                     // console.log('save: ', result);
                     this.isInProgress = false;
-                    this.showTooltip('green','Success');
+                    this.tooltipSave = {message:'Playlist saver on server',tooltip_class:'btn-success'};
+
                     if (result.insertId) {
                         // console.log('save: ', result);
                         this.router.navigate(['./playlist-editor',result.insertId])
@@ -192,20 +195,12 @@ export class PlaylistEditable implements OnInit{
                 },
                 error => {
                     this.isInProgress = false;
-                    this.showTooltip('red', 'Error');
+                    this.tooltipSave = {message:'Error on server',tooltip_class:'btn-danger'};
                 });
                    // this.getDataFromServer();
 
     }
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
+
     onItemDragend(evt:DragEvent):void{
 
     }

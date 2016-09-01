@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {AssetCard} from "./asset-card";
 import {NgTooltip} from "../shared/ng-tooltip";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 // import {MY_DIRECTIVES} from "../app.directives";
 
@@ -61,7 +62,7 @@ import {NgTooltip} from "../shared/ng-tooltip";
                                     class="btn btn-primary save"
                                     [class.disabled]="isInProgress"
                                     (click)="saveAsset(inputItem.value, textareaItem.value)"
-                                    [ng2-md-tooltip]="tooltipMessage" placement="right" [tooltipColor]="color"
+                                    [ng2-md-tooltip]="tooltipSave" placement="right" 
                                     >
                                     Save on server
                                 </button>
@@ -195,7 +196,7 @@ export class AssetEditor implements OnInit {
     isTooltip:boolean;
 
     color:string;
-    tooltipMessage:string;
+    tooltipSave:TooltipOptions;
 
     isInProgress:boolean = false;
 
@@ -235,7 +236,7 @@ export class AssetEditor implements OnInit {
     saveAsset (name:string, description:string) {
         // this.currentAsset.label = this.itemLabel;
         if(!name){
-            this.showTooltip('red', 'Error: name is empty');
+            this.tooltipSave = {message:'Name can not be empty',tooltip_class:'btn-danger'}
             return;
         }
 
@@ -252,14 +253,14 @@ export class AssetEditor implements OnInit {
                     if (res && res.changes){
                         // this.showSuccess();
                         this.currentAsset.label = this.itemLabel;
-                        this.showTooltip('green','Success');
+                        this.tooltipSave = {message:'Content saved on server',tooltip_class:'btn-success'};
                         this.isInProgress = false;
                         // console.log('save Success', res);
                     }  else{
                         // this.showError();
                         this.currentAsset.label = oldName;
                         this.currentAsset.description = oldDescription;
-                        this.showTooltip('red', 'Error');
+                        this.tooltipSave = {message:'Error processing layout',tooltip_class:'btn-danger'};
                         this.isInProgress = false;
                     }
 
@@ -267,7 +268,7 @@ export class AssetEditor implements OnInit {
                 error => {
                     this.currentAsset.label = oldName;
                     this.currentAsset.description = oldDescription;
-                    this.showTooltip('red', 'Error');
+                    this.tooltipSave = {message:'Error processing Asset',tooltip_class:'btn-danger'};
                     this.isInProgress = false;
                     this.errorMessage = <any>error
                 });
@@ -279,41 +280,7 @@ export class AssetEditor implements OnInit {
         // this.router.navigate(["./content-manager",'hideEditor',0]);
     }
 
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
 
-    // showSuccess () {
-    //     this.color = 'green';
-    //     this.success = true;
-    //     this.isTooltip = true;
-    //     this.tooltipMessage = 'success';
-    //     this.disableSave ();
-    // }
-    //
-    // showError () {
-    //     this.color = 'red';
-    //     this.error = true;
-    //     this.isTooltip = true;
-    //     this.tooltipMessage = 'error';
-    //     this.disableSave ();
-    // }
-    //
-    // disableSave () {
-    //     this.disabled = true;
-    //     setTimeout( ()=> {
-    //         this.success = false;
-    //         this.error = false;
-    //         this.disabled = false;
-    //         this.isTooltip = false;
-    //     }, 3000)
-    // }
 
     onEditClick () {
         //this.fullItem = this.currentItem;
