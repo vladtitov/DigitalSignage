@@ -72,10 +72,6 @@ var Ng2MdTooltip = (function () {
         core_1.Input(), 
         __metadata('design:type', String)
     ], Ng2MdTooltip.prototype, "placement", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', String)
-    ], Ng2MdTooltip.prototype, "tooltipColor", void 0);
     Ng2MdTooltip = __decorate([
         core_1.Directive({
             selector: "[ng2-md-tooltip]",

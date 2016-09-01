@@ -12,14 +12,13 @@ router.get('/get-status/:id', function (request, response) {
     var man = new VideoServerConnect_1.VideoServerConnect();
     man.getStatus(id).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
-router.get('/get-new-file/:status', function (request, response) {
-    var status = request.params.status;
+router.get('/get-new-video', function (request, response) {
+    console.log('get-new-video');
     var man = new VideoServerConnect_1.VideoServerConnect();
-    man.getNextVideo(status).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
+    man.getNextVideo().done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
-router.post('/ready', function (request, response) {
+router.post('/processed', function (request, response) {
     var asset = new models_1.VOAsset(request.body);
-    delete asset.workingFolder;
     var token = asset.token;
     delete asset.token;
     asset.path = asset.folder + '/' + asset.filename;

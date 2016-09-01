@@ -15,9 +15,6 @@ export class Ng2MdTooltip  implements OnChanges {
 
     @Input("ng2-md-tooltip") options:TooltipOptions;
     @Input() placement:string = 'top';
-    @Input() tooltipColor:string;
-
-
 
     private visible = false;
     private mytooltip:any;

@@ -26,6 +26,7 @@ export class TooltipText implements AfterViewInit {
     }
 
     isInit:boolean;
+
    setPosition(refEl:ElementRef,options:TooltipOptions):void {
         this.refEl = refEl;
        this.options = options;

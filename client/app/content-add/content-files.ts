@@ -165,7 +165,7 @@ export class FileContent {
 
     handleUpload(data:any): void {
 
-        console.log('handleUpload data: ', data);
+        // console.log('handleUpload data: ', data);
 
         if(this.onCancel) {
             data = null;
