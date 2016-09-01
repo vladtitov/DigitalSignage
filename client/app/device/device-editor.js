@@ -83,15 +83,20 @@ var DeviceEditor = (function () {
         this.currentItem.description = description;
         this.deviceEditorService.saveData(this.currentItem)
             .subscribe(function (data) {
-            _this.tooltipOptions = { message: 'Device saved on server', class: 'btn-success' };
-            ///this.showTooltip('green','Success');
+            console.log(data);
+            console.log(_this.currentItem);
+            if (data.insertId) {
+                if (_this.currentItem.id === -1)
+                    _this.currentItem.id = data.insertId;
+            }
+            _this.tooltipOptions = { message: 'Device saved on server', tooltip_class: 'btn-success' };
             _this.isInProgress = false;
             var id = data.insertId ? data.insertId : _this.currentItem.id;
             _this.getDataById(id);
             _this.onDataChange.emit(id);
             // if(this.devicelist1) this.devicelist1.refreshData();
         }, function (error) {
-            _this.tooltipOptions = { message: 'Server error', class: 'btn-danger' };
+            _this.tooltipOptions = { message: 'Server error', tooltip_class: 'btn-danger' };
             _this.isInProgress = false;
         });
     };

@@ -13,7 +13,7 @@ import {PositionService} from "./position-serv";
 
 export class Ng2MdTooltip  implements OnChanges {
 
-    @Input("ng2-md-tooltip") options:any;
+    @Input("ng2-md-tooltip") options:TooltipOptions;
     @Input() placement:string = 'top';
     @Input() tooltipColor:string;
 
@@ -22,8 +22,6 @@ export class Ng2MdTooltip  implements OnChanges {
     private visible = false;
     private mytooltip:any;
 
-
-    private defaultColor:string = '#337ab7';
     private timeout:number=3;
 
     constructor(private elementRef:ElementRef, private viewContainerRef:ViewContainerRef,private resolver:ComponentFactoryResolver, private positionService:PositionService) {
@@ -41,7 +39,6 @@ export class Ng2MdTooltip  implements OnChanges {
             }
             //console.log(options);
             options.placement = options.placement || this.placement || 'top';
-            options.backgroundColor =  options.backgroundColor || this.tooltipColor || this.defaultColor;
 
           this.show(options);
         }
@@ -85,6 +82,6 @@ export class Ng2MdTooltip  implements OnChanges {
 export interface TooltipOptions{
     placement?:string;
     message:string;
-    class:string; ///user bootstrap classes btn-danger, btn-success, btn-primary .....
+    tooltip_class:string; ///user bootstrap classes btn-danger, btn-success, btn-primary .....
     timeout?:number;
 }

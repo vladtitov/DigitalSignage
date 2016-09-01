@@ -19,7 +19,6 @@ var Ng2MdTooltip = (function () {
         this.positionService = positionService;
         this.placement = 'top';
         this.visible = false;
-        this.defaultColor = '#337ab7';
         this.timeout = 3;
     }
     Ng2MdTooltip.prototype.ngOnChanges = function (changes) {
@@ -36,7 +35,6 @@ var Ng2MdTooltip = (function () {
             }
             //console.log(options);
             options.placement = options.placement || this.placement || 'top';
-            options.backgroundColor = options.backgroundColor || this.tooltipColor || this.defaultColor;
             this.show(options);
         }
     };

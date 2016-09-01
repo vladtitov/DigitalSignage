@@ -27,7 +27,7 @@ var TooltipText = (function () {
         this.myStyle.left = 0;
         // console.log(options);
         this.message = options.message;
-        this.myClass = options.class || 'btn-primary';
+        this.myClass = options.tooltip_class || 'btn-primary';
         this.count = 0;
         if (this.isInit)
             this.placeElement();
@@ -53,7 +53,6 @@ var TooltipText = (function () {
         core_1.Component({
             selector: "tooltip-text",
             template: "\n        <div class=\"tooltip-text {{myClass}}\" [ngStyle]=\"myStyle\">{{message}}</div>\n",
-            styles: ["\n\n   \n"],
             providers: [position_serv_1.PositionService]
         }),
         __param(2, core_1.Inject(core_1.ChangeDetectorRef)), 

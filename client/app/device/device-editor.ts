@@ -157,16 +157,21 @@ export class DeviceEditor implements OnInit{
         this.deviceEditorService.saveData(this.currentItem)
             .subscribe(
                 (data:UpdateResult) => {
-                    this.tooltipOptions = {message:'Device saved on server',class:'btn-success'};
-                    ///this.showTooltip('green','Success');
+                    console. log(data);
+                    console.log(this.currentItem);
+                    if(data.insertId){
+                        if( this.currentItem.id ===-1 ) this.currentItem.id =data.insertId;
+                    }
+                    this.tooltipOptions = {message:'Device saved on server',tooltip_class:'btn-success'};
                     this.isInProgress = false;
+
                     var id = data.insertId ? data.insertId : this.currentItem.id;
                     this.getDataById(id);
                     this.onDataChange.emit(id);
                     // if(this.devicelist1) this.devicelist1.refreshData();
                 },
                 error => {
-                    this.tooltipOptions = {message:'Server error',class:'btn-danger'};
+                    this.tooltipOptions = {message:'Server error',tooltip_class:'btn-danger'};
                     this.isInProgress = false;
                 });
     }

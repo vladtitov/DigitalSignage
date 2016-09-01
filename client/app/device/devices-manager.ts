@@ -86,8 +86,8 @@ export class DevicesManager implements OnInit{
                 .subscribe((data:UpdateResult) => {
 
                     if(data.changes){
-                        this.deleteTooltip = {message:'Device '+item.id+' '+item.label+' deleted from database!',class:'btn-success'};
-                    }else  this.deleteTooltip = {class:'btn-danger',message:'Error to delete device'};
+                        this.deleteTooltip = {message:'Device '+item.id+' '+item.label+' deleted from database!',tooltip_class:'btn-success'};
+                    }else  this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete device'};
                    console.log('onRemoveResponse', data);
                     this.devicesList.refreshData();
                 });

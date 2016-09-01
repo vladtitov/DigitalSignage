@@ -1,5 +1,6 @@
 import {Component, Inject, ElementRef, ChangeDetectorRef,ComponentFactoryResolver, AfterViewInit} from "@angular/core";
 import {PositionService} from "./position-serv";
+import {TooltipOptions} from "./ng2-md-tooltip";
 
 
 @Component({
@@ -7,10 +8,7 @@ import {PositionService} from "./position-serv";
     template:`
         <div class="tooltip-text {{myClass}}" [ngStyle]="myStyle">{{message}}</div>
 `
-  ,styles:[`
 
-   
-`]
     ,providers:[PositionService]
 })
 
@@ -20,7 +18,7 @@ export class TooltipText implements AfterViewInit {
 
     private refEl:ElementRef;
     message:string;
-    options:any;
+    options:TooltipOptions;
     myStyle:any;
     myClass:string;
 
@@ -28,7 +26,7 @@ export class TooltipText implements AfterViewInit {
     }
 
     isInit:boolean;
-   setPosition(refEl:ElementRef,options:any):void {
+   setPosition(refEl:ElementRef,options:TooltipOptions):void {
         this.refEl = refEl;
        this.options = options;
        this.myStyle={};
@@ -36,7 +34,7 @@ export class TooltipText implements AfterViewInit {
        this.myStyle.left = 0;
       // console.log(options);
        this.message = options.message;
-       this.myClass = options.class || 'btn-primary';
+       this.myClass = options.tooltip_class || 'btn-primary';
        this.count=0;
        if(this.isInit) this.placeElement();
     }

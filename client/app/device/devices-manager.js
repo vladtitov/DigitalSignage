@@ -49,10 +49,10 @@ var DevicesManager = (function () {
             this.deviceEditorService.deleteDevice(item)
                 .subscribe(function (data) {
                 if (data.changes) {
-                    _this.deleteTooltip = { message: 'Device ' + item.id + ' ' + item.label + ' deleted from database!', class: 'btn-success' };
+                    _this.deleteTooltip = { message: 'Device ' + item.id + ' ' + item.label + ' deleted from database!', tooltip_class: 'btn-success' };
                 }
                 else
-                    _this.deleteTooltip = { class: 'btn-danger', message: 'Error to delete device' };
+                    _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete device' };
                 console.log('onRemoveResponse', data);
                 _this.devicesList.refreshData();
             });
