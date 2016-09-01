@@ -42,7 +42,7 @@ var DBContent = (function () {
     DBContent.prototype.deleteContent = function (cont) {
         var sql = "DELETE FROM content WHERE id = ?";
         var data = [cont.id];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     return DBContent;
 }());
@@ -62,4 +62,3 @@ var Content = (function () {
     return Content;
 }());
 exports.Content = Content;
-//# sourceMappingURL=dbContent.js.map

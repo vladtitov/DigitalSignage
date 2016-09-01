@@ -22,7 +22,7 @@ export class PlaylistItemsTable extends TableModel {
     deletePlatlist(id:number): Q.Promise<{changes:number}> {
         var sql: string = "DELETE FROM " + this.table + " WHERE playlist_id =? ";
        // console.log(sql);
-        return this.db.deleteAll(sql,[id]);
+        return this.db.deleteQuery(sql,[id]);
     }
 
 

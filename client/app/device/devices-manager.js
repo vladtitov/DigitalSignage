@@ -39,13 +39,24 @@ var DevicesManager = (function () {
     };
     DevicesManager.prototype.onRemoveClick = function () {
         var _this = this;
-        console.log('onRemoveClick ', this.currentItem);
-        if (this.currentItem)
-            this.deviceEditorService.deleteDevice(this.currentItem)
+        this.deleteTooltip = null;
+        if (!this.currentItem)
+            return;
+        var item = this.currentItem;
+        //  console.log('onRemoveClick ', this.currentItem);
+        if (confirm('You want to delete device ' + item.label + '?')) {
+            this.toolsDisadled = true;
+            this.deviceEditorService.deleteDevice(item)
                 .subscribe(function (data) {
-                console.log('data ', data.changes);
+                if (data.changes) {
+                    _this.deleteTooltip = { message: 'Device ' + item.id + ' ' + item.label + ' deleted from database!', tooltip_class: 'btn-success' };
+                }
+                else
+                    _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete device' };
+                console.log('onRemoveResponse', data);
                 _this.devicesList.refreshData();
             });
+        }
     };
     DevicesManager.prototype.onDataChange2 = function (deviceId) {
         this.devicesList.refreshData();
@@ -57,7 +68,7 @@ var DevicesManager = (function () {
     DevicesManager = __decorate([
         core_1.Component({
             selector: 'devices-manager',
-            template: "\n<div class=\"content-850\">\n            <div class =\"panel-heading\">\n                <h3>Devices Manager</h3>\n                <nav>\n                     <a [routerLink]=\"['/devices-manager', -1]\" class=\"btn btn-default\" ><span class=\"fa fa-plus\"></span> Create New Device</a>\n                     <!--<a class=\"btn btn-default\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\"></span> Edit</a>-->\n                     <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"onRemoveClick()\"><span class=\"fa fa-minus\"></span> Delete Device</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">\n            \n                <div class=\"item\">\n                    <devices-list (selecteditem)= \"onCurrentItem($event)\" #devicelist2></devices-list>\n                </div>\n                <div class=\"item\">\n                    <device-editor (onDataChange)=\"onDataChange2($event)\" [devicelist1]=\"devicelist2\"></device-editor>\n                </div>\n            </div>\n\n</div>\n",
+            template: "\n<div class=\"content-850\">\n            <div class =\"panel-heading\">\n                <h3>Devices Manager</h3>\n                <nav>\n                     <a [routerLink]=\"['/devices-manager', -1]\" class=\"btn btn-default\" ><span class=\"fa fa-plus\"></span> Create New Device</a>\n                     <!--<a class=\"btn btn-default\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\"></span> Edit</a>-->\n                     <a class=\"btn btn-default\" [ng2-md-tooltip]=\"deleteTooltip\" [class.disabled]=\"toolsDisadled\" (click)=\"onRemoveClick()\"><span class=\"fa fa-minus\"></span> Delete Device</a>\n                </nav>\n            </div>           \n            <div class=\"panel-body\">\n            \n                <div class=\"item\">\n                    <devices-list (selecteditem)= \"onCurrentItem($event)\" #devicelist2></devices-list>\n                </div>\n                <div class=\"item\">\n                    <device-editor (onDataChange)=\"onDataChange2($event)\" [devicelist1]=\"devicelist2\"></device-editor>\n                </div>\n            </div>\n\n</div>\n",
             styles: ["\n        .item{\n            float: left;\n            margin-left: 20px;\n            }\n    "],
             directives: [router_1.ROUTER_DIRECTIVES, devices_list_1.DevicesList, device_editor_1.DeviceEditor],
             providers: [device_editor_service_1.DeviceEditorService]

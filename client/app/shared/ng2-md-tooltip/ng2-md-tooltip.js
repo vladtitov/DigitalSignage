@@ -10,48 +10,64 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var tooltip_text_1 = require("./tooltip-text");
+var position_serv_1 = require("./position-serv");
 var Ng2MdTooltip = (function () {
-    function Ng2MdTooltip(elementRef, resolver) {
+    function Ng2MdTooltip(elementRef, viewContainerRef, resolver, positionService) {
         this.elementRef = elementRef;
+        this.viewContainerRef = viewContainerRef;
         this.resolver = resolver;
+        this.positionService = positionService;
+        this.placement = 'top';
         this.visible = false;
+        this.timeout = 3;
     }
-    /* constructor(@Inject(ViewContainerRef) private elementRef:ViewContainerRef,  @Inject(ComponentResolver) private resolver:ComponentResolver) {
-     }*/
     Ng2MdTooltip.prototype.ngOnChanges = function (changes) {
-        if (!changes.tooltip.currentValue)
+        if (!changes.options.currentValue)
             this.hide();
         else {
-            console.log(changes);
-            this.tooltip = changes.tooltip.currentValue;
-            this.show();
+            var options;
+            if (typeof changes.options.currentValue === 'object') {
+                options = changes.options.currentValue;
+            }
+            else {
+                options = {};
+                options.message = changes.options.currentValue;
+            }
+            //console.log(options);
+            options.placement = options.placement || this.placement || 'top';
+            this.show(options);
         }
     };
     // @HostListener("focusin")
     // @HostListener("mouseenter")
-    Ng2MdTooltip.prototype.show = function () {
+    Ng2MdTooltip.prototype.show = function (options) {
+        var _this = this;
         if (!this.visible) {
             this.visible = true;
             var fact = this.resolver.resolveComponentFactory(tooltip_text_1.TooltipText);
-            var component = this.elementRef.createComponent(fact);
-            component.instance.content = this.tooltip;
-            component.instance.color = this.tooltipColor;
-            component.instance.setPosition(this.elementRef.element, this.placement);
+            var component = this.viewContainerRef.createComponent(fact);
+            component.instance.setPosition(this.elementRef, options);
             this.mytooltip = component;
+            var timeout = options.timeout || 3000;
+            setTimeout(function () { return _this.hide(); }, timeout);
         }
     };
     // @HostListener("focusout")
     // @HostListener("mouseleave")
     Ng2MdTooltip.prototype.hide = function () {
         if (this.visible) {
+            // this.tooltip='';
             this.visible = false;
-            this.mytooltip.destroy();
+            var comp = this.mytooltip;
+            this.mytooltip.instance.removeMe(function () {
+                comp.destroy();
+            });
         }
     };
     __decorate([
         core_1.Input("ng2-md-tooltip"), 
-        __metadata('design:type', String)
-    ], Ng2MdTooltip.prototype, "tooltip", void 0);
+        __metadata('design:type', Object)
+    ], Ng2MdTooltip.prototype, "options", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
@@ -62,9 +78,10 @@ var Ng2MdTooltip = (function () {
     ], Ng2MdTooltip.prototype, "tooltipColor", void 0);
     Ng2MdTooltip = __decorate([
         core_1.Directive({
-            selector: "[ng2-md-tooltip]"
+            selector: "[ng2-md-tooltip]",
+            providers: [position_serv_1.PositionService]
         }), 
-        __metadata('design:paramtypes', [core_1.ViewContainerRef, core_1.ComponentFactoryResolver])
+        __metadata('design:paramtypes', [core_1.ElementRef, core_1.ViewContainerRef, core_1.ComponentFactoryResolver, position_serv_1.PositionService])
     ], Ng2MdTooltip);
     return Ng2MdTooltip;
 }());

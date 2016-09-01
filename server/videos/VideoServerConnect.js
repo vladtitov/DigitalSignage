@@ -4,7 +4,7 @@ var models_1 = require("../../client/app/services/models");
 var fs = require('fs');
 var Q = require('q');
 var path = require('path');
-var http = require('http');
+var request = require('request');
 var FileDownloader = (function () {
     function FileDownloader(url, folder, filename) {
         this.url = url;
@@ -21,7 +21,7 @@ var FileDownloader = (function () {
     FileDownloader.prototype.downloader = function (callBack) {
         var dest = path.resolve(WWW + '/' + this.folder + '/' + this.filename);
         var file = fs.createWriteStream(dest);
-        http.get(this.url, function (response) {
+        request.get(this.url, function (response) {
             response.pipe(file);
             file.on('finish', function () {
                 file.close(callBack);
@@ -36,9 +36,8 @@ var FileDownloader = (function () {
 }());
 exports.FileDownloader = FileDownloader;
 var VideoServerConnect = (function () {
-    function VideoServerConnect(folder) {
-        this.folder = folder;
-        this.server = 'http://127.0.0.1:56555';
+    function VideoServerConnect() {
+        this.server = 'http://192.168.1.12:56555';
     }
     VideoServerConnect.prototype.downloadFiles = function (asset, folder) {
         var def = Q.defer();
@@ -65,22 +64,23 @@ var VideoServerConnect = (function () {
         return def.promise;
     };
     VideoServerConnect.prototype.sendNotification = function (asset) {
-        console.log('sendNotification');
         var def = Q.defer();
-        http.get(this.server + '/' + 'wake-up', function (res) {
-            def.resolve(res);
+        var url = this.server + '/new-video/' + asset.process_id;
+        console.log(url);
+        request.get(url, function (error, response, body) {
+            console.log(body);
+            def.resolve(body);
         });
         return def.promise;
     };
-    VideoServerConnect.prototype.insertProcess = function (asset) {
+    VideoServerConnect.prototype.insertProcess = function (asset, folder) {
         var _this = this;
-        console.log('insertProcess');
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         asset.status = 'newvideo';
         asset.timestamp = Math.round(Date.now() / 1000);
         db.insertRow(asset, 'process').done(function (res) {
-            var db = new dbDriver_1.DBDriver(_this.folder);
+            var db = new dbDriver_1.DBDriver(folder);
             asset.process_id = res.insertId;
             _this.sendNotification(asset);
             db.insertRow(asset, 'assets').done(function (res) { return def.resolve(res); }, function (err) { return def.reject(err); });
@@ -125,9 +125,7 @@ var VideoServerConnect = (function () {
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
-    VideoServerConnect.prototype.getNextVideo = function () {
-        console.log('getNextVideo');
-        var status = 'newvideo';
+    VideoServerConnect.prototype.getNextVideo = function (status) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT * FROM process WHERE status=?';
@@ -152,4 +150,3 @@ var VideoServerConnect = (function () {
     return VideoServerConnect;
 }());
 exports.VideoServerConnect = VideoServerConnect;
-//# sourceMappingURL=VideoServerConnect.js.map

@@ -205,6 +205,18 @@ export class DBDriver {
         return deferred.promise;
     }
 
+    selectAllTable(table:string): Q.Promise<any[]> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string = 'SELECT * FROM '+table;
+        this.getdb().all(sql, (error, rows) => {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            } else def.resolve(rows);
+        });
+        return def.promise;
+    }
+
     selectAll(sql:string, data?:any[]): Q.Promise<any[]> {
         var deferred: Q.Deferred<any> = Q.defer();
 
@@ -289,21 +301,6 @@ export class DBDriver {
 
     }
 
-    deleteById(id:number,table:string): Q.Promise<UpdateResult> {
-        var def: Q.Deferred<any> = Q.defer();
-        var sql:string =  'DELETE FROM '+table+' WHERE id='+Number(id);
-        this.getdb().run(sql, function(error) {
-            if (error) {
-                def.reject(error);
-            } else {
-                def.resolve({ changes: this.changes });
-            }
-        });
-
-        return def.promise;
-
-    }
-
 
     insertRow(row:any,table:string): Q.Promise<UpdateResult> {
         delete row.id;
@@ -357,7 +354,53 @@ export class DBDriver {
     }
 
 
-    deleteAll(sql:string, data?:any[]): Q.Promise<any> {
+    deleteById(id:number,table:string): Q.Promise<UpdateResult> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'DELETE FROM '+table+' WHERE id='+Number(id);
+        this.getdb().run(sql, function(error) {
+            if (error) {
+                def.reject(error);
+            } else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+
+        return def.promise;
+
+    }
+
+
+    deleteByIdinColumn(id:number,column:string,table:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'DELETE FROM '+table+' WHERE '+column+'='+Number(id);
+        this.getdb().run(sql, function(error) {
+            if (error) {
+                console.log(error)
+                def.reject(error);
+            } else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+
+        return def.promise;
+    }
+
+    deleteByValueinColumn(value:string | number,column:string,table:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'DELETE FROM '+table+' WHERE '+column+'=?';
+        this.getdb().run(sql,[value] ,function(error) {
+            if (error) {
+                console.log(error)
+                def.reject(error);
+            } else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+
+        return def.promise;
+    }
+
+    deleteQuery(sql:string, data?:any[]): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
         this.getdb().run(sql, data, function(error) {
             if (error) {

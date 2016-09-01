@@ -73,6 +73,7 @@ var DeviceEditor = (function () {
     };
     DeviceEditor.prototype.onSaveClick = function (label, description) {
         var _this = this;
+        this.tooltipOptions = null;
         this.isInProgress = true;
         if (this.currentLayout)
             this.currentItem.layout_id = this.currentLayout.props.id;
@@ -82,26 +83,22 @@ var DeviceEditor = (function () {
         this.currentItem.description = description;
         this.deviceEditorService.saveData(this.currentItem)
             .subscribe(function (data) {
-            _this.showTooltip('green', 'Success');
+            console.log(data);
+            console.log(_this.currentItem);
+            if (data.insertId) {
+                if (_this.currentItem.id === -1)
+                    _this.currentItem.id = data.insertId;
+            }
+            _this.tooltipOptions = { message: 'Device saved on server', tooltip_class: 'btn-success' };
             _this.isInProgress = false;
             var id = data.insertId ? data.insertId : _this.currentItem.id;
             _this.getDataById(id);
             _this.onDataChange.emit(id);
             // if(this.devicelist1) this.devicelist1.refreshData();
         }, function (error) {
-            _this.showTooltip('red', 'Error');
+            _this.tooltipOptions = { message: 'Server error', tooltip_class: 'btn-danger' };
             _this.isInProgress = false;
         });
-    };
-    DeviceEditor.prototype.showTooltip = function (color, message) {
-        var _this = this;
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(function () {
-            _this.tooltipMessage = '';
-        }, 3000);
     };
     DeviceEditor.prototype.showLayout = function () {
         if (!this.currentItem)
@@ -135,7 +132,7 @@ var DeviceEditor = (function () {
     DeviceEditor = __decorate([
         core_1.Component({
             selector: 'device-editor',
-            template: "\n<div class=\"device-editor\">\n        \n            <h4>Device Details</h4>\n            <form role=\"form\" *ngIf=\"currentItem\">\n            <!--<span>{{currentItem.id}}</span>-->\n            <div class=\"form-group\">\n                <label>Divice Url: <a href=\"{{deviceUrl}}\">{{deviceUrl}}</a></label>\n            </div>\n            <div class=\"form-group\">\n                <label>Name</label>\n                <input class=\"form-control\" #inpLabel value=\"{{currentItem.label}}\"/>\n            </div>\n            <div class=\"form-group\">\n                <label>Description</label>\n                <textarea class=\"form-control\" #inpDescr value=\"{{currentItem.description}}\"></textarea>\n            </div>\n            <div class=\"form-group\">\n                <label for=\"selectLayout\">Layout</label>\n             <select class=\"form-control\"    id=\"selectLayout\"  [(ngModel)]=\"currentLayout\" name=\"mylayout\"> <option *ngFor=\"let label1 of layouts\" [ngValue]=\"label1\">{{label1.props.label}}</option> </select>\n            </div>\n            <div class=\"card-256x320\">\n                <div class=\"mythumb\">\n                    <div class=\"myimage-container\">\n                        <img class=\"myimage \" src=\"{{currentLayout.props.image}}\" />\n                    </div>\n                    <div class=\"props\"></div>\n                </div>\n            </div>\n            <div>\n                <a class=\"btn btn-primary saveBatton\" [class.disabled]=\"currentItem.id==0 || isInProgress\" (click)=\"onSaveClick(inpLabel.value, inpDescr.value)\"\n                [ng2-md-tooltip]=\"tooltipMessage\" placement=\"bottom\" [tooltipColor]=\"color\">\n            <span class=\"fa fa-save\"></span> Save</a>\n            </div>\n            </form>\n</div>\n",
+            template: "\n<div class=\"device-editor\">\n        \n            <h4>Device Details</h4>\n            <form role=\"form\" *ngIf=\"currentItem\">\n            <!--<span>{{currentItem.id}}</span>-->\n            <div class=\"form-group\">\n                <label>Divice Url: <a href=\"{{deviceUrl}}\">{{deviceUrl}}</a></label>\n            </div>\n            <div class=\"form-group\">\n                <label>Name</label>\n                <input class=\"form-control\" #inpLabel value=\"{{currentItem.label}}\"/>\n            </div>\n            <div class=\"form-group\">\n                <label>Description</label>\n                <textarea class=\"form-control\" #inpDescr value=\"{{currentItem.description}}\"></textarea>\n            </div>\n            <div class=\"form-group\">\n                <label for=\"selectLayout\">Layout</label>\n             <select class=\"form-control\"    id=\"selectLayout\"  [(ngModel)]=\"currentLayout\" name=\"mylayout\"> <option *ngFor=\"let label1 of layouts\" [ngValue]=\"label1\">{{label1.props.label}}</option> </select>\n            </div>\n            <div class=\"card-256x320\">\n                <div class=\"mythumb\">\n                    <div class=\"myimage-container\">\n                        <img class=\"myimage \" src=\"{{currentLayout.props.image}}\" />\n                    </div>\n                    <div class=\"props\"></div>\n                </div>\n            </div>\n            <div>\n                <a class=\"btn btn-primary saveBatton\" [class.disabled]=\"currentItem.id==0 || isInProgress\" (click)=\"onSaveClick(inpLabel.value, inpDescr.value)\"\n                [ng2-md-tooltip]=\"tooltipOptions\" >\n            <span class=\"fa fa-save\"></span> Save</a>\n            </div>\n            </form>\n</div>\n",
             styles: ["\n        .form{\n            padding-top: 7px;\n        }\n        .form-group{\n            margin-bottom: 10px;\n        }\n        .params{\n            padding: 3px 5px 0 9px;\n            height: 60px;\n        }\n        .saveBatton{\n            float:right;\n            margin-top: 15px;\n        }\n        .device-editor{\n            width: 450px;\n            \n        }\n\n"],
             providers: [device_editor_service_1.DeviceEditorService, layouts_list_service_1.LayoutsListService],
             directives: [layout_thumb_1.LayoutThumb]

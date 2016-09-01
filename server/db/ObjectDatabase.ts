@@ -157,14 +157,14 @@ export class ObjectDatabase {
         var sql: string = "DELETE FROM " + this.mainTable + " WHERE id = " + id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
     deleteByFieldId(feild:string,id:number): Q.Promise<UpdateResult> {
 
         var sql: string = "DELETE FROM " + this.mainTable + " WHERE "+feild+" = " + id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 
     deleteContent(row:any): Q.Promise<UpdateResult> {
@@ -172,7 +172,7 @@ export class ObjectDatabase {
         var sql: string = "DELETE FROM " + this.mainTable + " WHERE id = " + row.id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 
     selectMax(column_name: string): Q.Promise<{column_name:number}> {

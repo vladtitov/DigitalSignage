@@ -82,7 +82,7 @@ export class DevicesController{
 
     getAllDevices(): Q.Promise<any[]>{
         var sql: string = 'SELECT * FROM devices';
-        console.log(sql);
+        ///console.log(sql);
         return this.db.queryAll(sql);
     }
 

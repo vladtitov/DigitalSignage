@@ -353,7 +353,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
            // response.json({data:'success'});
             var video:VideoServerConnect = new VideoServerConnect(folder);
 
-            video.insertProcess(asset).then(
+            video.insertProcess(asset,folder).then(
                 res => response.json({data:res})
                 ,err => response.json({error: err})
             );

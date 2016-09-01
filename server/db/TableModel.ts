@@ -134,14 +134,14 @@ export class TableModel {
         var sql: string = "DELETE FROM " + this.table + " WHERE id = " + id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
     deleteByFieldId(feild:string,id:number): Q.Promise<UpdateResult> {
 
         var sql: string = "DELETE FROM " + this.table + " WHERE "+feild+" = " + id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 
     deleteContent(row:any): Q.Promise<UpdateResult> {
@@ -149,7 +149,7 @@ export class TableModel {
         var sql: string = "DELETE FROM " + this.table + " WHERE id = " + row.id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 
     runQuery(sql:string): Q.Promise<UpdateResult> {

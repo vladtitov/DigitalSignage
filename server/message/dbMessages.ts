@@ -57,7 +57,7 @@ export class DBMessages {
         var sql: string = "DELETE FROM messages WHERE id = ?";
         var data: any[] = [message.id];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 }
 

@@ -16,7 +16,7 @@ var PlaylistItemsTable = (function (_super) {
     }
     PlaylistItemsTable.prototype.deletePlatlist = function (id) {
         var sql = "DELETE FROM " + this.table + " WHERE playlist_id =? ";
-        return this.db.deleteAll(sql, [id]);
+        return this.db.deleteQuery(sql, [id]);
     };
     PlaylistItemsTable.prototype.updatePalylist = function (list, playlistId) {
         var _this = this;
@@ -126,4 +126,3 @@ var PlaylistItemsTable = (function (_super) {
     return PlaylistItemsTable;
 }(TableModel_1.TableModel));
 exports.PlaylistItemsTable = PlaylistItemsTable;
-//# sourceMappingURL=PlaylistItemsTable.js.map
