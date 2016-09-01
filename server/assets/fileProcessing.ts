@@ -94,7 +94,7 @@ export class FileProcessing {
 
     uploadFile2(req:express.Request, res:express.Response,folder:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
-
+        console.log('uploadFile2');
         var uploadFolder:string = folder+'/uploads';
         var upload:express.RequestHandler = multer({ dest: WWW+'/'+uploadFolder}).single('file');
 

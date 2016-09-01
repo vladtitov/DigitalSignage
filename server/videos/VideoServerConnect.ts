@@ -53,8 +53,15 @@ export class FileDownloader{
 
 export  class VideoServerConnect{
 
-    folder:string;
-    server:string='http://192.168.1.12:56555';
+    // folder:string;
+    // server:string='http://192.168.1.12:56555';
+    // server:string='http://192.168.0.82:56555';
+    server:string='http://127.0.0.1:56555';
+
+    constructor(private folder?:string) {
+
+    }
+
 
     downloadFiles(asset:VOAsset,folder:string): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
@@ -90,15 +97,17 @@ export  class VideoServerConnect{
 
 
     sendNotification(asset:VOAsset): Q.Promise<any>{
-
+        console.log('sendNotification');
         var def: Q.Deferred<any> = Q.defer();
-        http.get(this.server+'/'+'newvideo'+'/'+asset.process_id,(res:IncomingMessage)=>{
+        http.get(this.server+'/'+'wake-up',(res:IncomingMessage)=>{
+            // console.log('sendNotification res', res);
             def.resolve(res);
         });
         return def.promise;
     }
 
     insertProcess(asset:VOAsset): Q.Promise<any>{
+        console.log('insertProcess');
         var def: Q.Deferred<any> = Q.defer();
         var db = new DBDriver(null);
         asset.status = 'newvideo';
@@ -227,7 +236,9 @@ export  class VideoServerConnect{
 
 
 
-    getNextVideo(status:string): Q.Promise<any>{
+    getNextVideo(): Q.Promise<any>{
+        console.log('getNextVideo');
+        var status:string = 'newvideo';
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
         var sql:string = 'SELECT * FROM process WHERE status=?';
@@ -235,10 +246,10 @@ export  class VideoServerConnect{
             res=>{
                 var out:VOAsset;
                 for(var i=0,n= res.length;i<n;i++){
-                    var asset:VOAsset = res[i]
+                    var asset:VOAsset = res[i];
                     //console.log(WWW+'/'+asset.path);
                     if(fs.existsSync(WWW+'/'+asset.path)){
-                        out = asset
+                        out = asset;
                         break
                     }else db.deleteById(asset.id,'process');
                 }

@@ -330,10 +330,10 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
 
         asset.folder = folder;
 
-        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
-        if(ext === 'jpg' || ext === 'peg' || ext === 'png'){
+        var mimetype = asset.mimetype.substr(asset.mimetype.length - 3);
+        if(mimetype === 'jpg' || mimetype === 'peg' || mimetype === 'png'){
             asset.type = 'image';
-        } else if (ext === 'ime' || ext === 'avi') {
+        } else if (mimetype === 'ime' || mimetype === 'avi') {
             asset.type = 'video';
         }else{
             response.status(400);
@@ -351,7 +351,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
 
         } else if(asset.type === 'video'){
            // response.json({data:'success'});
-            var video:VideoServerConnect = new VideoServerConnect();
+            var video:VideoServerConnect = new VideoServerConnect(folder);
 
             video.insertProcess(asset).then(
                 res => response.json({data:res})

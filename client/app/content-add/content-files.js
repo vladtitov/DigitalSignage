@@ -58,8 +58,8 @@ var FileContent = (function () {
         // console.log('onUploadsStart!!!');
     };
     FileContent.prototype.handleUpload = function (data) {
+        // console.log('handleUpload data: ', data);
         var _this = this;
-        console.log('handleUpload data: ', data);
         if (this.onCancel) {
             data = null;
             return;

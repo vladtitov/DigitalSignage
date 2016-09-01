@@ -36,8 +36,9 @@ var FileDownloader = (function () {
 }());
 exports.FileDownloader = FileDownloader;
 var VideoServerConnect = (function () {
-    function VideoServerConnect() {
-        this.server = 'http://192.168.1.12:56555';
+    function VideoServerConnect(folder) {
+        this.folder = folder;
+        this.server = 'http://127.0.0.1:56555';
     }
     VideoServerConnect.prototype.downloadFiles = function (asset, folder) {
         var def = Q.defer();
@@ -64,14 +65,16 @@ var VideoServerConnect = (function () {
         return def.promise;
     };
     VideoServerConnect.prototype.sendNotification = function (asset) {
+        console.log('sendNotification');
         var def = Q.defer();
-        http.get(this.server + '/' + 'newvideo' + '/' + asset.process_id, function (res) {
+        http.get(this.server + '/' + 'wake-up', function (res) {
             def.resolve(res);
         });
         return def.promise;
     };
     VideoServerConnect.prototype.insertProcess = function (asset) {
         var _this = this;
+        console.log('insertProcess');
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         asset.status = 'newvideo';
@@ -122,7 +125,9 @@ var VideoServerConnect = (function () {
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
-    VideoServerConnect.prototype.getNextVideo = function (status) {
+    VideoServerConnect.prototype.getNextVideo = function () {
+        console.log('getNextVideo');
+        var status = 'newvideo';
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT * FROM process WHERE status=?';

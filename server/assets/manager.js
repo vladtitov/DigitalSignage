@@ -124,11 +124,11 @@ router.post('/upload', function (req, response) {
     var fp = new fileProcessing_1.FileProcessing(folder);
     fp.uploadFile2(req, response, folder).then(function (asset) {
         asset.folder = folder;
-        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
-        if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
+        var mimetype = asset.mimetype.substr(asset.mimetype.length - 3);
+        if (mimetype === 'jpg' || mimetype === 'peg' || mimetype === 'png') {
             asset.type = 'image';
         }
-        else if (ext === 'ime' || ext === 'avi') {
+        else if (mimetype === 'ime' || mimetype === 'avi') {
             asset.type = 'video';
         }
         else {
@@ -140,7 +140,7 @@ router.post('/upload', function (req, response) {
             ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         else if (asset.type === 'video') {
-            var video = new VideoServerConnect_1.VideoServerConnect();
+            var video = new VideoServerConnect_1.VideoServerConnect(folder);
             video.insertProcess(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         console.log('uploadFile done');

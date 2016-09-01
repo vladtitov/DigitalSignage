@@ -25,20 +25,19 @@ router.get('/get-status/:id', function(request:express.Request, response:express
     )
 });
 
-router.get('/get-new-file/:status', function(request:express.Request, response:express.Response){
-
-    var status:string = request.params.status;
-    var man:VideoServerConnect = new VideoServerConnect()
-    man.getNextVideo(status).done(
+router.get('/get-new-video', function(request:express.Request, response:express.Response){
+    console.log('get-new-video');
+    var man:VideoServerConnect = new VideoServerConnect();
+    man.getNextVideo().done(
         res=>response.json({data:res})
         ,err=>response.json({error:err})
     )
 });
 
 
-router.post('/ready', function(request:express.Request, response:express.Response){
+router.post('/processed', function(request:express.Request, response:express.Response){
     var asset:VOAsset = new VOAsset(request.body);
-    delete  asset.workingFolder;
+
     var token:string = asset.token;
     delete asset.token;
 

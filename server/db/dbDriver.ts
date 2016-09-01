@@ -317,7 +317,7 @@ export class DBDriver {
         }
         var sql: string = 'INSERT INTO '+table+' ('+ar1.join(',')+') VALUES ('+ar2.join(',')+')';
 
-        //console.log(sql);
+        // console.log(sql);
         return this.insertOne(sql, ar3);
     }
 
