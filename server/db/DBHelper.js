@@ -54,7 +54,7 @@ var DBHelper = (function () {
     DBHelper.prototype.deleteContent = function (row) {
         var sql = "DELETE FROM " + this.table + " WHERE id = " + row.id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     DBHelper.prototype.selectMax = function (column_name) {
         var sql = "SELECT max(" + column_name + ") AS " + column_name + " FROM " + this.table;
@@ -65,4 +65,3 @@ var DBHelper = (function () {
     return DBHelper;
 }());
 exports.DBHelper = DBHelper;
-//# sourceMappingURL=DBHelper.js.map

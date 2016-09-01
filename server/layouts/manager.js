@@ -21,26 +21,21 @@ router.get('/assembled-all', function (request, response) {
     });
 });
 router.get('/byid/:id', function (request, response) {
-    var controller = new LayoutsController_1.LayoutsController(request.session['user_folder']);
+    var folder = request.session['user_folder'];
+    if (!folder) {
+        response.json({ error: 'need-login' });
+        return;
+    }
     var id = Number(request.params.id);
     if (isNaN(id)) {
         response.json({ error: ' id shpuld be present' });
         return;
     }
-    controller.getLayoutById(id).done(function (res) {
-        var layout = new models_1.VOLayout({ props: res });
-        if (res && res.id) {
-            controller.getViewportsByLayoutId(res.id).done(function (res) {
-                layout.viewports = res;
-                response.json({ data: layout });
-            }, function (err) {
-                response.json(err);
-            });
-        }
-        else
-            response.json(res);
+    var controller = new LayoutsController_1.LayoutsController(folder);
+    controller.getLayoutFull(id).done(function (res) {
+        response.json({ data: res });
     }, function (err) {
-        response.json(err);
+        response.json({ error: err });
     });
 });
 router.post('/byid/:id', function (request, response) {
@@ -138,4 +133,3 @@ router.delete('/mydevice/:id', function (request, response) {
     controllerDevice.deleteDevice(id).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

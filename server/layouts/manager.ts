@@ -49,29 +49,25 @@ router.get('/assembled-all', function (request:express.Request, response:express
 });
 
 router.get('/byid/:id', function (request:express.Request, response:express.Response) {
-    var controller = new LayoutsController(request.session['user_folder']);
+
+    var folder:string = request.session['user_folder'];
+    if(!folder){
+        response.json({error:'need-login'});
+        return;
+    }
+
     var id:number = Number(request.params.id);
     if(isNaN(id)){
         response.json({error:' id shpuld be present'});
         return
     }
 
-    controller.getLayoutById(id).done(function(res){
+    var controller = new LayoutsController(folder);
 
-        var layout:VOLayout = new VOLayout({props:res});
-        if(res && res.id){
-            controller.getViewportsByLayoutId(res.id).done(function (res) {
-                layout.viewports = res;
-                response.json({data:layout});
-            },function(err){
-                response.json(err);
-            })
-        //TODO handle error if null layout of id
-        }else response.json(res)
-
-
+    controller.getLayoutFull(id).done(function(res){
+        response.json({data:res});
     },function (err) {
-        response.json(err);
+        response.json({error:err});
     })
 
 });

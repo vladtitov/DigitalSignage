@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {DevicesList} from "./devices-list";
 import {LayoutsListService} from "../layouts/layouts-list-service";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 @Component({
     selector:'device-editor'
@@ -43,7 +44,7 @@ import {LayoutsListService} from "../layouts/layouts-list-service";
             </div>
             <div>
                 <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0 || isInProgress" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
-                [ng2-md-tooltip]="tooltipMessage" placement="bottom" [tooltipColor]="color">
+                [ng2-md-tooltip]="tooltipOptions" >
             <span class="fa fa-save"></span> Save</a>
             </div>
             </form>
@@ -84,7 +85,7 @@ export class DeviceEditor implements OnInit{
     labels: string[];
 
     color:string;
-    tooltipMessage:string;
+    tooltipOptions:TooltipOptions
 
     isInProgress:boolean = false;
 
@@ -146,6 +147,8 @@ export class DeviceEditor implements OnInit{
     }
 
     onSaveClick(label, description){
+        this.tooltipOptions = null;
+
         this.isInProgress = true;
         if(this.currentLayout) this.currentItem.layout_id = this.currentLayout.props.id;
         if(this.currentItem.layout_id == -1) this.currentItem.layout_id = 0;
@@ -154,7 +157,8 @@ export class DeviceEditor implements OnInit{
         this.deviceEditorService.saveData(this.currentItem)
             .subscribe(
                 (data:UpdateResult) => {
-                    this.showTooltip('green','Success');
+                    this.tooltipOptions = {message:'Device saved on server',class:'btn-success'};
+                    ///this.showTooltip('green','Success');
                     this.isInProgress = false;
                     var id = data.insertId ? data.insertId : this.currentItem.id;
                     this.getDataById(id);
@@ -162,20 +166,12 @@ export class DeviceEditor implements OnInit{
                     // if(this.devicelist1) this.devicelist1.refreshData();
                 },
                 error => {
-                    this.showTooltip('red', 'Error');
+                    this.tooltipOptions = {message:'Server error',class:'btn-danger'};
                     this.isInProgress = false;
                 });
     }
 
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
+
 
     showLayout(){
         if(!this.currentItem) return;

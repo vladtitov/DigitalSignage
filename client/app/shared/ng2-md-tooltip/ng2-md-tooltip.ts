@@ -1,15 +1,20 @@
-import { Directive, ComponentFactoryResolver, Input, ViewContainerRef, ComponentRef, OnChanges } from "@angular/core";
+import {
+    Directive, ComponentFactoryResolver, Input, ViewContainerRef, ComponentRef, OnChanges,
+    ElementRef
+} from "@angular/core";
 import {TooltipText} from "./tooltip-text";
+import {PositionService} from "./position-serv";
 
 
 @Directive({
     selector: "[ng2-md-tooltip]"
+    ,providers:[ PositionService]
 })
 
 export class Ng2MdTooltip  implements OnChanges {
 
-    @Input("ng2-md-tooltip") tooltip:string;
-    @Input() placement:string;
+    @Input("ng2-md-tooltip") tooltip:any;
+    @Input() placement:string = 'top';
     @Input() tooltipColor:string;
 
 
@@ -18,34 +23,43 @@ export class Ng2MdTooltip  implements OnChanges {
     private mytooltip:any;
 
 
+    private defaultColor:string = '#337ab7';
+    private timeout:number=3;
 
-   /* constructor(@Inject(ViewContainerRef) private elementRef:ViewContainerRef,  @Inject(ComponentResolver) private resolver:ComponentResolver) {
-    }*/
-
-  ngOnChanges(changes:any){
-    if(!changes.tooltip.currentValue) this.hide();
-    else {
-      console.log(changes);
-      this.tooltip = changes.tooltip.currentValue;
-      this.show();
+    constructor(private elementRef:ElementRef, private viewContainerRef:ViewContainerRef,private resolver:ComponentFactoryResolver, private positionService:PositionService) {
     }
-  }
-  constructor(private elementRef:ViewContainerRef,  private resolver:ComponentFactoryResolver) {
-  }
+
+      ngOnChanges(changes:any){
+        if(!changes.tooltip.currentValue) this.hide();
+        else {
+            var options:any;
+            if(typeof changes.tooltip.currentValue ==='object'){
+                options = changes.tooltip.currentValue;
+            }else {
+                options = {};
+                options.message = changes.tooltip.currentValue;
+            }
+            //console.log(options);
+            options.placement = options.placement || this.placement || 'top';
+            options.backgroundColor =  options.backgroundColor || this.tooltipColor || this.defaultColor;
+
+          this.show(options);
+        }
+      }
+
 
     // @HostListener("focusin")
     // @HostListener("mouseenter")
-    show() {
+    show(options) {
         if (!this.visible) {
             this.visible = true;
-          var fact = this.resolver.resolveComponentFactory(TooltipText);
-          let component:ComponentRef<TooltipText> = this.elementRef.createComponent(fact);
-          component.instance.content = this.tooltip;
-          component.instance.color = this.tooltipColor;
-            component.instance.setPosition(this.elementRef.element, this.placement);
 
+             var fact = this.resolver.resolveComponentFactory(TooltipText);
+          let component:ComponentRef<TooltipText> = this.viewContainerRef.createComponent(fact);
+            component.instance.setPosition(this.elementRef, options);
           this.mytooltip = component;
-           // return component;
+            var timeout:number = options.timeout || 3000;
+           setTimeout(()=>this.hide(),timeout);
 
         }
     }
@@ -55,14 +69,22 @@ export class Ng2MdTooltip  implements OnChanges {
     // @HostListener("mouseleave")
     hide() {
         if (this.visible) {
-
+           // this.tooltip='';
             this.visible = false;
-          this.mytooltip.destroy();
-           // this.tooltipDeferred.then((componentRef:ComponentRef<any>) => {
-            //    componentRef.destroy();
+            var comp = this.mytooltip;
+            this.mytooltip.instance.removeMe(function (){
+                comp.destroy();
+            });
 
-              //  return  this.mytooltip;
-          //  });
+
         }
     }
+}
+
+
+export interface TooltipOptions{
+    placement?:string;
+    message:string;
+    class:string;
+    timeout?:number;
 }
