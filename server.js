@@ -11,7 +11,7 @@ var proxy = httpProxy.createProxyServer({
     port: 80
 });
 var path = require('path');
-var SETTINGS = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+var SETTINGS = JSON.parse(fs.readFileSync('mysettings.json', 'utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');

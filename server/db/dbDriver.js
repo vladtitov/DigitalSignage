@@ -1,3 +1,5 @@
+///<reference path="../../typings/sqlite3/sqlite3.d.ts"/>
+///<reference path="../../typings/q/Q.d.ts"/>
 "use strict";
 var Q = require('q');
 var sqlite = require('sqlite3').verbose();
@@ -26,11 +28,14 @@ var DBDriver = (function () {
         return DBDriver.getDb(this.folder);
     };
     DBDriver.prototype.close = function () {
+        // this.getdb()=null;
     };
     DBDriver.prototype.serializeDB = function (callBack) {
+        // console.log('dbDriver runQuery');
         this.getdb().serialize(callBack);
     };
     DBDriver.prototype.serialize_DB = function (callBack) {
+        // console.log('dbDriver runQuery');
         this.getdb().serialize(callBack);
     };
     DBDriver.prototype.arrayQuery = function (sql, data) {
@@ -147,6 +152,7 @@ var DBDriver = (function () {
                 deferred.reject(error);
             }
             else {
+                // console.log({ id: this.lastID });
                 deferred.resolve({ changes: this.changes });
             }
         });
@@ -162,6 +168,7 @@ var DBDriver = (function () {
                 });
             }
             else {
+                // console.log({ id: this.lastID });
                 deferred.resolve({ changes: this.changes });
             }
         });
@@ -201,6 +208,7 @@ var DBDriver = (function () {
                 deferred.reject(error);
             }
             else {
+                // console.log(row);
                 deferred.resolve(row);
             }
         });
@@ -270,6 +278,7 @@ var DBDriver = (function () {
             ar3.push(row[str]);
         }
         var sql = 'INSERT INTO ' + table + ' (' + ar1.join(',') + ') VALUES (' + ar2.join(',') + ')';
+        // console.log(sql);
         return this.insertOne(sql, ar3);
     };
     DBDriver.prototype.insertOne = function (sql, data) {
@@ -280,6 +289,7 @@ var DBDriver = (function () {
                 deferred.reject(err);
             }
             else {
+                // console.log({ id: this.lastID });
                 deferred.resolve({ insertId: this.lastID });
             }
         });
@@ -355,7 +365,9 @@ var DBDriver = (function () {
         });
         return deferred.promise;
     };
+    // private db:Database
     DBDriver.dbs = {};
     return DBDriver;
 }());
 exports.DBDriver = DBDriver;
+//# sourceMappingURL=dbDriver.js.map

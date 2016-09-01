@@ -94,3 +94,4 @@ var ImageProcess = (function () {
     return ImageProcess;
 }());
 exports.ImageProcess = ImageProcess;
+//# sourceMappingURL=ImageProcess.js.map

@@ -39,7 +39,7 @@ interface Settings{
 
 var path = require('path');
 
-const SETTINGS:Settings = JSON.parse(fs.readFileSync('settings.json','utf8'));
+const SETTINGS:Settings = JSON.parse(fs.readFileSync('mysettings.json','utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');

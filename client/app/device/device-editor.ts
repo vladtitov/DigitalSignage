@@ -44,7 +44,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             </div>
             <div>
                 <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0 || isInProgress" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
-                [ng2-md-tooltip]="tooltipOptions" >
+                [ng2-md-tooltip]="tooltipOptions" placement="bottom">
             <span class="fa fa-save"></span> Save</a>
             </div>
             </form>
