@@ -46,7 +46,7 @@ export class AppComponent {
                 console.log('onSubmit res: ', res);
                 // this.router.navigate(["./dashboard/content-manager",'view',0]);
                 localStorage.removeItem("myuser");
-                window.location.href = "/loginHello";
+                window.location.href = "/login";
             }, (err)=>{
                 console.log('onSubmit error ', err);
                 this.handleError(err); // = <any>err;

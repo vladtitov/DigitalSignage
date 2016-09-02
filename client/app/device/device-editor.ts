@@ -20,7 +20,8 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             <form role="form" *ngIf="currentItem">
             <!--<span>{{currentItem.id}}</span>-->
             <div class="form-group">
-                <label>Divice Url: <a href="{{deviceUrl}}">{{deviceUrl}}</a></label>
+                <label>Divice Url: <span>{{deviceUrl}}</span></label>
+                <label>Preview <a href="{{deviceUrl}}">{{deviceUrl}}</a></label>
             </div>
             <div class="form-group">
                 <label>Name</label>
