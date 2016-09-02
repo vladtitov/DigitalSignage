@@ -174,6 +174,19 @@ var DBDriver = (function () {
         });
         return deferred.promise;
     };
+    DBDriver.prototype.selectAllTable = function (table) {
+        var def = Q.defer();
+        var sql = 'SELECT * FROM ' + table;
+        this.getdb().all(sql, function (error, rows) {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            }
+            else
+                def.resolve(rows);
+        });
+        return def.promise;
+    };
     DBDriver.prototype.selectAll = function (sql, data) {
         var deferred = Q.defer();
         this.getdb().all(sql, data, function (error, rows) {
@@ -195,7 +208,7 @@ var DBDriver = (function () {
                 deferred.reject(error);
             }
             else {
-                // console.log(rows);
+                // console.log(row);
                 deferred.resolve(row);
             }
         });
@@ -254,19 +267,6 @@ var DBDriver = (function () {
             return d.promise;
         }
     };
-    DBDriver.prototype.deleteById = function (id, table) {
-        var def = Q.defer();
-        var sql = 'DELETE FROM ' + table + ' WHERE id=' + Number(id);
-        this.getdb().run(sql, function (error) {
-            if (error) {
-                def.reject(error);
-            }
-            else {
-                def.resolve({ changes: this.changes });
-            }
-        });
-        return def.promise;
-    };
     DBDriver.prototype.insertRow = function (row, table) {
         delete row.id;
         var ar1 = [];
@@ -278,7 +278,7 @@ var DBDriver = (function () {
             ar3.push(row[str]);
         }
         var sql = 'INSERT INTO ' + table + ' (' + ar1.join(',') + ') VALUES (' + ar2.join(',') + ')';
-        //console.log(sql);
+        // console.log(sql);
         return this.insertOne(sql, ar3);
     };
     DBDriver.prototype.insertOne = function (sql, data) {
@@ -312,7 +312,48 @@ var DBDriver = (function () {
         });
         return deferred.promise;
     };
-    DBDriver.prototype.deleteAll = function (sql, data) {
+    DBDriver.prototype.deleteById = function (id, table) {
+        var def = Q.defer();
+        var sql = 'DELETE FROM ' + table + ' WHERE id=' + Number(id);
+        this.getdb().run(sql, function (error) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.deleteByIdinColumn = function (id, column, table) {
+        var def = Q.defer();
+        var sql = 'DELETE FROM ' + table + ' WHERE ' + column + '=' + Number(id);
+        this.getdb().run(sql, function (error) {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            }
+            else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.deleteByValueinColumn = function (value, column, table) {
+        var def = Q.defer();
+        var sql = 'DELETE FROM ' + table + ' WHERE ' + column + '=?';
+        this.getdb().run(sql, [value], function (error) {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            }
+            else {
+                def.resolve({ changes: this.changes });
+            }
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.deleteQuery = function (sql, data) {
         var deferred = Q.defer();
         this.getdb().run(sql, data, function (error) {
             if (error) {

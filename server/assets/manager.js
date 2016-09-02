@@ -3,9 +3,9 @@ var express = require('express');
 var fileProcessing_1 = require("./fileProcessing");
 var ImageProcess_1 = require("./ImageProcess");
 var TableModel_1 = require("../db/TableModel");
-var VideoProcess_1 = require("./VideoProcess");
 var models_1 = require("../../client/app/services/models");
 var AssetsController_1 = require("./AssetsController");
+var VideoServerConnect_1 = require("../videos/VideoServerConnect");
 var router = express.Router();
 var fs = require('fs');
 router.get('/select-all', function (req, res) {
@@ -124,11 +124,11 @@ router.post('/upload', function (req, response) {
     var fp = new fileProcessing_1.FileProcessing(folder);
     fp.uploadFile2(req, response, folder).then(function (asset) {
         asset.folder = folder;
-        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
-        if (ext === 'jpg' || ext === 'peg' || ext === 'png') {
+        var mimetype = asset.mimetype.substr(asset.mimetype.length - 3);
+        if (mimetype === 'jpg' || mimetype === 'peg' || mimetype === 'png') {
             asset.type = 'image';
         }
-        else if (ext === 'ime' || ext === 'avi') {
+        else if (mimetype === 'ime' || mimetype === 'avi') {
             asset.type = 'video';
         }
         else {
@@ -140,13 +140,8 @@ router.post('/upload', function (req, response) {
             ip.processImage2(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         else if (asset.type === 'video') {
-            response.json({ data: 'success' });
-            var vp = new VideoProcess_1.VideoProcess(folder);
-            vp.saveInDatabase(asset).then(function (res) {
-            }, function (err) {
-                console.error(err);
-                response.json({ error: err });
-            });
+            var video = new VideoServerConnect_1.VideoServerConnect(folder);
+            video.insertProcess(asset, folder).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         console.log('uploadFile done');
     }, function (error) {

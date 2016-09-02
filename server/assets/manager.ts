@@ -18,6 +18,7 @@ import {UpdateResult} from "../db/dbDriver";
 import {VideoProcess} from "./VideoProcess";
 import {VOAsset} from "../../client/app/services/models";
 import {AssetsController} from "./AssetsController";
+import {VideoServerConnect} from "../videos/VideoServerConnect";
 
 declare var WWW:string;
 declare var SERVER:string;
@@ -69,7 +70,7 @@ var fs = require('fs');
  *         "data": [
  *            {
  *               "id": 1,
- *               "original_name": "face.png",
+ *               "originalname": "face.png",
  *               "path": "/clientAssets/uploads/userImages/_1468357328476_face.png",
  *               "thumb": "/clientAssets/uploads/thumbnails/_1468357328476_face.png",
  *               "size": 132545,
@@ -82,7 +83,7 @@ var fs = require('fs');
  *            },
  *            {
  *                "id": 2,
- *                "original_name": "face.png",
+ *                "originalname": "face.png",
  *                "path": "/clientAssets/uploads/userImages/_1468359521555_face.png",
  *                "thumb": "/clientAssets/uploads/thumbnails/_1468359521555_face.png",
  *                "size": 132545,
@@ -200,7 +201,7 @@ router.post('/delete-asset', function (req:express.Request, res:express.Response
  *      {
  *          "data": {
  *               "id": 1,
- *               "original_name": "face.png",
+ *               "originalname": "face.png",
  *               "path": "/clientAssets/uploads/userImages/_1468357328476_face.png",
  *               "thumb": "/clientAssets/uploads/thumbnails/_1468357328476_face.png",
  *               "size": 132545,
@@ -329,10 +330,10 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
 
         asset.folder = folder;
 
-        var ext = asset.mimetype.substr(asset.mimetype.length - 3);
-        if(ext === 'jpg' || ext === 'peg' || ext === 'png'){
+        var mimetype = asset.mimetype.substr(asset.mimetype.length - 3);
+        if(mimetype === 'jpg' || mimetype === 'peg' || mimetype === 'png'){
             asset.type = 'image';
-        } else if (ext === 'ime' || ext === 'avi') {
+        } else if (mimetype === 'ime' || mimetype === 'avi') {
             asset.type = 'video';
         }else{
             response.status(400);
@@ -349,14 +350,13 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
             );
 
         } else if(asset.type === 'video'){
-            response.json({data:'success'});
-            var vp:VideoProcess = new VideoProcess(folder);
-            vp.saveInDatabase(asset).then(function (res) {
-                // response.json({data:res});
-            }, function (err) {
-                console.error(err);
-                response.json({error: err});
-            });
+           // response.json({data:'success'});
+            var video:VideoServerConnect = new VideoServerConnect(folder);
+
+            video.insertProcess(asset,folder).then(
+                res => response.json({data:res})
+                ,err => response.json({error: err})
+            );
         }
         console.log('uploadFile done');
         // console.log('asset\n', asset);

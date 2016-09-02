@@ -58,8 +58,8 @@ var FileContent = (function () {
         // console.log('onUploadsStart!!!');
     };
     FileContent.prototype.handleUpload = function (data) {
+        // console.log('handleUpload data: ', data);
         var _this = this;
-        console.log('handleUpload data: ', data);
         if (this.onCancel) {
             data = null;
             return;
@@ -72,7 +72,7 @@ var FileContent = (function () {
         var id = data.id;
         var index = this.findIndex(id);
         if (index === -1) {
-            this.uploadProgresses.push({ id: id, percent: 0, original_name: data.originalName });
+            this.uploadProgresses.push({ id: id, percent: 0, originalname: data.originalName });
         }
         if (this.uploadProgresses[index]) {
             this.zone.run(function () {

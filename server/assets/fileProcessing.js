@@ -10,6 +10,7 @@ var FileProcessing = (function () {
     }
     FileProcessing.prototype.uploadFile2 = function (req, res, folder) {
         var def = Q.defer();
+        console.log('uploadFile2');
         var uploadFolder = folder + '/uploads';
         var upload = multer({ dest: WWW + '/' + uploadFolder }).single('file');
         upload(req, res, function (err) {

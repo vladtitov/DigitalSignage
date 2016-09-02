@@ -142,7 +142,7 @@ export class  VideoProcess {
     };
 */
 
-
+/*
     saveInDatabase(asset:VOAsset): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
         var db = new DBDriver(null);
@@ -161,5 +161,5 @@ export class  VideoProcess {
         )
 
         return def.promise;
-    };
+    };*/
 }

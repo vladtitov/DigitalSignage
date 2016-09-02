@@ -5,6 +5,8 @@
 /// <reference path="typings/body-parser/body-parser.d.ts" />
 ///<reference path="typings/express-session/express-session.d.ts"/>
 ///<reference path="typings/cookie-parser/cookie-parser.d.ts"/>
+///<reference path="typings/request/request.d.ts"/>
+
 
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
@@ -24,20 +26,25 @@ interface MyRequest extends express.Request{
 var fs = require('fs-extra');
 var request = require('request');
 var httpProxy = require('http-proxy');
-
-
 var proxy = httpProxy.createProxyServer({
     changeOrigin:true,
     port:80
 });
 
+interface Settings{
+    dev_folder:string;
+}
+
+
 
 var path = require('path');
 
+const SETTINGS:Settings = JSON.parse(fs.readFileSync('mysettings.json','utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL =  ROOT + '/server/db/';
+GLOBAL.SETTINGS = SETTINGS;
 
 
 GLOBAL.onError = function (err: any, res:express.Response) {
@@ -77,6 +84,13 @@ app.use(express.static(WWW));
 
 app.get('/', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});
+});
+
+app.get('/login', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': WWW});
+});
+app.get('/login/*', function(req:express.Request, res:express.Response){
+    res.sendFile('mylogin.html',{ 'root': WWW});
 });
 
 
@@ -123,9 +137,10 @@ app.use('/account',bodyParser.urlencoded({extended: true}));
 app.use('/account',bodyParser.json());
 app.use('/account', require('./server/account/manager'));
 
-app.use('/videoserver',bodyParser.urlencoded({extended: true}));
-app.use('/videoserver',bodyParser.json());
-app.use('/videoserver', require('./server/videoserver/manager'));
+app.use('/videos',bodyParser.urlencoded({extended: true}));
+app.use('/videos',bodyParser.json());
+app.use('/videos', require('./server/videos/manager'));
+
 
 app.use('/player/:token/', function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
@@ -157,8 +172,8 @@ app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
 
     if(!folder){
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser')
-        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
+        console.log(' user not loged in go to '+SETTINGS.dev_folder)
+        req.session['user_folder'] = SETTINGS.dev_folder;
     }
     next();
 });

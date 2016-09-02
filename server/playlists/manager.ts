@@ -342,7 +342,7 @@ router.post('/byid/:id', function (req:express.Request, res:express.Response) {
     var playlisTable: PlaylistsTable = new PlaylistsTable(req.session['user_folder']);
     playlisTable.updateContentById(pl.props,id)
         .done(function(result:UpdateResult){
-            console.log(result);
+            // console.log(result);
             if(result.insertId) id = result.insertId;
 
             playlist_assets.updatePalylist(pl.list,id)

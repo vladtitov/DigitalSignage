@@ -66,7 +66,7 @@ export class DBContent {
         var sql: string = "DELETE FROM content WHERE id = ?";
         var data: any[] = [cont.id];
         
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 }
 

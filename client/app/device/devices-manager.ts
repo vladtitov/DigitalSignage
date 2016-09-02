@@ -8,6 +8,7 @@ import {DeviceEditor} from "./device-editor";
 import {VODevice, UpdateResult} from "../services/models";
 import {DeviceEditorService} from "./device-editor-service";
 import {Subscription} from "rxjs/Rx";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 @Component({
     selector:'devices-manager'
@@ -18,9 +19,9 @@ import {Subscription} from "rxjs/Rx";
                 <nav>
                      <a [routerLink]="['/devices-manager', -1]" class="btn btn-default" ><span class="fa fa-plus"></span> Create New Device</a>
                      <!--<a class="btn btn-default" (click)="onEditClick()"> <span class="fa fa-edit"></span> Edit</a>-->
-                     <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="onRemoveClick()"><span class="fa fa-minus"></span> Delete Device</a>
+                     <a class="btn btn-default" [ng2-md-tooltip]="deleteTooltip" [class.disabled]="toolsDisadled" (click)="onRemoveClick()"><span class="fa fa-minus"></span> Delete Device</a>
                 </nav>
-            </div>
+            </div>           
             <div class="panel-body">
             
                 <div class="item">
@@ -51,6 +52,7 @@ export class DevicesManager implements OnInit{
     currentItem:VODevice;
 
     private sub: Subscription;
+    private deleteTooltip:TooltipOptions;
 
     constructor(
         private router: Router
@@ -73,12 +75,25 @@ export class DevicesManager implements OnInit{
     }
 
     onRemoveClick(){
-        console.log('onRemoveClick ', this.currentItem);
-        if(this.currentItem) this.deviceEditorService.deleteDevice(this.currentItem)
-            .subscribe((data:UpdateResult) => {
-                console.log('data ', data.changes);
-                this.devicesList.refreshData();
-            });
+        this.deleteTooltip = null;
+
+        if(!this.currentItem) return;
+        var item:VODevice = this.currentItem;
+      //  console.log('onRemoveClick ', this.currentItem);
+        if(confirm('You want to delete device '+item.label+'?')){
+            this.toolsDisadled = true;
+            this.deviceEditorService.deleteDevice(item)
+                .subscribe((data:UpdateResult) => {
+
+                    if(data.changes){
+                        this.deleteTooltip = {message:'Device '+item.id+' '+item.label+' deleted from database!',tooltip_class:'btn-success'};
+                    }else  this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete device'};
+                   console.log('onRemoveResponse', data);
+                    this.devicesList.refreshData();
+                });
+        }
+
+
     }
 
     onDataChange2(deviceId:number){

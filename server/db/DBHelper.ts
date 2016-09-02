@@ -80,7 +80,7 @@ export class DBHelper {
         var sql: string = "DELETE FROM " + this.table + " WHERE id = " + row.id;
         var data: any[] = [];
 
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     }
 
     selectMax(column_name: string): Q.Promise<{column_name:number}> {

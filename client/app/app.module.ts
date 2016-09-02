@@ -20,7 +20,8 @@ import {DevicesManager} from "./device/devices-manager";
 import {DevicesList} from "./device/devices-list";
 import {DeviceEditor} from "./device/device-editor";
 
-
+import {Ng2MdTooltip} from "./shared/ng2-md-tooltip/ng2-md-tooltip";
+import {TooltipText} from "./shared/ng2-md-tooltip/tooltip-text";
 
 //import { HeroesModule } from './heroes/heroes.module';
 //import { LoginComponent } from './login.component';
@@ -47,7 +48,8 @@ import {DeviceEditor} from "./device/device-editor";
         DevicesManager,
         DevicesList,
         DeviceEditor
-
+        ,Ng2MdTooltip
+        ,TooltipText
 
        // AppComponent,
      //   LoginComponent
@@ -56,6 +58,7 @@ import {DeviceEditor} from "./device/device-editor";
         appRoutingProviders,
      //   DialogService
     ],
+    entryComponents: [ TooltipText ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule {

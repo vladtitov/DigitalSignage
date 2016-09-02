@@ -13,7 +13,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var assempler_viewports_1 = require(".//assempler-viewports");
+var assempler_viewports_1 = require("./assempler-viewports");
 var LayoutAssemplerView = (function () {
     function LayoutAssemplerView(ar, myrouter) {
         this.ar = ar;

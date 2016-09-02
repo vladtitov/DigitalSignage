@@ -23,9 +23,12 @@ var AssetEditor = (function () {
         this.assetService = assetService;
         this.route = route;
         this.router = router;
+        this.isInProgress = false;
     }
     Object.defineProperty(AssetEditor.prototype, "_currentAsset", {
         set: function (item) {
+            if (!item)
+                return;
             // console.log('item ', item);
             this.currentAsset = item;
             this.itemLabel = item.label;
@@ -55,47 +58,79 @@ var AssetEditor = (function () {
     };
     AssetEditor.prototype.saveAsset = function (name, description) {
         var _this = this;
-        this.currentAsset.label = this.itemLabel;
-        // if (name || description) {
-        //     this.currentAsset.label = name;
+        // this.currentAsset.label = this.itemLabel;
+        if (!name) {
+            this.showTooltip('red', 'Error: name is empty');
+            return;
+        }
+        this.isInProgress = true;
+        var oldName = this.currentAsset.label;
+        var oldDescription = this.currentAsset.description;
+        this.currentAsset.label = name;
         this.currentAsset.description = description;
         this.assetService.saveItem(this.currentAsset)
             .subscribe(function (res) {
             if (res && res.changes) {
-                _this.showSuccess();
+                // this.showSuccess();
+                _this.currentAsset.label = _this.itemLabel;
+                _this.showTooltip('green', 'Success');
+                _this.isInProgress = false;
             }
-            else
-                _this.showError();
-        }, function (error) { return _this.errorMessage = error; });
-        // }
+            else {
+                // this.showError();
+                _this.currentAsset.label = oldName;
+                _this.currentAsset.description = oldDescription;
+                _this.showTooltip('red', 'Error');
+                _this.isInProgress = false;
+            }
+        }, function (error) {
+            _this.currentAsset.label = oldName;
+            _this.currentAsset.description = oldDescription;
+            _this.showTooltip('red', 'Error');
+            _this.isInProgress = false;
+            _this.errorMessage = error;
+        });
     };
     AssetEditor.prototype.hideEdit = function () {
         //this.fullItem.selected = false;
         this.router.navigate(["./content-manager", 'view', 0]);
         // this.router.navigate(["./content-manager",'hideEditor',0]);
     };
-    AssetEditor.prototype.showSuccess = function () {
-        this.success = true;
-        this.isTooltip = true;
-        this.tooltipMessage = 'success';
-        this.disableSave();
-    };
-    AssetEditor.prototype.showError = function () {
-        this.error = true;
-        this.isTooltip = true;
-        this.tooltipMessage = 'error';
-        this.disableSave();
-    };
-    AssetEditor.prototype.disableSave = function () {
+    AssetEditor.prototype.showTooltip = function (color, message) {
         var _this = this;
-        this.disabled = true;
+        this.color = color;
+        this.tooltipMessage = message;
+        // if(color == 'green') this.tooltipMessage = 'Success';
+        // else this.tooltipMessage = 'Error';
         setTimeout(function () {
-            _this.success = false;
-            _this.error = false;
-            _this.disabled = false;
-            _this.isTooltip = false;
+            _this.tooltipMessage = '';
         }, 3000);
     };
+    // showSuccess () {
+    //     this.color = 'green';
+    //     this.success = true;
+    //     this.isTooltip = true;
+    //     this.tooltipMessage = 'success';
+    //     this.disableSave ();
+    // }
+    //
+    // showError () {
+    //     this.color = 'red';
+    //     this.error = true;
+    //     this.isTooltip = true;
+    //     this.tooltipMessage = 'error';
+    //     this.disableSave ();
+    // }
+    //
+    // disableSave () {
+    //     this.disabled = true;
+    //     setTimeout( ()=> {
+    //         this.success = false;
+    //         this.error = false;
+    //         this.disabled = false;
+    //         this.isTooltip = false;
+    //     }, 3000)
+    // }
     AssetEditor.prototype.onEditClick = function () {
         //this.fullItem = this.currentItem;
         this.router.navigate(["./content-manager", "edit", this.currentAsset.id]);
@@ -116,7 +151,7 @@ var AssetEditor = (function () {
     AssetEditor = __decorate([
         core_1.Component({
             selector: 'asset-editor',
-            template: "\n<div>\n               \n            <div class=\"full-image\" >\n                <div id=\"myModal\" class=\"modal\" role=\"dialog\">\n                    <div class=\"modal-dialog\">\n                        <div class=\"modal-content\" *ngIf=\"currentAsset\">\n                        \n                            <div class=\"modal-header\">\n                                <p>Edit name</p>\n                                <button type=\"button\" class=\"close\" data-dismiss=\"modal\"(click)=\"hideEdit()\">&times;</button>  \n                            </div>\n                            \n                            <div class=\"modal-body\">\n                                <input \n                                    type=\"text\"\n                                    class=\"form-control\"\n                                    placeholder=\"Content name\"\n                                    [(ngModel)]=\"itemLabel\"\n                                    #inputItem>\n                                <div class=\"text-center\">\n                                    <div class=\"card-256\">\n                                        <asset-card [item]=\"currentAsset\" [size]=\"256\"></asset-card>\n                                    </div>\n                                </div>\n                                <!--<p>Duration: {{ currentAsset.duration }} </p>-->\n                                <p>Size: {{ currentAsset.height }} x {{ currentAsset.width }}</p>\n                                <textarea\n                                    class=\"form-control\"\n                                    name=\"comment\"\n                                    cols=\"50\"\n                                    rows=\"2\"\n                                    #textareaItem >{{ currentAsset.description }}</textarea>\n                            </div>\n                            \n                            <div class=\"modal-footer\">\n                                <!--<span *ngIf=\"success\" class=\"msg success\">Success</span>-->\n                                <!--<span *ngIf=\"error\" class=\"msg error\">Error</span>-->\n\n                                <button\n                                    type=\"button\"\n                                    class=\"btn btn-primary save\"\n                                    [class.disabled]=\"disabled\"\n                                    (click)=\"saveAsset(inputItem.value, textareaItem.value)\">\n                                    Save on server\n                                </button>\n                                <div class=\"mytooltip\">\n                                    <span \n                                        class=\"tooltiptext\"\n                                        [ng-tooltip]=\"tooltipMessage\"\n                                        [isTooltip]=\"isTooltip\">\n                                        {{tooltipMessage}}\n                                    </span>\n                                </div>\n                                <button type=\"button\" class=\"btn btn-default clos pull-right\" data-dismiss=\"modal\"(click)=\"hideEdit()\">Close</button> \n                            </div>\n                        </div>\n                    </div>   \n                </div>\n            </div>\n</div>              \n              ",
+            template: "\n<div>\n               \n            <div class=\"full-image\" >\n                <div id=\"myModal\" class=\"modal\" role=\"dialog\">\n                    <div class=\"modal-dialog\">\n                        <div class=\"modal-content\" *ngIf=\"currentAsset\">\n                        \n                            <div class=\"modal-header\">\n                                <p>Edit name</p>\n                                <button type=\"button\" class=\"close\" data-dismiss=\"modal\"(click)=\"hideEdit()\">&times;</button>  \n                            </div>\n                            \n                            <div class=\"modal-body\">\n                                <input \n                                    type=\"text\"\n                                    class=\"form-control\"\n                                    placeholder=\"Content name\"\n                                    [(ngModel)]=\"itemLabel\"\n                                    #inputItem>\n                                <div class=\"text-center\">\n                                    <div class=\"card-256\">\n                                        <asset-card [item]=\"currentAsset\" [size]=\"256\"></asset-card>\n                                    </div>\n                                </div>\n                                <!--<p>Duration: {{ currentAsset.duration }} </p>-->\n                                <p>Size: {{ currentAsset.height }} x {{ currentAsset.width }}</p>\n                                <textarea\n                                    class=\"form-control\"\n                                    name=\"comment\"\n                                    cols=\"50\"\n                                    rows=\"2\"\n                                    #textareaItem >{{ currentAsset.description }}</textarea>\n                            </div>\n                            \n                            <div class=\"modal-footer\">\n                                <!--<span *ngIf=\"success\" class=\"msg success\">Success</span>-->\n                                <!--<span *ngIf=\"error\" class=\"msg error\">Error</span>-->\n\n                                <button\n                                    type=\"button\"\n                                    class=\"btn btn-primary save\"\n                                    [class.disabled]=\"isInProgress\"\n                                    (click)=\"saveAsset(inputItem.value, textareaItem.value)\"\n                                    [ng2-md-tooltip]=\"tooltipMessage\" placement=\"right\" [tooltipColor]=\"color\"\n                                    >\n                                    Save on server\n                                </button>\n                                <!--<div class=\"mytooltip\">-->\n                                    <!--<span -->\n                                        <!--class=\"tooltiptext\"-->\n                                        <!--[ng-tooltip]=\"tooltipMessage\"-->\n                                        <!--[isTooltip]=\"isTooltip\">-->\n                                        <!--{{tooltipMessage}}-->\n                                    <!--</span>-->\n                                <!--</div>-->\n                                <button type=\"button\" class=\"btn btn-default clos pull-right\" data-dismiss=\"modal\"(click)=\"hideEdit()\">Close</button> \n                            </div>\n                        </div>\n                    </div>   \n                </div>\n            </div>\n</div>              \n              ",
             styles: ["\n                .text-center > .card-256 {\n                    margin: auto;\n                }\n                .full-image {\n                    position: absolute;\n                    top: 200px;\n                    left: 200px;\n                    background-color: #ffe3c5;\n                    border: 1px solid black;\n                }\n                \n                .myscroll {\n                    height: 700px;\n                    overflow-y: scroll;\n                    width: 100%;\n                }\n                \n                .myscroll-content{\n                    width: 100%;\n                }\n                \n                .card {\n                    height: 128px;\n                    width: 128px;\n                    float: left;\n                    overflow: hidden;\n                    word-wrap: break-word;\n                }\n                \n                .selected {\n                    border: 1px solid red;\n                }\n                \n                .modal {\n                    display: block;\n                    background-color: rgba(0, 0, 0, 0.31);\n                }\n                \n                .modal-header {\n                    padding-bottom: 0px;\n                }\n                \n                .modal-content {\n                    width: 600px;\n                    height: 630px;\n                }\n                \n                .modal-footer {\n                    text-align: start;\n                }\n                \n                input {\n                    margin-bottom: 10px;\n                }\n                \n                p {\n                    width: 90%;\n                    display: inline-block;\n                    margin-bottom: 20px;\n                }\n                \n                .msg {\n                    padding: 5px;\n                    position: absolute;\n                    left: 10px;\n                    bottom: 60px;\n                    z-index: 99;\n                    margin-left: 0;\n                    width: 70px;\n                    text-align: center;\n                    border-radius: 5px 5px;\n                    color: #000;\n                }\n                \n                .success {\n                    background: #FFFFAA; border: 1px solid #FFAD33;\n                }\n                \n                .error {\n                    background: #FFCCAA; border: 1px solid #FF3334;\n                }\n                \n                .disabled {\n                    pointer-events:none;\n                    opacity: 0.5;\n                }\n                \n              "],
             directives: [asset_library_1.AssetLibrary, asset_card_1.AssetCard, ng_tooltip_1.NgTooltip],
             providers: []

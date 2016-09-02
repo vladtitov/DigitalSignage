@@ -15,6 +15,7 @@ var NewUser = (function () {
     function NewUser(router, loginService) {
         this.router = router;
         this.loginService = loginService;
+        this.errorMessage = false;
         console.log('hello new-user!');
     }
     NewUser.prototype.back = function () {
@@ -24,7 +25,15 @@ var NewUser = (function () {
         var _this = this;
         console.log('onSubmit ', value);
         this.loginService.createAccount(value).subscribe(function (res) {
-            console.log('onSubmit res', res);
+            if (res.token) {
+                localStorage.setItem('email', _this.userEmail);
+                console.log('onSubmit res', res);
+                _this.back();
+            }
+            else {
+                _this.errorMessage = true;
+                console.log('wrong');
+            }
         }, function (err) {
             console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;
@@ -39,8 +48,8 @@ var NewUser = (function () {
     NewUser = __decorate([
         core_1.Component({
             selector: 'new-user',
-            template: "\n<div>\n            \n<!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Back</a>-->\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Create Account</h3>\n                        <hr>\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    ngModel \n                                    required\n                                    type=\"email\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"New User\">Create Account</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"back()\">Back</a>\n                    </div>\n                </div>\n                \n            </div>\n\n</div>",
-            styles: ["\n\n            sup.required {\n                color: #D64242;\n                font-size: 95%;\n                top: -2px;\n            }\n    \n    "]
+            template: "\n<div>\n            \n<!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Back</a>-->\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Create Account</h3>\n                        <hr>\n                        <div *ngIf=\"errorMessage\" class=\"errorMessage\">\n                            <h5> This username already exists </h5>\n                            <hr>\n                        </div>\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    [(ngModel)] = \"userEmail\"\n                                    required\n                                    type=\"email\"\n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\" type=\"submit\" value=\"New User\"><span class=\"fa fa-user-plus\"></span>Create Account</button>\n                        </form>\n                        <a class=\"panel-footer\" (click)=\"back()\"><span class=\"fa fa-arrow-left\"></span>Back</a>\n                    </div>\n                </div>\n                \n            </div>\n\n</div>",
+            styles: ["\n    \n    "]
         }), 
         __metadata('design:paramtypes', [router_1.Router, login_service_1.LoginService])
     ], NewUser);

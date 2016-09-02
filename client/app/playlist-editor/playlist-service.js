@@ -48,7 +48,7 @@ var PlayListService = (function () {
         localStorage.setItem('playlist_' + this.Id, JSON.stringify(this.currentItem));
     };
     PlayListService.prototype.saveDataOnServer = function () {
-        console.log(this.currentItem);
+        // console.log(this.currentItem);
         return this.http.post(this.serviceUrl + 'playlists/byid/' + this.Id, this.currentItem)
             .map(function (res) { return new models_1.UpdateResult(res.json().data); })
             .catch(this.handleError);
@@ -88,7 +88,7 @@ var PlayListService = (function () {
             return new models_1.VOPlaylist(data);
         })
             .catch(this.handleError).subscribe(function (result) {
-            console.log(result);
+            // console.log(result);
             _this.currentItem = result;
             _this.currentItemSubject.next(_this.currentItem);
         });

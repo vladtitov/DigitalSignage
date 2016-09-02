@@ -8,7 +8,7 @@ import { RouterConfig } from '@angular/router';
 
 import {VOLayout, VOViewport} from "../services/models";
 
-import { AssemblerViewports } from ".//assempler-viewports";
+import { AssemblerViewports } from "./assempler-viewports";
 
 
 

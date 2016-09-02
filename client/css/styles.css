@@ -7,6 +7,29 @@ body {
     padding: 2em;
 }
 
+.tooltip-container {
+    position: relative;
+    top:0;
+    left:0;
+}
+
+.tooltip-text {
+    text-transform: none;
+    font-size: 12px;
+    font-weight: 500;
+
+    text-align: center;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1000;
+    box-shadow: 3px 3px 5px #333;
+
+    line-height: 12px;
+    padding: 4px 8px 4px 8px;
+    opacity: 0.5;
+    transition: .5s ease-in-out opacity;
+    white-space: nowrap;
+}
 .pos-relative{
     position: relative;
 }
@@ -187,6 +210,8 @@ body {
     height: 132px;
     box-shadow: grey 5px 5px 10px;
     margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .thumb-128-2 > div{
     width:132px;
@@ -278,8 +303,20 @@ body {
 .loginform h3 {
     color: #337ab7;
 }
+.loginform h5 {
+    color: #FF0000;
+}
+.loginform h5.errorMessage {
+    color: #FF0000;
+}
+.loginform h5.message {
+    color: #008000;
+}
+
 .loginform hr {
     width: 300px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .loginform .panel {
     max-width: 430px;
@@ -313,6 +350,10 @@ md-checkbox{
 }
 .loginform a {
     cursor: pointer;
+}
+
+.loginform span {
+    margin-right: 8px;
 }
 
 

@@ -11,10 +11,12 @@ var proxy = httpProxy.createProxyServer({
     port: 80
 });
 var path = require('path');
+var SETTINGS = JSON.parse(fs.readFileSync('mysettings.json', 'utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL = ROOT + '/server/db/';
+GLOBAL.SETTINGS = SETTINGS;
 GLOBAL.onError = function (err, res) {
     console.log('onError error\n', err);
     res.json({ error: 'error', reason: err });
@@ -33,6 +35,12 @@ app.use(session({
 app.use(express.static(WWW));
 app.get('/', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
+});
+app.get('/login', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': WWW });
+});
+app.get('/login/*', function (req, res) {
+    res.sendFile('mylogin.html', { 'root': WWW });
 });
 app.get('/dashboard', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
@@ -65,9 +73,9 @@ app.all('/proxy/*', function (req, res) {
 app.use('/account', bodyParser.urlencoded({ extended: true }));
 app.use('/account', bodyParser.json());
 app.use('/account', require('./server/account/manager'));
-app.use('/videoserver', bodyParser.urlencoded({ extended: true }));
-app.use('/videoserver', bodyParser.json());
-app.use('/videoserver', require('./server/videoserver/manager'));
+app.use('/videos', bodyParser.urlencoded({ extended: true }));
+app.use('/videos', bodyParser.json());
+app.use('/videos', require('./server/videos/manager'));
 app.use('/player/:token/', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (folder)
@@ -94,8 +102,8 @@ app.use('/api', bodyParser.json());
 app.use('/api', function (req, res, next) {
     var folder = req.session['user_folder'];
     if (!folder) {
-        console.log(' user not loged in go to /clientAssets/folder_hbrowser');
-        req.session['user_folder'] = 'clientAssets/folder_hbrowser';
+        console.log(' user not loged in go to ' + SETTINGS.dev_folder);
+        req.session['user_folder'] = SETTINGS.dev_folder;
     }
     next();
 });

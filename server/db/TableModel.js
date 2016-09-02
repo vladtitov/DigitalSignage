@@ -82,17 +82,17 @@ var TableModel = (function () {
     TableModel.prototype.deleteById = function (id) {
         var sql = "DELETE FROM " + this.table + " WHERE id = " + id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     TableModel.prototype.deleteByFieldId = function (feild, id) {
         var sql = "DELETE FROM " + this.table + " WHERE " + feild + " = " + id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     TableModel.prototype.deleteContent = function (row) {
         var sql = "DELETE FROM " + this.table + " WHERE id = " + row.id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     TableModel.prototype.runQuery = function (sql) {
         return this.db.runQuery(sql);

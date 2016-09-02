@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {DevicesList} from "./devices-list";
 import {LayoutsListService} from "../layouts/layouts-list-service";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 @Component({
     selector:'device-editor'
@@ -42,7 +43,9 @@ import {LayoutsListService} from "../layouts/layouts-list-service";
                 </div>
             </div>
             <div>
-                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0" (click)="onSaveClick(inpLabel.value, inpDescr.value)"><span class="fa fa-save"></span> Save</a>
+                <a class="btn btn-primary saveBatton" [class.disabled]="currentItem.id==0 || isInProgress" (click)="onSaveClick(inpLabel.value, inpDescr.value)"
+                [ng2-md-tooltip]="tooltipOptions" placement="bottom">
+            <span class="fa fa-save"></span> Save</a>
             </div>
             </form>
 </div>
@@ -80,6 +83,11 @@ export class DeviceEditor implements OnInit{
     currentLayout: VOLayout = new VOLayout({});
     layouts:VOLayout[];
     labels: string[];
+
+    color:string;
+    tooltipOptions:TooltipOptions
+
+    isInProgress:boolean = false;
 
     deviceUrl:string;
     deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/screen/mydevice/';
@@ -139,18 +147,37 @@ export class DeviceEditor implements OnInit{
     }
 
     onSaveClick(label, description){
+        this.tooltipOptions = null;
+
+        this.isInProgress = true;
         if(this.currentLayout) this.currentItem.layout_id = this.currentLayout.props.id;
         if(this.currentItem.layout_id == -1) this.currentItem.layout_id = 0;
         this.currentItem.label = label;
         this.currentItem.description = description;
         this.deviceEditorService.saveData(this.currentItem)
-            .subscribe((data:UpdateResult) => {
-                var id = data.insertId ? data.insertId : this.currentItem.id;
-                this.getDataById(id);
-                this.onDataChange.emit(id);
-                // if(this.devicelist1) this.devicelist1.refreshData();
-        });
+            .subscribe(
+                (data:UpdateResult) => {
+                    console. log(data);
+                    console.log(this.currentItem);
+                    if(data.insertId){
+                        if( this.currentItem.id ===-1 ) this.currentItem.id =data.insertId;
+                    }
+                    this.tooltipOptions = {message:'Device saved on server',tooltip_class:'btn-success'};
+                    this.isInProgress = false;
+
+                    var id = data.insertId ? data.insertId : this.currentItem.id;
+                    this.getDataById(id);
+                    this.onDataChange.emit(id);
+                    // if(this.devicelist1) this.devicelist1.refreshData();
+                },
+                error => {
+                    this.tooltipOptions = {message:'Server error',tooltip_class:'btn-danger'};
+                    this.isInProgress = false;
+                });
     }
+
+
+
     showLayout(){
         if(!this.currentItem) return;
         var id:number = this.currentItem.layout_id;

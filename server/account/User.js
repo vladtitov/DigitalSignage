@@ -1,10 +1,10 @@
 "use strict";
 var dbmodels_1 = require("../db/dbmodels");
-var ObjectDatabase_1 = require("../db/ObjectDatabase");
 var Q = require('q');
 var dbDriver_1 = require("../db/dbDriver");
 var crypto = require('crypto');
 var fs = require('fs-extra');
+var nodemailer = require("nodemailer");
 var User = (function () {
     function User() {
         this.secret = 'abcdefg';
@@ -24,8 +24,6 @@ var User = (function () {
         var _this = this;
         var def = Q.defer();
         user.folder = 'clientAssets/folder_' + user.id;
-        console.log(user.folder);
-        console.log(user);
         this.copyFolder(user.folder).done(function (res) { return _this.updateUsers(user).done(function (update) {
             def.resolve({
                 token: user.token,
@@ -38,6 +36,7 @@ var User = (function () {
         var _this = this;
         var def = Q.defer();
         var users = new dbmodels_1.RUsers();
+        password = crypto.createHash('md5').update(password).digest('hex');
         users.username = email;
         users.email = email;
         users.password = password;
@@ -48,7 +47,7 @@ var User = (function () {
                 def.reject({ exists: email });
             }
             else
-                _this.insertNewUaser(users).done(function (insert) {
+                _this.insertNewUser(users).done(function (insert) {
                     if (insert.insertId) {
                         users.id = insert.insertId;
                         def.resolve(users);
@@ -59,11 +58,50 @@ var User = (function () {
         });
         return def.promise;
     };
+    User.prototype.resetPass = function (email) {
+        var _this = this;
+        var def = Q.defer();
+        var users = new dbmodels_1.RUsers();
+        users.username = email;
+        this.isUsernameExists(users.username).done(function (res) {
+            if (res) {
+                _this.sendMail(res.username, res.token).done(function (info) {
+                    def.resolve(info);
+                }, function (err) { return def.reject(err); });
+            }
+            else
+                def.reject({ notExists: email });
+        }, function (err) { return def.reject(err); });
+        return def.promise;
+    };
+    User.prototype.sendMail = function (email, token) {
+        var def = Q.defer();
+        var configFile = fs.readFileSync("server/account/smtpConfig.json", "utf8");
+        var smtpConfig = JSON.parse(configFile);
+        var transporter = nodemailer.createTransport(smtpConfig);
+        var emailText = fs.readFileSync("server/emailTemplate.html", "utf8");
+        var text = emailText.replace('__token__', token);
+        var mailOptionsFile = fs.readFileSync("server/account/mailOptions.json", "utf8");
+        var mailOptions = JSON.parse(mailOptionsFile);
+        mailOptions.to = email;
+        mailOptions.html = text;
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            }
+            else {
+                def.resolve(info);
+            }
+            ;
+        });
+        return def.promise;
+    };
     User.prototype.updateUsers = function (user) {
         var db = new dbDriver_1.DBDriver(null);
         return db.updateRow(user, 'users');
     };
-    User.prototype.insertNewUaser = function (user) {
+    User.prototype.insertNewUser = function (user) {
         var db = new dbDriver_1.DBDriver(null);
         user.token = this.generateToken(user.username);
         user.created = Math.round(Date.now() / 1000);
@@ -72,7 +110,6 @@ var User = (function () {
     User.prototype.isUsernameExists = function (email) {
         var db = new dbDriver_1.DBDriver(null);
         var sql = 'SELECT *  FROM users WHERE username =?';
-        console.log(sql + email);
         return db.selectOne(sql, [email]);
     };
     User.prototype.getAllDevices = function (folder) {
@@ -89,10 +126,16 @@ var User = (function () {
         return crypto.createHmac('sha256', this.secret).update(str).digest('hex');
     };
     User.prototype.getUserByToken = function (token) {
-        var db = new ObjectDatabase_1.ObjectDatabase(null, 'users');
-        return db.selectByValues({
-            token: token
-        });
+        var db = new dbDriver_1.DBDriver(null);
+        var sql = 'SELECT *  FROM users WHERE token =?';
+        return db.selectOne(sql, [token]);
+    };
+    User.prototype.updateUserPass = function (id, password) {
+        var db = new dbDriver_1.DBDriver(null);
+        var timestamp = Math.round(Date.now() / 1000);
+        password = crypto.createHash('md5').update(password).digest('hex');
+        var sql = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
+        return db.runQuery(sql);
     };
     User.prototype.login = function (username, password, sid, ip) {
         password = crypto.createHash('md5').update(password).digest('hex');
@@ -105,8 +148,10 @@ var User = (function () {
                 db.updateRow({ id: user.id, timestamp: timestamp, ip: ip }, 'users');
                 def.resolve(user);
             }
-            else
-                (function (err) { return def.reject('wrong'); });
+            else {
+                console.log('err ');
+                def.reject('wrong');
+            }
         }, function (err) { return def.reject(err); });
         return def.promise;
     };

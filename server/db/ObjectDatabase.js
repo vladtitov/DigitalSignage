@@ -115,17 +115,17 @@ var ObjectDatabase = (function () {
     ObjectDatabase.prototype.deleteById = function (id) {
         var sql = "DELETE FROM " + this.mainTable + " WHERE id = " + id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     ObjectDatabase.prototype.deleteByFieldId = function (feild, id) {
         var sql = "DELETE FROM " + this.mainTable + " WHERE " + feild + " = " + id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     ObjectDatabase.prototype.deleteContent = function (row) {
         var sql = "DELETE FROM " + this.mainTable + " WHERE id = " + row.id;
         var data = [];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     ObjectDatabase.prototype.selectMax = function (column_name) {
         var sql = "SELECT max(" + column_name + ") AS " + column_name + " FROM " + this.mainTable;

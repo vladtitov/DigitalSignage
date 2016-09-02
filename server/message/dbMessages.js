@@ -35,7 +35,7 @@ var DBMessages = (function () {
     DBMessages.prototype.deleteContent = function (message) {
         var sql = "DELETE FROM messages WHERE id = ?";
         var data = [message.id];
-        return this.db.deleteAll(sql, data);
+        return this.db.deleteQuery(sql, data);
     };
     return DBMessages;
 }());

@@ -66,7 +66,6 @@ var DevicesController = (function () {
     };
     DevicesController.prototype.getAllDevices = function () {
         var sql = 'SELECT * FROM devices';
-        console.log(sql);
         return this.db.queryAll(sql);
     };
     DevicesController.prototype.getDevicesByLayoutId = function (layout_id) {
