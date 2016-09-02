@@ -59,7 +59,9 @@ import {LoginService} from "./login-service";
 </div>`
 
     , styles:[`
-    
+        h3{
+            color: #ff0000;
+        }
     `]
 })
 

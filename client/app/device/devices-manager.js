@@ -26,6 +26,11 @@ var DevicesManager = (function () {
         var _this = this;
         this.sub = this.route.params.subscribe(function (params) {
             var id = +params['id']; // (+) converts string 'id' to a number
+            // console.log('id ', id);
+            if (isNaN(id)) {
+                _this.router.navigate(['./devices-manager', 0]);
+                return;
+            }
             _this.toolsDisadled = (id === -1 || id === 0) ? true : false;
             if (_this.toolsDisadled)
                 _this.devicesList.reset();

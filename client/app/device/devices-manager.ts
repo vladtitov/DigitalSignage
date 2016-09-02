@@ -63,6 +63,11 @@ export class DevicesManager implements OnInit{
     ngOnInit():void{
         this.sub = this.route.params.subscribe(params => {
             let id:number = +params['id']; // (+) converts string 'id' to a number
+            // console.log('id ', id);
+            if(isNaN(id)){
+                this.router.navigate(['./devices-manager',0]);
+                return;
+            }
             this.toolsDisadled = (id === -1 || id === 0) ? true : false;
             if(this.toolsDisadled) this.devicesList.reset();
         });

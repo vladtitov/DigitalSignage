@@ -19,9 +19,11 @@ import {LoginService} from "./login-service";
                     <div class="panel" id="login">
                         <h3>Change Password</h3>
                         <hr>
-                        <div *ngIf="errorMessage || message">
+                        <div  *ngIf="errorMessage">
                             <h5 *ngIf="errorMessage" [class.errorMessage]="errorMessage"> Error </h5>
-                            <h5 *ngIf="message" [class.message]="message"> Please Sign In </h5>
+                            <!--<a *ngIf="message" class="btn btn-success" (click)="back()">Please Sign In</a>-->
+                            <!--<button *ngIf="message" class="btn btn-success btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>-->
+                            <!--<h5 *ngIf="message" [class.message]="message"> Please Sign In </h5>-->
                             <hr>
                         </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
@@ -49,7 +51,8 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>
+                            <a *ngIf="message" class="btn btn-success btn-lg" (click)="back()"><span class="fa fa-sign-in"></span>Please Sign In</a>
+                            <button *ngIf="!message" class="btn btn-primary btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>
                         </form>
                         <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Sign In</a>
                     </div>
@@ -60,7 +63,9 @@ import {LoginService} from "./login-service";
 </div>`
 
     , styles:[`
-    
+        form > a {
+            width: 100%;
+        }
     `]
 })
 
