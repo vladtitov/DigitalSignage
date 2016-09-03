@@ -28,7 +28,7 @@ var LayoutThumb = (function () {
     LayoutThumb = __decorate([
         core_1.Component({
             selector: 'layout-thumb',
-            template: "\n            <div class=\"mythumb\" [class.box-selected]=\"layout.selected\">\n                  <div class=\"myimage-container\">\n                      <img  class=\"myimage\" src=\"{{layout.props.image}}\"/>       \n                  </div>\n                  <div class=\"params pos-bottom\">\n                  <div>{{layout.props.label}}</div>\n                  \n                </div>\n                           \n            </div>\n",
+            template: "\n            <div class=\"mythumb\" [class.box-selected]=\"layout.selected\">\n            \n                  <div class=\"myimage-container\">\n                      <img  class=\"myimage\" src=\"{{layout.props.image}}\"/>       \n                  </div>\n                  <div class=\"myid\">{{layout.props.id}}</div>\n                  <div class=\"params pos-bottom\">\n                  <div>{{layout.props.label}}</div>\n                  \n                </div>\n                           \n            </div>\n",
             styles: ["\n    \n         \n    \n   \n \n\n \n\n"],
             directives: [ViewPortThumb_1.ViewPortThumb]
         }), 

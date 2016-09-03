@@ -6,27 +6,18 @@ var Q = require('q');
 var path = require('path');
 var http = require('http');
 var FileDownloader = (function () {
-    function FileDownloader(url, folder, filename) {
-        this.url = url;
-        this.folder = folder;
-        this.filename = filename;
+    function FileDownloader() {
     }
-    FileDownloader.prototype.getFile = function () {
-        var _this = this;
-        this.downloader(function (err) {
-            if (_this.onComplete)
-                _this.onComplete(err);
-        });
-    };
-    FileDownloader.prototype.downloader = function (callBack) {
-        var dest = path.resolve(WWW + '/' + this.folder + '/' + this.filename);
-        var file = fs.createWriteStream(dest);
-        http.get(this.url, function (response) {
+    FileDownloader.prototype.download = function (url, destination, callBack) {
+        var file = fs.createWriteStream(destination);
+        http.get(url, function (response) {
             response.pipe(file);
             file.on('finish', function () {
-                file.close(callBack);
+                file.close();
+                if (callBack)
+                    callBack();
             }).on('error', function (err) {
-                fs.unlink(dest);
+                fs.unlink(destination);
                 if (callBack)
                     callBack(err);
             });
@@ -38,14 +29,17 @@ exports.FileDownloader = FileDownloader;
 var VideoServerConnect = (function () {
     function VideoServerConnect(folder) {
         this.folder = folder;
-        this.server = 'http://127.0.0.1:56555';
+        this.server = SETTINGS.video_server;
     }
     VideoServerConnect.prototype.downloadFiles = function (asset, folder) {
+        var _this = this;
         var def = Q.defer();
         folder += '/userVideos';
         var thumbs = asset.thumb.split(',');
-        var down = new FileDownloader(this.server + '/' + asset.folder + '/' + asset.filename, folder, asset.filename);
-        down.onComplete = function (err) {
+        var url = this.server + '/' + asset.folder + '/' + asset.filename;
+        var destination = path.resolve(WWW + '/' + folder + '/' + asset.filename);
+        var down = new FileDownloader();
+        down.download(url, destination, function (err) {
             if (err)
                 def.reject(err);
             else {
@@ -56,18 +50,20 @@ var VideoServerConnect = (function () {
                 asset.thumb = ar.join(',');
                 def.resolve(asset);
             }
-        };
-        down.getFile();
+        });
         thumbs.forEach(function (filename) {
-            var d = new FileDownloader(asset.folder + '/' + filename, folder, filename);
-            d.getFile();
+            url = _this.server + '/' + asset.folder + '/' + filename;
+            destination = path.resolve(WWW + '/' + folder + '/' + filename);
+            down.download(url, destination);
         });
         return def.promise;
     };
     VideoServerConnect.prototype.sendNotification = function (asset) {
-        console.log('sendNotification');
         var def = Q.defer();
-        http.get(this.server + '/' + 'wake-up', function (res) {
+        var url = this.server + '/' + 'wake-up';
+        console.log('sendNotification ' + url);
+        http.get(url, function (res) {
+            console.log('sendNotification res', res);
             def.resolve(res);
         });
         return def.promise;
@@ -89,21 +85,24 @@ var VideoServerConnect = (function () {
     };
     VideoServerConnect.prototype.getStatus = function (id) {
         var db = new dbDriver_1.DBDriver(null);
-        return db.selectColumsById(id, 'status', 'process');
+        return db.selectColumnsById(id, 'status', 'process');
     };
-    VideoServerConnect.prototype.updateStatus = function (asset, folder) {
+    VideoServerConnect.prototype.updateStatus = function (process_id, status, folder) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
-        db.updateRow({ id: asset.id, status: asset.status }, 'process').done(function (res) {
+        db.updateRow({ id: process_id, status: status }, 'process').done(function (res) {
             var db2 = new dbDriver_1.DBDriver(folder);
-            db2.updateRowByColumn({ process_id: asset.id, status: asset.status }, 'process_id', 'assets').done(function (res) { return def.resolve(asset); }, function (err) { return def.reject(err); });
+            db2.updateRowByColumn({ process_id: process_id, status: status }, 'process_id', 'assets').done(function (res) { return def.resolve(res); }, function (err) { return def.reject(err); });
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
     VideoServerConnect.prototype.finalize = function (asset, folder) {
         var _this = this;
         var def = Q.defer();
-        this.saveAssetData(asset, folder).done(function (res) { return _this.updateStatus(asset, folder).done(function (res) { return def.resolve(asset); }, function (err) { return def.reject(err); }); }, function (err) { return def.reject(err); });
+        this.saveAssetData(asset, folder).done(function (res) { return _this.updateStatus(asset.id, 'ready', folder).done(function (res) {
+            asset.status = 'ready';
+            def.resolve(asset);
+        }, function (err) { return def.reject(err); }); }, function (err) { return def.reject(err); });
         return def.promise;
     };
     VideoServerConnect.prototype.saveAssetData = function (asset, folder) {
@@ -111,31 +110,27 @@ var VideoServerConnect = (function () {
         asset.process_id = asset.id;
         return db2.updateRowByColumn(new models_1.VOAsset(asset), 'process_id', 'assets');
     };
-    VideoServerConnect.prototype.updateProcessed = function (asset) {
-        var _this = this;
+    VideoServerConnect.prototype.getAssetFolder = function (asset) {
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
         db.selectById(asset.id, 'process').done(function (row) {
-            if (row) {
-                var folder = row.folder;
-                _this.updateStatus(asset, folder).done(function (res) { return def.resolve(folder); }, function (err) { return def.reject(err); });
-            }
+            if (row)
+                def.resolve(row.folder);
             else
                 def.reject('notexists');
         }, function (err) { return def.reject(err); });
         return def.promise;
     };
     VideoServerConnect.prototype.getNextVideo = function () {
-        console.log('getNextVideo');
         var status = 'newvideo';
         var def = Q.defer();
         var db = new dbDriver_1.DBDriver(null);
-        var sql = 'SELECT * FROM process WHERE status=?';
-        db.selectAll(sql, [status]).done(function (res) {
+        db.selectByValue(status, 'status', 'process').done(function (res) {
             var out;
             for (var i = 0, n = res.length; i < n; i++) {
                 var asset = res[i];
                 if (fs.existsSync(WWW + '/' + asset.path)) {
+                    asset.status = 'requested';
                     out = asset;
                     break;
                 }
@@ -152,4 +147,3 @@ var VideoServerConnect = (function () {
     return VideoServerConnect;
 }());
 exports.VideoServerConnect = VideoServerConnect;
-//# sourceMappingURL=VideoServerConnect.js.map

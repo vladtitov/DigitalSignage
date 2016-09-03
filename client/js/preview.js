@@ -33,7 +33,6 @@ var htplayer;
         return VOLayoutProps;
     }());
     htplayer.VOLayoutProps = VOLayoutProps;
-    //
     var VOLayout = (function () {
         function VOLayout(obj) {
             for (var str in obj)
@@ -331,10 +330,10 @@ var htplayer;
             $container.append(this.$view);
         };
         HTMyPlayer.prototype.width = function () {
-            return this.layout.width || 1920;
+            return this.layout.props.width || 1920;
         };
         HTMyPlayer.prototype.height = function () {
-            return this.layout.height || 1080;
+            return this.layout.props.height || 1080;
         };
         HTMyPlayer.prototype.start = function () {
         };

@@ -54,9 +54,22 @@ var DBDriver = (function () {
         });
         return deferred.promise;
     };
-    DBDriver.prototype.selectColumsById = function (id, columns, table) {
+    DBDriver.prototype.selectByValue = function (value, column, table) {
         var def = Q.defer();
-        var sql = 'SELECT ' + columns + ' FROM ' + table + ' WHERE id=' + Number(id);
+        var sql = 'SELECT * FROM ' + table + ' WHERE ' + column + '=?';
+        this.getdb().all(sql, [value], function (error, row) {
+            if (error) {
+                def.reject(error);
+            }
+            else {
+                def.resolve(row);
+            }
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.selectColumnsById = function (id, columns, table) {
+        var def = Q.defer();
+        var sql = 'SELECT ' + columns + ' FROM ' + table + ' WHERE id=' + id;
         this.getdb().get(sql, function (error, row) {
             if (error) {
                 def.reject(error);
@@ -79,6 +92,46 @@ var DBDriver = (function () {
             }
         });
         return def.promise;
+    };
+    DBDriver.prototype.selectAllTable = function (table) {
+        var def = Q.defer();
+        var sql = 'SELECT * FROM ' + table;
+        this.getdb().all(sql, function (error, rows) {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            }
+            else
+                def.resolve(rows);
+        });
+        return def.promise;
+    };
+    DBDriver.prototype.selectAll = function (sql, data) {
+        var deferred = Q.defer();
+        this.getdb().all(sql, data, function (error, rows) {
+            if (error) {
+                console.log(error);
+                deferred.reject(error);
+            }
+            else {
+                deferred.resolve(rows);
+            }
+        });
+        return deferred.promise;
+    };
+    DBDriver.prototype.selectOne = function (sql, data) {
+        var deferred = Q.defer();
+        this.getdb().get(sql, data, function (error, row) {
+            if (error) {
+                console.log('selectOne ', error);
+                deferred.reject(error);
+            }
+            else {
+                // console.log(row);
+                deferred.resolve(row);
+            }
+        });
+        return deferred.promise;
     };
     DBDriver.prototype.queryOne = function (sql) {
         var deferred = Q.defer();
@@ -170,46 +223,6 @@ var DBDriver = (function () {
             else {
                 // console.log({ id: this.lastID });
                 deferred.resolve({ changes: this.changes });
-            }
-        });
-        return deferred.promise;
-    };
-    DBDriver.prototype.selectAllTable = function (table) {
-        var def = Q.defer();
-        var sql = 'SELECT * FROM ' + table;
-        this.getdb().all(sql, function (error, rows) {
-            if (error) {
-                console.log(error);
-                def.reject(error);
-            }
-            else
-                def.resolve(rows);
-        });
-        return def.promise;
-    };
-    DBDriver.prototype.selectAll = function (sql, data) {
-        var deferred = Q.defer();
-        this.getdb().all(sql, data, function (error, rows) {
-            if (error) {
-                console.log(error);
-                deferred.reject(error);
-            }
-            else {
-                deferred.resolve(rows);
-            }
-        });
-        return deferred.promise;
-    };
-    DBDriver.prototype.selectOne = function (sql, data) {
-        var deferred = Q.defer();
-        this.getdb().get(sql, data, function (error, row) {
-            if (error) {
-                console.log('selectOne ', error);
-                deferred.reject(error);
-            }
-            else {
-                // console.log(row);
-                deferred.resolve(row);
             }
         });
         return deferred.promise;

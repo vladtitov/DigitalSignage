@@ -7,10 +7,16 @@ body {
     padding: 2em;
 }
 
+.myid{
+    position: absolute;
+
+}
+
 .tooltip-container {
     position: relative;
     top:0;
     left:0;
+
 }
 
 .tooltip-text {

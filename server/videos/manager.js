@@ -22,16 +22,17 @@ router.post('/processed', function (request, response) {
     var token = asset.token;
     delete asset.token;
     asset.path = asset.folder + '/' + asset.filename;
-    asset.status = 'processed';
-    console.log(asset);
     var man = new VideoServerConnect_1.VideoServerConnect();
-    man.updateProcessed(asset).done(function (folder) {
-        asset.folder = folder;
-        man.downloadFiles(asset, folder).done(function (res) {
-            asset.status = 'ready';
-            man.finalize(asset, folder).done(function (res) { return response.json({ data: asset }); }, function (err) { return response.json({ error: err }); });
+    var folder;
+    console.log('got processed', asset);
+    man.getAssetFolder(asset).done(function (res) {
+        folder = res;
+        man.updateStatus(asset.id, 'precessed', folder).done(function (res) {
+            asset.status = 'precessed';
+            man.downloadFiles(asset, folder).done(function (asset) {
+                man.finalize(asset, folder).done(function (asset) { return response.json({ data: asset }); }, function (err) { return response.json({ error: err }); });
+            }, function (err) { return response.json({ error: err }); });
         }, function (err) { return response.json({ error: err }); });
     }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map
