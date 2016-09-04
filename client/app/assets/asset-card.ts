@@ -14,6 +14,7 @@ import {VOAsset} from "../services/models";
                     <div class="image-container-{{size}}">
                             <img class="image-{{size}}" src="{{image}}" />
                     </div>
+                    <div class="myid"><span>{{item.id}}</span></div>
                     <div class="info pos-bottom">
                         <div class="deviceText-{{size}}"><span>{{item.label}}</span></div>
                         <div class="deviceText-{{size}}" *ngIf="duration">Duration: <span>{{duration}}</span></div>

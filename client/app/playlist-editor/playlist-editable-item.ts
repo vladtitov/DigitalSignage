@@ -11,7 +11,7 @@ import {VOPlayLists_Assets, VOAsset} from "../services/models";
 
 
         <div class="item" [style.width.px]="myWidth" [class.selected]="item.selected" [class.hilited]="item.hilited" (dblclick)="onItemDobleClick(item)" (dragstart)="onDragStart(item)" >
-               
+                <div class="myid"><span>{{id}}</span></div>
                 <div class="myimage" [class.pictures]="image2">                
                 
                             <img src="{{image}}" [class.img1]="!image2" [class.img2]="image2" (onerror)="onImageLoadError($event)">
@@ -152,7 +152,7 @@ export class PlayListItem implements OnInit{
 
         this.setDuration(this.item.duration);
 
-
+        this.id = asset.id;
         this.label = asset.label || 'no label';
     }
 

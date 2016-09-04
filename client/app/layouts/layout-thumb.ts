@@ -12,7 +12,7 @@ import {ViewPortThumb} from "./ViewPortThumb";
                   <div class="myimage-container">
                       <img  class="myimage" src="{{layout.props.image}}"/>       
                   </div>
-                  <div class="myid">{{layout.props.id}}</div>
+                  <div class="myid"><span>{{layout.props.id}}</span></div>
                   <div class="params pos-bottom">
                   <div>{{layout.props.label}}</div>
                   
@@ -21,11 +21,7 @@ import {ViewPortThumb} from "./ViewPortThumb";
             </div>
 `
         ,styles:[`
-    
-         
-    
-   
- 
+
 
  
 

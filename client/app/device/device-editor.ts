@@ -25,6 +25,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             </div>
             <div class="form-group">
                 <label>Name</label>
+                <small *ngIf="currentItem.id>0" style="margin-left: 15px">ID: {{currentItem.id}}</small>
                 <input class="form-control" #inpLabel value="{{currentItem.label}}"/>
             </div>
             <div class="form-group">
@@ -33,11 +34,13 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             </div>
             <div class="form-group">
                 <label for="selectLayout">Layout</label>
+                <small *ngIf="currentLayout.props.id>0" style="margin-left: 15px">ID: {{currentLayout.props.id}}</small>
              <select class="form-control"    id="selectLayout"  [(ngModel)]="currentLayout" name="mylayout"> <option *ngFor="let label1 of layouts" [ngValue]="label1">{{label1.props.label}}</option> </select>
             </div>
             <div class="card-256x320">
                 <div class="mythumb">
                     <div class="myimage-container">
+                        <div class="myid" *ngIf="currentLayout.props.id>0"><span>{{currentLayout.props.id}}</span></div>
                         <img class="myimage " src="{{currentLayout.props.image}}" />
                     </div>
                     <div class="props"></div>

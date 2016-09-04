@@ -23,13 +23,13 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
             <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
-            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress"
+            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress" style="margin-right: 100px"
                 [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
             <span class="fa fa-life-saver"></span> Save on Server</a>
                     
-        
+            <small *ngIf="playlistProps.id>0" style="margin-right: 10px">ID: {{playlistProps.id}};</small>
             <label class="PNameLabel" for="PName">Playlist Name</label>
-           <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
+            <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
             
@@ -79,7 +79,7 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             }
             .PNameLabel{
-                margin-left: 50px;
+
             }
             time-cell{
                 width: 128px;
