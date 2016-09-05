@@ -12,16 +12,33 @@ var htplayer;
     var PreviewController = (function () {
         function PreviewController() {
             var _this = this;
-            var params = UtilsServices.utils.getUrlParams();
-            console.log(params);
-            if (!params || !params.layout_id) {
-                console.warn('heed layout_id');
-                return;
+            // let params:any = UtilsServices.utils.getUrlParams();
+            var layout_id;
+            var device_id;
+            var params = window.location.href.split('/');
+            console.log('params: ', params);
+            var ind = params.indexOf('layout');
+            if (ind != -1) {
+                layout_id = +params[ind + 1];
             }
+            else {
+                ind = params.indexOf('device');
+                if (ind != -1) {
+                    device_id = +params[ind + 1];
+                }
+            }
+            console.log('layout_id', layout_id);
+            console.log('device_id', device_id);
+            if (!layout_id && !device_id)
+                return;
+            console.log(params);
             htplayer.playerURL = '/api/';
-            var id = params.layout_id;
+            // let id = params.layout_id;
             this.player = new htplayer.HTMyPlayer('#ViewportsContainer');
-            this.player.loadLayout(id);
+            if (layout_id)
+                this.player.loadLayout(layout_id);
+            else if (device_id)
+                this.player.loadDevice(device_id);
             this.player.onLayotLoaded = function () {
                 _this.player.appendTo($('#MainContainer'));
                 _this.fitToWindow();

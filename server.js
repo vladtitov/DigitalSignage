@@ -42,6 +42,9 @@ app.get('/login', function (req, res) {
 app.get('/login/*', function (req, res) {
     res.sendFile('mylogin.html', { 'root': WWW });
 });
+app.get('/preview/*', function (req, res) {
+    res.sendFile('player-preview.html', { 'root': WWW });
+});
 app.get('/dashboard', function (req, res) {
     res.sendFile('indexts.html', { 'root': WWW });
 });
@@ -138,3 +141,4 @@ app.listen(port, function () {
     console.log('http://127.0.0.1:' + port);
     console.log('http://127.0.0.1:' + port + '/api');
 });
+//# sourceMappingURL=server.js.map

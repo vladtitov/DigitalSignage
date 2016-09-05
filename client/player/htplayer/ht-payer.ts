@@ -68,7 +68,7 @@ module htplayer{
             this.setNewViewPorts();
         }
 
-      loadLayout(layout_id:number):void{
+        loadLayout(layout_id:number):void{
             $.get(playerURL+'layouts/byid/'+layout_id).done((res)=>{
                 console.log(res);
               if(res.data){
@@ -78,6 +78,18 @@ module htplayer{
               }else console.warn(res)
             })
         }
+
+        loadDevice(device_id:number):void{
+            $.get(playerURL+'layouts/by-device-id/'+device_id).done((res)=>{
+                console.log(res);
+                if(res.data){
+                    this.layout = new VOLayout(res.data);
+                    this.setNewViewPorts();
+                    if(this.onLayotLoaded)this.onLayotLoaded();
+                }else console.warn(res)
+            })
+        }
+
         setNewViewPorts(){
             this.viewports = this.layout.viewports.map(item=>new ViewportModel(item))
             this.createView();

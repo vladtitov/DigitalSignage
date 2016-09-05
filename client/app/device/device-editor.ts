@@ -17,11 +17,11 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 <div class="device-editor">
         
             <h4>Device Details</h4>
+            <a class="previewUrl" *ngIf="deviceUrl && currentItem.layout_id" target="_blank" href="{{deviceUrl}}"><span class="fa fa-eye"></span> Preview</a>
             <form role="form" *ngIf="currentItem">
             <!--<span>{{currentItem.id}}</span>-->
-            <div class="form-group">
-                <label>Divice Url: <span>{{deviceUrl}}</span></label>
-                <label>Preview <a href="{{deviceUrl}}">{{deviceUrl}}</a></label>
+            <div class="form-group" *ngIf="deviceUrl && currentItem.layout_id">
+                <label >Divice Url: </label> <small>{{deviceUrl}}</small>
             </div>
             <div class="form-group">
                 <label>Name</label>
@@ -55,6 +55,13 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 </div>
 `
     ,styles:[`
+        h4{
+            display: inline-block;
+        }
+        .previewUrl{
+            float: right;
+            margin-top: 8px;
+        }
         .form{
             padding-top: 7px;
         }
@@ -94,7 +101,7 @@ export class DeviceEditor implements OnInit{
     isInProgress:boolean = false;
 
     deviceUrl:string;
-    deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/screen/mydevice/';
+    deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/device/';
 
     private sub: Subscription;
 

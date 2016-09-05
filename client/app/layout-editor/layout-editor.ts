@@ -50,7 +50,9 @@ declare var  domtoimage:any;
                         <label>Layout Name</label>
                        <input type="text" maxlength="100" [(ngModel)]="currentLayout.props.label" name="layoutname" />
                        &nbsp;&nbsp;&nbsp;
-                        <label *ngIf="devicesLabels">Used on devices: <span>{{devicesLabels}}</span> </label>
+                        <label *ngIf="devicesLabels">Used on devices: <span>{{devicesLabels}};</span> </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <a class="previewUrl" *ngIf="layoutUrl" target="_blank" href="{{layoutUrl}}"><span class="fa fa-eye"></span> Preview</a>
                     </div>
                     <div  id="SnapshotDiv" [style.width.px]="mySizeW" [style.height.px]="mySizeH">
                         <div id="PictureDiv" [style.width.px]="mySizeW" [style.height.px]="mySizeH"> 
@@ -109,6 +111,9 @@ export class LayoutEditor implements OnInit {
     template:VOTemplate;
     errorMessage: string;
 
+    layoutUrl:string;
+    layoutBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/layout/';
+
     toolsDisadled:boolean;
 
     color:string;
@@ -139,6 +144,7 @@ export class LayoutEditor implements OnInit {
             var id:number = +params['id'];
             if(params['type']=='template'){
                 this.toolsDisadled = true;
+                this.layoutUrl = null;
                 this.templatesService.getTemplateById(id).subscribe((res:VOTemplate)=>{
                     // console.log(res);
                     var layout = new VOLayout({viewports:res.viewports});
@@ -168,6 +174,7 @@ export class LayoutEditor implements OnInit {
 
     setCurrent(item:VOLayout):void{
         this.currentLayout = item;
+        this.layoutUrl = this.layoutBaseUrl + this.currentLayout.props.id;
         this.mySizeW = item.props.width/2;
         this.mySizeH = item.props.height/2;
         // console.log(item);

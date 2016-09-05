@@ -93,6 +93,10 @@ app.get('/login/*', function(req:express.Request, res:express.Response){
     res.sendFile('mylogin.html',{ 'root': WWW});
 });
 
+app.get('/preview/*', function(req:express.Request, res:express.Response){
+    res.sendFile('player-preview.html',{ 'root': WWW});
+});
+
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
     res.sendFile('indexts.html',{ 'root':WWW});

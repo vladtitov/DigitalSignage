@@ -72,6 +72,40 @@ router.get('/byid/:id', function (request:express.Request, response:express.Resp
 
 });
 
+router.get('/by-device-id/:id', function (request:express.Request, response:express.Response) {
+
+    var folder:string = request.session['user_folder'];
+    if(!folder){
+        response.json({error:'need-login'});
+        return;
+    }
+
+    var id:number = Number(request.params.id);
+    if(isNaN(id)){
+        response.json({error:' id shpuld be present'});
+        return
+    }
+
+    var controllerDevice = new DevicesController(folder);
+    controllerDevice.getDeviceById(id).done(function(res){
+        if(!res) {
+            response.json({error:id});
+            return;
+        }
+        var controller = new LayoutsController(folder);
+        controller.getLayoutFull(res.layout_id).done(function(res){
+            response.json({data:res});
+        },function (err) {
+            response.json({error:err});
+        });
+        // response.json({data:res});
+    },function (err) {
+        console.error(err);
+        response.json({error:err});
+    });
+
+});
+
 router.post('/byid/:id', function (request:express.Request, response:express.Response) {
 
     var item:VOLayout = new VOLayout(request.body);
