@@ -55,11 +55,15 @@ var DevicesManager = (function () {
                 .subscribe(function (data) {
                 if (data.changes) {
                     _this.deleteTooltip = { message: 'Device ' + item.id + ' ' + item.label + ' deleted from database!', tooltip_class: 'btn-success' };
+                    _this.router.navigate(['./devices-manager', 0]);
                 }
                 else
                     _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete device' };
                 console.log('onRemoveResponse', data);
                 _this.devicesList.refreshData();
+            }, function (error) {
+                _this.deleteTooltip = { message: 'Server error', tooltip_class: 'btn-danger' };
+                _this.toolsDisadled = false;
             });
         }
     };

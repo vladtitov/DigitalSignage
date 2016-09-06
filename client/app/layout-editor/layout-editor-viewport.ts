@@ -26,7 +26,7 @@ import {LayoutViewportPlaylists} from "../layouts/layout-viewport-playlists";
                         
                     
                     
-                        
+                    <a class="btn btn-danger removeBatton" (click)="onRemoveClick()" *ngIf="item.selected && item.playlist_id"><span class="fa fa-times"></span> Remove</a>    
                     <div class="cover"
                         (dragenter)="onDragEnter($event)"
                         (dragleave)="onDragLeave($event)"
@@ -85,6 +85,11 @@ import {LayoutViewportPlaylists} from "../layouts/layout-viewport-playlists";
                     right:0;
                     margin:auto;
                 }
+             .removeBatton{
+                position: absolute;
+                top:0;
+                z-index: 1100;
+             }
 
              .cover{
                  position: absolute;
@@ -104,6 +109,7 @@ export class LayoutEditorViewport implements OnInit{
     @Input() item:VOViewport;
     @Output () onportclick = new EventEmitter();
 
+    selected:boolean = false;
 
     toggleview:boolean = true;
     borderColor:string='thin solid black';
@@ -129,7 +135,7 @@ export class LayoutEditorViewport implements OnInit{
             this.item.image = item.props.image;
            // console.log(this.item.playlistid)
         }
-        this.borderColor = 'thin solid red';}, 100);
+        this.borderColor = 'medium solid red';}, 100);
        /*this.dragService.emitDragEnd.subscribe(
             (item) => {
                 this.item.playlistid = item.id;
@@ -149,8 +155,26 @@ export class LayoutEditorViewport implements OnInit{
         console.log("Leave")
     }
 
+    onRemoveClick(){
+        console.log('this.item', this.item);
+        this.item.playlist_id = null;
+        this.item.image = null;
+    }
+
     onViewportClick(evt:DragEvent):void{
+        // this.borderColor = this.selected ? 'medium solid gold' : 'thin solid white';
+
+        if(!this.item.selected){
+            this.item.selected = true;
+            this.borderColor='medium solid gold';
+        } else if(this.item.selected) {
+            this.item.selected = false;
+            this.borderColor = 'medium solid white';
+        }
+
         this.onportclick.emit(null);
+        // this.dragService.onClickViewport = (item:VOPlaylist) =>{item.props.id;}
+        console.log('onViewportClick', this.item.playlist_id);
     }
 
 }

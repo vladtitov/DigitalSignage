@@ -180,6 +180,7 @@ export class VOViewport {
     height: number;
     playertype:string;
     playlist_id: number;
+    selected:boolean;
     constructor (obj:any) {
         for (var str in obj)this[str] = obj[str];
     }

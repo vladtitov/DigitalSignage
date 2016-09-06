@@ -94,6 +94,7 @@ var DeviceEditor = (function () {
             var id = data.insertId ? data.insertId : _this.currentItem.id;
             _this.getDataById(id);
             _this.onDataChange.emit(id);
+            _this.router.navigate(['./devices-manager', id]);
             // if(this.devicelist1) this.devicelist1.refreshData();
         }, function (error) {
             _this.tooltipOptions = { message: 'Server error', tooltip_class: 'btn-danger' };

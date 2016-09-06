@@ -18,6 +18,7 @@ var LayoutEditorViewport = (function () {
     function LayoutEditorViewport(dragService) {
         this.dragService = dragService;
         this.onportclick = new core_1.EventEmitter();
+        this.selected = false;
         this.toggleview = true;
         this.borderColor = 'thin solid black';
     }
@@ -33,7 +34,7 @@ var LayoutEditorViewport = (function () {
                 _this.item.image = item.props.image;
                 // console.log(this.item.playlistid)
             };
-            _this.borderColor = 'thin solid red';
+            _this.borderColor = 'medium solid red';
         }, 100);
         /*this.dragService.emitDragEnd.subscribe(
              (item) => {
@@ -51,8 +52,24 @@ var LayoutEditorViewport = (function () {
         }, 50);
         console.log("Leave");
     };
+    LayoutEditorViewport.prototype.onRemoveClick = function () {
+        console.log('this.item', this.item);
+        this.item.playlist_id = null;
+        this.item.image = null;
+    };
     LayoutEditorViewport.prototype.onViewportClick = function (evt) {
+        // this.borderColor = this.selected ? 'medium solid gold' : 'thin solid white';
+        if (!this.item.selected) {
+            this.item.selected = true;
+            this.borderColor = 'medium solid gold';
+        }
+        else if (this.item.selected) {
+            this.item.selected = false;
+            this.borderColor = 'medium solid white';
+        }
         this.onportclick.emit(null);
+        // this.dragService.onClickViewport = (item:VOPlaylist) =>{item.props.id;}
+        console.log('onViewportClick', this.item.playlist_id);
     };
     __decorate([
         core_1.Input(), 
@@ -65,8 +82,8 @@ var LayoutEditorViewport = (function () {
     LayoutEditorViewport = __decorate([
         core_1.Component({
             selector: 'layout-editor-viewport',
-            template: "    \n    \n                <div class=\"mydiv\"\n                    [style.top]=item.y\n                    [style.left]=item.x \n                    [style.width]=item.width \n                    [style.height]=item.height\n                    [style.border]=borderColor\n                >\n                    \n                            <img class=\"myimage\" src=\"{{ item.image || 'images/transparent.png' }}\" \n                                [style.max-width]=item.width \n                                [style.max-height]=item.height\n                            > <!--width=\"{{ item.width }}\" height=\" {{ item.height }}\"-->\n                        \n                    \n                    \n                        \n                    <div class=\"cover\"\n                        (dragenter)=\"onDragEnter($event)\"\n                        (dragleave)=\"onDragLeave($event)\"\n                        (click)=\"onViewportClick($event)\"\n                        >                \n                    </div>      \n                         \n                </div>\n            ",
-            styles: ["\n             .mydiv {\n                 background-color: whitesmoke; \n                       \n                 position: absolute;\n                 }\n                /*.card-256x320{*/\n                    /*width: 270px;*/\n                    /*height: 320px;*/\n                    /*background-color: #fcfcfc;*/\n                    /*margin: 10px;*/\n                    /*float: left;;*/\n                /*}*/\n                \n                .mydiv .mythumb{\n                    position: relative;\n                    /*width: 270px;*/\n                    /*height: 320px;*/\n                    box-shadow: grey 5px 5px 10px;\n                \n                }\n                \n                .mydiv .mythumb .props{\n                    position: absolute;\n                    bottom: 0;\n                    padding: 3px 5px 0 9px;\n                    height: 60px;\n                }\n                \n                \n                .mydiv .myimage-container{\n                    /*width:260px;*/\n                    /*height:260px;*/\n                    background-color: #EFF5FB; /*#e7f1ff;*/\n                \n                    margin: 4px;\n                    position: absolute;\n                }\n                \n                .mydiv .myimage{\n\n                    border: 1px solid #c3c3c3;\n                    position:absolute;\n                    top:0;\n                    bottom: 0;\n                    left: 0;\n                    right:0;\n                    margin:auto;\n                }\n\n             .cover{\n                 position: absolute;\n                 top:0;\n                 left: 0;\n                 width: 100%;\n                 height: 100%;\n                 z-index: 1000;\n                 background-color: rgba(255, 255, 255, 0.1);\n             }\n            "],
+            template: "    \n    \n                <div class=\"mydiv\"\n                    [style.top]=item.y\n                    [style.left]=item.x \n                    [style.width]=item.width \n                    [style.height]=item.height\n                    [style.border]=borderColor\n                >\n                    \n                            <img class=\"myimage\" src=\"{{ item.image || 'images/transparent.png' }}\" \n                                [style.max-width]=item.width \n                                [style.max-height]=item.height\n                            > <!--width=\"{{ item.width }}\" height=\" {{ item.height }}\"-->\n                        \n                    \n                    \n                    <a class=\"btn btn-danger removeBatton\" (click)=\"onRemoveClick()\" *ngIf=\"item.selected && item.playlist_id\"><span class=\"fa fa-times\"></span> Remove</a>    \n                    <div class=\"cover\"\n                        (dragenter)=\"onDragEnter($event)\"\n                        (dragleave)=\"onDragLeave($event)\"\n                        (click)=\"onViewportClick($event)\"\n                        >                \n                    </div>      \n                         \n                </div>\n            ",
+            styles: ["\n             .mydiv {\n                 background-color: whitesmoke; \n                       \n                 position: absolute;\n                 }\n                /*.card-256x320{*/\n                    /*width: 270px;*/\n                    /*height: 320px;*/\n                    /*background-color: #fcfcfc;*/\n                    /*margin: 10px;*/\n                    /*float: left;;*/\n                /*}*/\n                \n                .mydiv .mythumb{\n                    position: relative;\n                    /*width: 270px;*/\n                    /*height: 320px;*/\n                    box-shadow: grey 5px 5px 10px;\n                \n                }\n                \n                .mydiv .mythumb .props{\n                    position: absolute;\n                    bottom: 0;\n                    padding: 3px 5px 0 9px;\n                    height: 60px;\n                }\n                \n                \n                .mydiv .myimage-container{\n                    /*width:260px;*/\n                    /*height:260px;*/\n                    background-color: #EFF5FB; /*#e7f1ff;*/\n                \n                    margin: 4px;\n                    position: absolute;\n                }\n                \n                .mydiv .myimage{\n\n                    border: 1px solid #c3c3c3;\n                    position:absolute;\n                    top:0;\n                    bottom: 0;\n                    left: 0;\n                    right:0;\n                    margin:auto;\n                }\n             .removeBatton{\n                position: absolute;\n                top:0;\n                z-index: 1100;\n             }\n\n             .cover{\n                 position: absolute;\n                 top:0;\n                 left: 0;\n                 width: 100%;\n                 height: 100%;\n                 z-index: 1000;\n                 background-color: rgba(255, 255, 255, 0.1);\n             }\n            "],
             directives: [],
             providers: []
         }), 

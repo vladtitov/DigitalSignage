@@ -32,11 +32,12 @@ declare var  domtoimage:any;
                 <h3>Layout assembler</h3>
                 <nav>                 
                     <a [routerLink]="['/layout-template/',-1]" class="btn btn-default"><span class="fa fa-plus"></span> Create New Layout</a>                           
-                    <a #mybtn class="btn btn-default" [class.disabled]="toolsDisadled" (click)="onDeleteClick($evtnt,mybtn)" ><span class="fa fa-minus"></span> Delete Layout</a>
+                    <a #mybtn class="btn btn-default" (click)="onDeleteClick($evtnt,mybtn)" [class.disabled]="toolsDisadled">
+                        <span class="fa fa-minus"></span> Delete Layout</a>
                     <a class="btn btn-default" (click) = "onServerSaveClick()"
-                        [class.disabled]="isInProgress"
-                        [ng2-md-tooltip]="tooltipSave" placement="bottom" [tooltipColor]="color">
-                    <span class="fa fa-life-saver"></span> Save on Server</a>
+                            [class.disabled]="isInProgress"
+                            [ng2-md-tooltip]="tooltipSave" placement="bottom">
+                        <span class="fa fa-life-saver"></span> Save on Server</a>
                 </nav>
             </div>
             <div class="panel-body">                 
@@ -116,7 +117,6 @@ export class LayoutEditor implements OnInit {
 
     toolsDisadled:boolean;
 
-    color:string;
     tooltipSave:TooltipOptions;
     tooltipDelete:TooltipOptions;
 
@@ -157,8 +157,8 @@ export class LayoutEditor implements OnInit {
                     this.currentLayout = layout;
                 })
             }else{
+                this.toolsDisadled = false;
                 this.editorService.getLayoutById(id);
-
             }
 
         });
@@ -241,7 +241,7 @@ export class LayoutEditor implements OnInit {
     onServerSaveClick():void{
         ///console.log(this.currentViewPorts);
         this.isInProgress = true;
-      this.makeSnap((dataUrl)=>{
+        this.makeSnap((dataUrl)=>{
           this.currentLayout.props.image = dataUrl;
           this.currentLayout.props.type='lite';
           this.currentLayout.viewports = this.currentViewPorts;
@@ -253,8 +253,8 @@ export class LayoutEditor implements OnInit {
                    this.tooltipSave={message:"Layout saved on server",tooltip_class:'btn-success'};
                    this.isInProgress = false;
                    if(data.insertId) {
-
                        this.editorService.getLayoutById(data.insertId);
+                       this.router.navigate(['/layout-editor','library' ,data.insertId]);
                    }
                    else this.editorService.getLayoutById();
                },

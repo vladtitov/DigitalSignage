@@ -179,6 +179,7 @@ export class DeviceEditor implements OnInit{
                     var id = data.insertId ? data.insertId : this.currentItem.id;
                     this.getDataById(id);
                     this.onDataChange.emit(id);
+                    this.router.navigate(['./devices-manager',id]);
                     // if(this.devicelist1) this.devicelist1.refreshData();
                 },
                 error => {
