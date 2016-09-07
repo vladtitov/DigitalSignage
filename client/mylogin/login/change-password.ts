@@ -2,6 +2,7 @@
 import {Component} from "@angular/core";
 import {Router, ActivatedRoute} from '@angular/router';
 import {LoginService} from "./login-service";
+import {UpdateResult} from "../../app/services/models";
 
 @Component({
     selector: 'change-password'
@@ -19,9 +20,11 @@ import {LoginService} from "./login-service";
                     <div class="panel" id="login">
                         <h3>Change Password</h3>
                         <hr>
-                        <div *ngIf="errorMessage || message">
+                        <div  *ngIf="errorMessage">
                             <h5 *ngIf="errorMessage" [class.errorMessage]="errorMessage"> Error </h5>
-                            <h5 *ngIf="message" [class.message]="message"> Please Sign In </h5>
+                            <!--<a *ngIf="message" class="btn btn-success" (click)="back()">Please Sign In</a>-->
+                            <!--<button *ngIf="message" class="btn btn-success btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>-->
+                            <!--<h5 *ngIf="message" [class.message]="message"> Please Sign In </h5>-->
                             <hr>
                         </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
@@ -49,7 +52,11 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>
+                            <a *ngIf="message" class="btn btn-success btn-lg" (click)="back()"><span class="fa fa-sign-in"></span>Please Sign In</a>
+                            <button *ngIf="!message" class="btn btn-primary btn-lg btn-block"
+                                    type="submit" value="Change Password"
+                                    [style.cursor]="cursorStyle"
+                                    [disabled]="toolsDisadled"><span class="fa fa-unlock"></span>Change Password</button>
                         </form>
                         <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Sign In</a>
                     </div>
@@ -60,16 +67,19 @@ import {LoginService} from "./login-service";
 </div>`
 
     , styles:[`
-    
+        form > a {
+            width: 100%;
+        }
     `]
 })
 
 export class ChangePassword{
-
+    cursorStyle:string = 'pointer';
     userEmail:string;
     token:string;
     message:boolean = false;
     errorMessage: boolean = false;
+    toolsDisadled: boolean = false;
 
     private sub: any;
 
@@ -92,22 +102,27 @@ export class ChangePassword{
     onSubmit(value:any){
         value.token = this.token;
         // console.log('onSubmit ', value);
+        this.toolsDisadled = true;
 
-        this.loginService.changePassword(value).subscribe((res)=>{
-            console.log('res ', res);
+        this.loginService.changePassword(value).subscribe((res:UpdateResult)=>{
+            // console.log('res ', res);
 
-            if(res == 1){
+            if(res.changes){
                 this.errorMessage = false;
-                this.message = true;
+                setTimeout(()=>{this.message = true},1000);
                 // localStorage.setItem('email', this.userEmail);
                 // console.log('onSubmit res', res);
             } else {
                 this.message = false;
                 this.errorMessage = true;
-                console.log('wrong');
+                setTimeout(()=>{this.toolsDisadled = false},1000);
+                // console.log('wrong');
             }
         }, (err)=>{
-            console.log('onSubmit error ', err);
+            this.message = false;
+            this.errorMessage = true;
+            setTimeout(()=>{this.toolsDisadled = false},1000);
+            // console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
         });
     }
@@ -115,7 +130,7 @@ export class ChangePassword{
     private handleError (error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     }
     

@@ -7,10 +7,28 @@ body {
     padding: 2em;
 }
 
+.myid{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #fff;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    z-index: 5;
+}
+.myid>span{
+    font-size: 60%;
+    font-weight: 600;
+    padding: 3px;
+    color: #777;
+}
+
 .tooltip-container {
     position: relative;
     top:0;
     left:0;
+
 }
 
 .tooltip-text {
@@ -213,13 +231,13 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.thumb-128-2 > div{
+.thumb-128-2 > .image-container-128-2{
     width:132px;
     height:132px;
     background-color: #EFF5FB; /*#e7f1ff;*/
     /*position: absolute;*/
 }
-.thumb-128-2 > div > img{
+.thumb-128-2 > .image-container-128-2 > img{
     max-width: 128px;
     max-height: 128px;
     /*border: 1px solid #c3c3c3;*/
@@ -230,7 +248,7 @@ body {
     right:0;
     margin:auto;
 }
-.thumb-128-2 > div > div{
+.thumb-128-2 > .image-container-128-2 > .thumb-label{
     position: absolute;
     bottom: 0;
     color: black;
@@ -370,6 +388,7 @@ md-checkbox{
 .max-128{
     max-width:128px;
     max-height:128px;
+    border: 3px solid black;
 }
 .myimage-256{
     max-width: 256px;

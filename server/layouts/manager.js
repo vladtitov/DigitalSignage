@@ -38,6 +38,34 @@ router.get('/byid/:id', function (request, response) {
         response.json({ error: err });
     });
 });
+router.get('/by-device-id/:id', function (request, response) {
+    var folder = request.session['user_folder'];
+    if (!folder) {
+        response.json({ error: 'need-login' });
+        return;
+    }
+    var id = Number(request.params.id);
+    if (isNaN(id)) {
+        response.json({ error: ' id shpuld be present' });
+        return;
+    }
+    var controllerDevice = new DevicesController_1.DevicesController(folder);
+    controllerDevice.getDeviceById(id).done(function (res) {
+        if (!res) {
+            response.json({ error: id });
+            return;
+        }
+        var controller = new LayoutsController_1.LayoutsController(folder);
+        controller.getLayoutFull(res.layout_id).done(function (res) {
+            response.json({ data: res });
+        }, function (err) {
+            response.json({ error: err });
+        });
+    }, function (err) {
+        console.error(err);
+        response.json({ error: err });
+    });
+});
 router.post('/byid/:id', function (request, response) {
     var item = new models_1.VOLayout(request.body);
     var id = Number(item.props.id);
@@ -133,4 +161,3 @@ router.delete('/mydevice/:id', function (request, response) {
     controllerDevice.deleteDevice(id).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

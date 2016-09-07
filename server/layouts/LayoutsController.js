@@ -43,7 +43,7 @@ var LayoutsController = (function () {
     LayoutsController.prototype.getLayoutFull = function (id) {
         var def = Q.defer();
         var db = this.db;
-        db.selectById(id, 'layouts').done(function (res1) { return db.selectColumsById(id, 'layout_id', 'layouts_viewports').done(function (res2) { return def.resolve({ props: res1, viewports: res2 }); }, function (err) { return def.reject(err); }); }, function (err) { return def.reject(err); });
+        db.selectById(id, 'layouts').done(function (res1) { return db.selectByValue(id, 'layout_id', 'layouts_viewports').done(function (res2) { return def.resolve({ props: res1, viewports: res2 }); }, function (err) { return def.reject(err); }); }, function (err) { return def.reject(err); });
         return def.promise;
     };
     LayoutsController.prototype.updateContentById = function (row, id) {
@@ -95,4 +95,3 @@ var LayoutsController = (function () {
     return LayoutsController;
 }());
 exports.LayoutsController = LayoutsController;
-//# sourceMappingURL=LayoutsController.js.map

@@ -9,6 +9,7 @@ import {LayoutEditorService} from "../layout-editor/layout-editor-service";
     ,template:`
 <div [class.selected]="mydevice.selected" class="myitem">
             <div class="deviceVO float-left item-128">
+                <div class="myid"><span>{{mydevice.id}}</span></div>
                 <div class="fa fa-desktop icon"></div>
                 <div class="deviceText">{{mydevice.label}}</div>
                 <div class="deviceText">{{mydevice.description}}</div>
@@ -19,6 +20,7 @@ import {LayoutEditorService} from "../layout-editor/layout-editor-service";
                         <img class="pos-center max-128" src="{{currentLayout.props.image}}" />
                     </div>
                 </div>
+                <div class="myid" *ngIf="currentLayout.props.id>0"><span>{{currentLayout.props.id}}</span></div>
             </div>
 </div>
 
@@ -31,6 +33,10 @@ import {LayoutEditorService} from "../layout-editor/layout-editor-service";
         .deviceVO{
             text-align: center;
             padding: 22px 0;
+            position: relative;
+        }
+        .layoutVO{
+            position: relative;
         }
         .image{
         

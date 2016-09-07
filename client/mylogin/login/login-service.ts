@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import {VOUserData} from "../../app/services/models";
+import {VOUserData, VOUserResult, UpdateResult} from "../../app/services/models";
 
 @Injectable()
 export class LoginService {
@@ -14,62 +14,62 @@ export class LoginService {
 
     private dataUrl = 'account/';
     private loginUrl ='login';
-    private createUrl ='new-user-player';
+    private createUrl ='new-user-admin';
     private resetPassUrl = 'reset-password';
     private changePassUrl = 'change-password';
 
-    loginServer(data:any){
+    loginServer(data:VOUserData):Observable<VOUserResult>{
 
-        let body = JSON.stringify(data);
+        // let body = JSON.stringify(data);
         // console.log('body ', body);
-        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
-        let options = new RequestOptions({ headers: headers });
+        // let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        // let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.dataUrl+this.loginUrl, body, options)
-            .map(this.parseOne)
+        return this.http.post(this.dataUrl+this.loginUrl, data)
+            .map((res)=> {return new VOUserResult(res.json().data)})
             .catch(this.handleError);
     }
 
-    createAccount(data:any){
+    createAccount(data:VOUserData):Observable<VOUserResult>{
 
-        let body = JSON.stringify(data);
-        // console.log('body ', body);
-        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
-        let options = new RequestOptions({ headers: headers });
+        // let body = JSON.stringify(data);
+        // // console.log('body ', body);
+        // let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        // let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.dataUrl+this.createUrl, body, options)
-            .map(this.parseOne)
+        return this.http.post(this.dataUrl+this.createUrl, data)
+            .map((res)=> {return new VOUserResult(res.json().data)})
             .catch(this.handleError);
     }
 
     resetPassword(data:any){
 
-        let body = JSON.stringify(data);
-        // console.log('body ', body);
-        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
-        let options = new RequestOptions({ headers: headers });
+        // let body = JSON.stringify(data);
+        // // console.log('body ', body);
+        // let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        // let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.dataUrl+this.resetPassUrl, body, options)
+        return this.http.post(this.dataUrl+this.resetPassUrl, data)
             .map(this.parseOne)
             .catch(this.handleError);
     }
 
-    changePassword(data:any){
+    changePassword(data:any):Observable<UpdateResult>{
 
-        let body = JSON.stringify(data);
-        // console.log('body ', body);
-        let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
-        let options = new RequestOptions({ headers: headers });
+        // let body = JSON.stringify(data);
+        // // console.log('body ', body);
+        // let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
+        // let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.dataUrl+this.changePassUrl, body, options)
-            .map(this.parseOne)
+        return this.http.post(this.dataUrl+this.changePassUrl, data)
+            .map((res)=> {return new UpdateResult(res.json().data)})
             .catch(this.handleError);
     }
 
     private parseOne(res: Response) {
         let body = res.json();
         if(!body.data){
-            console.error('data is missing');
+            // console.error('data is missing');
         }
         return body.data || { };
     }
@@ -77,7 +77,7 @@ export class LoginService {
     private handleError (error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return Observable.throw(errMsg);
     }
 

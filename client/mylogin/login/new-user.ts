@@ -2,6 +2,7 @@
 import {Component} from "@angular/core";
 import { Router } from '@angular/router';
 import {LoginService} from "./login-service";
+import {VOUserResult, VOUserData} from "../../app/services/models";
 
 @Component({
     selector: 'new-user'
@@ -19,7 +20,7 @@ import {LoginService} from "./login-service";
                     <div class="panel" id="login">
                         <h3>Create Account</h3>
                         <hr>
-                        <div *ngIf="errorMessage" class="errorMessage">
+                        <div *ngIf="existsMessage" class="errorMessage">
                             <h5> This username already exists </h5>
                             <hr>
                         </div>
@@ -28,7 +29,7 @@ import {LoginService} from "./login-service";
                                 <md-input 
                                     placeholder="Email address" 
                                     name="username" 
-                                    [(ngModel)] = "userEmail"
+                                    [(ngModel)] = "userName"
                                     required
                                     type="email"
                                     style="width: 100%">
@@ -48,9 +49,15 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="New User"><span class="fa fa-user-plus"></span>Create Account</button>
+                            <button
+                                class="btn btn-primary btn-lg btn-block"
+                                type="submit" value="New User"
+                                [style.cursor]="cursorStyle"
+                                [disabled]="toolsDisadled"><span class="fa fa-user-plus"></span>Create Account</button>
                         </form>
-                        <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Back</a>
+                        <a class="panel-footer"
+                            (click)="back()"
+                            [style.pointer-events]="hrefDisadled ? 'none' : 'auto'"><span class="fa fa-arrow-left"></span>Back</a>
                     </div>
                 </div>
                 
@@ -59,35 +66,46 @@ import {LoginService} from "./login-service";
 </div>`
 
     , styles:[`
-    
+        h3{
+            color: #ff0000;
+        }
     `]
 })
 
 export class NewUser{
+    cursorStyle:string = 'pointer';
+    userName:string;
+    existsMessage: boolean = false;
+    hrefDisadled: boolean = false;
+    toolsDisadled: boolean = false;
 
-    userEmail:string;
-    errorMessage: boolean = false;
+    constructor(private router:Router, private loginService:LoginService){}
 
-    constructor(private router:Router, private loginService:LoginService){console.log('hello new-user!');}
+    ngOnInit(){
+        this.hrefDisadled = true;
+        setTimeout(()=>{this.hrefDisadled = false},100);
+    }
 
     back(){
         this.router.navigate(["./sign-in"]);
     }
 
-    onSubmit(value:any){
-        console.log('onSubmit ', value);
+    onSubmit(value:VOUserData){
+        // console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
 
-        this.loginService.createAccount(value).subscribe((res)=>{
+        this.loginService.createAccount(value).subscribe((res:VOUserResult)=>{
             if(res.token){
-                localStorage.setItem('email', this.userEmail);
-                console.log('onSubmit res', res);
+                localStorage.setItem('email', this.userName);
+                // console.log('onSubmit res', res);
                 this.back();
             } else {
-                this.errorMessage = true;
-                console.log('wrong');
+                this.existsMessage = true;
+                // console.log('wrong');
             }
         }, (err)=>{
-            console.log('onSubmit error ', err);
+            // console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
         });
     }
@@ -95,7 +113,7 @@ export class NewUser{
     private handleError (error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     }
     

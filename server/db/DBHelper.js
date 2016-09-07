@@ -65,4 +65,3 @@ var DBHelper = (function () {
     return DBHelper;
 }());
 exports.DBHelper = DBHelper;
-//# sourceMappingURL=DBHelper.js.map

@@ -66,7 +66,7 @@ router.post('/login', function (request, response) {
     ctr.login(body.username, body.password, sid, ip).done(function (user) {
         var out = {};
         out.result = 'logedin';
-        out.namesp = user.folder;
+        out.folder = user.folder;
         out.token = user.token;
         out.sid = user.sid;
         out.role = user.role;
@@ -108,7 +108,7 @@ router.post('/change-password', function (request, response) {
     var user = new User_1.User();
     user.getUserByToken(token).done(function (res) {
         if (res) {
-            user.updateUserPass(res.id, password).done(function (final) { return response.json({ data: final.changes }); }, function (error) { return response.json({ error: error }); });
+            user.updateUserPass(res.id, password).done(function (final) { return response.json({ data: final }); }, function (error) { return response.json({ error: error }); });
         }
         else
             response.json({ error: util_1.error });
@@ -137,6 +137,20 @@ router.post('/loginplayer', function (request, response) {
                     response.json({ data: out });
                 }
             });
+        }, function (error) { return response.json({ error: error }); });
+    }
+    else
+        response.json({ error: 'reqired' });
+});
+router.post('/new-user-admin', function (request, response) {
+    var body = request.body;
+    var ip = request.connection.remoteAddress;
+    var password = body.password;
+    if (password && password.length > 5) {
+        var user = new User_1.User();
+        user.createUser(body.username, body.password, ip, 'admin').done(function (newuser) {
+            console.log('new user', newuser);
+            user.createAccount(newuser).done(function (final) { return response.json({ data: final }); }, function (error) { return response.json({ error: error }); });
         }, function (error) { return response.json({ error: error }); });
     }
     else
@@ -171,4 +185,3 @@ router.get('/userdevices', function (request, response) {
     }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

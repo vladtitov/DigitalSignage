@@ -10,6 +10,7 @@ import {Component} from '@angular/core';
 
 import { Router } from '@angular/router';
 import {LoginService} from "./login-service";
+import {VOUserData, VOUserResult} from "../../app/services/models";
 
 @Component({
     selector: 'sign-in'
@@ -30,7 +31,7 @@ import {LoginService} from "./login-service";
                     <div class="panel" id="login">
                         <h3>Sign in to your account</h3>
                         <hr>                                        
-                        <div *ngIf="errorMessage" class="errorMessage">
+                        <div *ngIf="wrongMessage" class="errorMessage">
                             <h5> Incorrect username or password </h5>
                             <hr>
                         </div>
@@ -60,9 +61,14 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Log In"><span class="fa fa-sign-in"></span>Sign In</button>
+                            <button class="btn btn-primary btn-lg btn-block"
+                                    type="submit" value="Log In"
+                                    [style.cursor]="cursorStyle"
+                                    [disabled]="toolsDisadled"><span class="fa fa-sign-in"></span>Sign In</button>
                         </form>
-                        <a class="panel-footer" (click)="newUser()"><span class="fa fa-user-plus"></span>Create Account</a>
+                        <a class="panel-footer"
+                            (click)="newUser()"
+                            [style.pointer-events]="hrefDisadled ? 'none' : 'auto'"><span class="fa fa-user-plus"></span>Create Account</a>
                     </div>
                     <a (click)="resetPass()"><span class="fa fa-unlock-alt"></span>Reset Password</a>
                 </div>
@@ -79,18 +85,22 @@ import {LoginService} from "./login-service";
 })
 
 export class SignIn{
-
+    cursorStyle:string = 'pointer';
     urlLogin:string = 'account/login';
     inputPass:string = 'inputPass';
     showPass: boolean = false;
 
-    errorMessage: boolean = false;
+    wrongMessage: boolean = false;
 
     userEmail:string;
+    hrefDisadled: boolean = false;
+    toolsDisadled: boolean = false;
 
-    constructor(private router:Router, private loginService:LoginService){console.log('hello login-manager');}
+    constructor(private router:Router, private loginService:LoginService){}
 
     ngOnInit(){
+        this.hrefDisadled = true;
+        setTimeout(()=>{this.hrefDisadled = false},100);
         if(localStorage.getItem('email')){
             this.userEmail = localStorage.getItem('email');
             localStorage.removeItem('email');
@@ -106,24 +116,23 @@ export class SignIn{
         this.router.navigate(["./reset-password"]);
     }
 
-    onSubmit(value:any){
-        console.log('onSubmit ', value);
+    onSubmit(value:VOUserData){
+        // console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
 
-        this.loginService.loginServer(value).subscribe((res)=>{
-            console.log('res ', res.result);
+        this.loginService.loginServer(value).subscribe((res:VOUserResult)=>{
+            // console.log('res ', res.result);
             if(res.result == 'logedin') {
-                this.errorMessage = false;
-                console.log('onSubmit res: ', res);
-                // this.router.navigate(["./dashboard/content-manager",'view',0]);
-                res = JSON.stringify(res);
-                localStorage.setItem('myuser', res);
+                this.wrongMessage = false;
+                localStorage.setItem('myuser', JSON.stringify(res));
                 window.location.href = "/";
             } else {
-                this.errorMessage = true;
-                console.log('wrong');
+                this.wrongMessage = true;
+                // console.log('wrong');
             }
         }, (err)=>{
-            console.log('onSubmit error ', err);
+            // console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
         });
     }
@@ -131,7 +140,7 @@ export class SignIn{
     private handleError (error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     }
 

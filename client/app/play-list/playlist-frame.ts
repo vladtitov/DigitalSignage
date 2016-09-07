@@ -9,9 +9,10 @@ import {VOPlayLists_Assets, VOAsset} from "../services/models";
     template:`
 <div>
             <div class="thumb-128-2">
-                    <div>
+                    <div class="image-container-128-2">
+                        <div class="myid" *ngIf="id>0"><span>{{id}}</span></div>
                         <img src="{{image}}">
-                        <div>{{label}}</div>
+                        <div class="thumb-label">{{label}}</div>
                     </div>
             </div>
 </div>   
@@ -34,6 +35,7 @@ export class PlayListFrame implements OnInit{
 
     label:string;
     image:string;
+    id:number;
     ngOnInit():void{
         // var asset:VOAsset = this.item.asset
         // this.image = this.item.thumb
@@ -51,6 +53,7 @@ export class PlayListFrame implements OnInit{
 
         if(!this.item.label) this.item.label = this.item.originalname;
         if(this.item) this.label = this.item.label; // || 'no label';
+        if(this.item) this.id = this.item.asset_id;
     }
 }
 

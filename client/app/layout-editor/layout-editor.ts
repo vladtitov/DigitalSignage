@@ -21,6 +21,7 @@ import {AssemblerPlayLists} from "./playlists-list-dragable";
 import {LayoutEditorViewport} from "./layout-editor-viewport";
 import {LayoutEditorService} from "./layout-editor-service";
 import {DeviceEditorService} from "../device/device-editor-service";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 declare var  domtoimage:any;
 @Component({
@@ -31,11 +32,12 @@ declare var  domtoimage:any;
                 <h3>Layout assembler</h3>
                 <nav>                 
                     <a [routerLink]="['/layout-template/',-1]" class="btn btn-default"><span class="fa fa-plus"></span> Create New Layout</a>                           
-                    <a #mybtn class="btn btn-default" [class.disabled]="toolsDisadled" (click)="onDeleteClick($evtnt,mybtn)"><span class="fa fa-minus"></span> Delete Layout</a>
+                    <a #mybtn class="btn btn-default" (click)="onDeleteClick($evtnt,mybtn)" [class.disabled]="toolsDisadled">
+                        <span class="fa fa-minus"></span> Delete Layout</a>
                     <a class="btn btn-default" (click) = "onServerSaveClick()"
-                        [class.disabled]="isInProgress"
-                        [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
-                    <span class="fa fa-life-saver"></span> Save on Server</a>
+                            [class.disabled]="isInProgress"
+                            [ng2-md-tooltip]="tooltipSave" placement="bottom">
+                        <span class="fa fa-life-saver"></span> Save on Server</a>
                 </nav>
             </div>
             <div class="panel-body">                 
@@ -45,9 +47,13 @@ declare var  domtoimage:any;
                 <hr size="3">
                 <div class="layout">
                     <div class="form-group">
+                        <small *ngIf="currentLayout.props.id>0" style="margin-right: 15px">ID: {{currentLayout.props.id}};</small>
                         <label>Layout Name</label>
-                       <input type="text" [(ngModel)]="currentLayout.props.label" name="layoutname" />
-                        <label *ngIf="devicesLabels">Used devices: <span>{{devicesLabels}}</span> </label>
+                       <input type="text" maxlength="100" [(ngModel)]="currentLayout.props.label" name="layoutname" />
+                       &nbsp;&nbsp;&nbsp;
+                        <label *ngIf="devicesLabels">Used on devices: <span>{{devicesLabels}};</span> </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <a class="previewUrl" *ngIf="layoutUrl" target="_blank" href="{{layoutUrl}}"><span class="fa fa-eye"></span> Preview</a>
                     </div>
                     <div  id="SnapshotDiv" [style.width.px]="mySizeW" [style.height.px]="mySizeH">
                         <div id="PictureDiv" [style.width.px]="mySizeW" [style.height.px]="mySizeH"> 
@@ -106,10 +112,13 @@ export class LayoutEditor implements OnInit {
     template:VOTemplate;
     errorMessage: string;
 
+    layoutUrl:string;
+    layoutBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/layout/';
+
     toolsDisadled:boolean;
 
-    color:string;
-    tooltipMessage:string;
+    tooltipSave:TooltipOptions;
+    tooltipDelete:TooltipOptions;
 
     isInProgress:boolean = false;
 
@@ -135,6 +144,7 @@ export class LayoutEditor implements OnInit {
             var id:number = +params['id'];
             if(params['type']=='template'){
                 this.toolsDisadled = true;
+                this.layoutUrl = null;
                 this.templatesService.getTemplateById(id).subscribe((res:VOTemplate)=>{
                     // console.log(res);
                     var layout = new VOLayout({viewports:res.viewports});
@@ -147,8 +157,8 @@ export class LayoutEditor implements OnInit {
                     this.currentLayout = layout;
                 })
             }else{
+                this.toolsDisadled = false;
                 this.editorService.getLayoutById(id);
-
             }
 
         });
@@ -164,6 +174,7 @@ export class LayoutEditor implements OnInit {
 
     setCurrent(item:VOLayout):void{
         this.currentLayout = item;
+        this.layoutUrl = this.layoutBaseUrl + this.currentLayout.props.id;
         this.mySizeW = item.props.width/2;
         this.mySizeH = item.props.height/2;
         // console.log(item);
@@ -208,7 +219,7 @@ export class LayoutEditor implements OnInit {
             })
             .catch( (error) => {
                 this.isInProgress = false;
-                this.showTooltip('red', 'Error');
+                this.tooltipSave={message:'Error making snapshot',tooltip_class:'btn-danger'};
                 console.error('oops, something went wrong!', error);
             });
 
@@ -218,16 +229,36 @@ export class LayoutEditor implements OnInit {
         if(this.currentLayout && confirm('You want to delete assemble '+this.currentLayout.props.label+'?\n' +
                 'Used devices: ' + this.devicesLabels))
             this.editorService.deleteLayoutById(this.currentLayout.props.id).subscribe(
-                (res:UpdateResult)=>{ this.router.navigate(['../layout-template/',-1])}
+                (res:UpdateResult)=>{
+
+                    this.router.navigate(['../layouts-assembled/'])
+                }
             )
     }
     onViewPlaylists():void {
         //this.viewplaylists = !this.viewplaylists;
     }
+
+    resetViewports(){
+        console.log(this.currentViewPorts);
+
+        this.currentViewPorts.forEach((item)=>{
+            console.log('item', item.selected);
+            if(item.selected) item.selected = false;
+        });
+
+        // console.log(this.currentViewPorts);
+    }
+
+
     onServerSaveClick():void{
-        ///console.log(this.currentViewPorts);
         this.isInProgress = true;
-      this.makeSnap((dataUrl)=>{
+        this.resetViewports();
+        setTimeout( () => this.saveOnServer(), 20);
+    }
+
+    saveOnServer():void{
+        this.makeSnap((dataUrl)=>{
           this.currentLayout.props.image = dataUrl;
           this.currentLayout.props.type='lite';
           this.currentLayout.viewports = this.currentViewPorts;
@@ -235,13 +266,18 @@ export class LayoutEditor implements OnInit {
                .subscribe(
                (data:UpdateResult)=>{
                    // console.log(data);
-                   this.showTooltip('green','Success');
+
+                   this.tooltipSave={message:"Layout saved on server",tooltip_class:'btn-success'};
                    this.isInProgress = false;
-                   if(data.insertId)  this.editorService.getLayoutById(data.insertId);
+                   if(data.insertId) {
+                       this.editorService.getLayoutById(data.insertId);
+                       this.router.navigate(['/layout-editor','library' ,data.insertId]);
+                   }
                    else this.editorService.getLayoutById();
                },
                error => {
-                   this.showTooltip('red', 'Error');
+                   this.tooltipSave ={message:'Error saving layout',tooltip_class:'btn-danger'};
+
                    this.isInProgress = false;
                });
         })
@@ -253,15 +289,7 @@ export class LayoutEditor implements OnInit {
 
     }
 
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
+
 
  }
 

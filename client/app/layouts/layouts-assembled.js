@@ -43,6 +43,7 @@ var LayoutsAssembled = (function () {
     };
     LayoutsAssembled.prototype.onDeleteClick = function (evt, btn) {
         var _this = this;
+        this.deleteTooltip = null;
         var strLabels;
         if (this.currentItem.usedDevice && this.currentItem.usedDevice.length) {
             var labelArr = this.currentItem.usedDevice.map(function (item) {
@@ -56,13 +57,24 @@ var LayoutsAssembled = (function () {
         if (this.currentItem && confirm('You want to delete asseble "' + this.currentItem.props.label + '"?\n' +
             'Used devices: ' + strLabels)) {
             this.layoutsEditorService.deleteLayoutById(this.currentItem.props.id)
-                .subscribe(function (res) { return _this.changesResult = res; }, function (err) { return _this.error = err; });
+                .subscribe(function (result) {
+                if (result.changes) {
+                    _this.deleteTooltip = { message: 'Layout deleted from database!', tooltip_class: 'btn-success' };
+                    _this.changesResult = result;
+                    _this.currentItem = null;
+                }
+                else
+                    _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete layout' };
+            }, function (error) {
+                _this.deleteTooltip = { message: 'Server error', tooltip_class: 'btn-danger' };
+                _this.error = error;
+            });
         }
     };
     LayoutsAssembled = __decorate([
         core_1.Component({
             selector: 'layouts-assembled',
-            template: "\n<div>\n            <div class =\"panel-heading\">\n                <h3>Layouts Manager</h3>\n                <nav>\n                    <a [routerLink]=\"['../layout-template/',-1]\" class=\"btn btn-default\"><span class=\"fa fa-plus\"></span> Create New Layout</a>\n                    <a class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\" ></span> Edit Layout</a>\n                    <a #mybtn class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onDeleteClick($evtnt,mybtn)\"><span class=\"fa fa-minus\"></span> Delete Layout</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">\n                <layouts-list-cards [changesResult]=\"changesResult\" (onselect)=\"onLayoutSelected($event)\"  ></layouts-list-cards>\n            </div>\n</div>\n",
+            template: "\n<div>\n            <div class =\"panel-heading\">\n                <h3>Layouts Manager</h3>\n                <nav>\n                    <a [routerLink]=\"['../layout-template/',-1]\" class=\"btn btn-default\"><span class=\"fa fa-plus\"></span> Create New Layout</a>\n                    <a class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\" ></span> Edit Layout</a>\n                    <a #mybtn class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onDeleteClick($evtnt,mybtn)\" [ng2-md-tooltip]=\"deleteTooltip\"><span class=\"fa fa-minus\"></span> Delete Layout</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">\n                <layouts-list-cards [changesResult]=\"changesResult\" (onselect)=\"onLayoutSelected($event)\"  ></layouts-list-cards>\n            </div>\n</div>\n",
             directives: [router_1.ROUTER_DIRECTIVES, layouts_list_cards_1.LayoutsListCards],
             providers: [layout_editor_service_1.LayoutEditorService, device_editor_service_1.DeviceEditorService]
         }), 

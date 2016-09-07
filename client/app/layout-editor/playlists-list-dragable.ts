@@ -24,9 +24,10 @@ import {DragPlayListService} from "./drag-playlist-service";
                             <div  class="thumb-128-2" *ngFor="let playlist of playlists" 
                             (dragstart)="onDragStart(playlist)"
                             (dragend)="onDragEnd(playlist)">
-                                <div>
+                                <div class="image-container-128-2">
+                                    <div class="myid"><span>{{playlist.props.id}}</span></div>
                                     <img src="{{ playlist.props.image}}">
-                                    <div>
+                                    <div class="thumb-label">
                                         {{ playlist.props.label}}
                                     </div>
                                 </div>

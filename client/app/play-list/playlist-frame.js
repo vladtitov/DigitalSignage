@@ -34,6 +34,8 @@ var PlayListFrame = (function () {
             this.item.label = this.item.originalname;
         if (this.item)
             this.label = this.item.label; // || 'no label';
+        if (this.item)
+            this.id = this.item.asset_id;
     };
     __decorate([
         core_1.Input(), 
@@ -42,7 +44,7 @@ var PlayListFrame = (function () {
     PlayListFrame = __decorate([
         core_1.Component({
             selector: 'playlist-frame',
-            template: "\n<div>\n            <div class=\"thumb-128-2\">\n                    <div>\n                        <img src=\"{{image}}\">\n                        <div>{{label}}</div>\n                    </div>\n            </div>\n</div>   \n\n\n                <!--<div class=\"frame\">-->\n                    <!--<img src=\" {{ image }} \" width=\"128\" height=\"128\"> -->\n                <!--</div>       -->\n             ",
+            template: "\n<div>\n            <div class=\"thumb-128-2\">\n                    <div class=\"image-container-128-2\">\n                        <div class=\"myid\" *ngIf=\"id>0\"><span>{{id}}</span></div>\n                        <img src=\"{{image}}\">\n                        <div class=\"thumb-label\">{{label}}</div>\n                    </div>\n            </div>\n</div>   \n\n\n                <!--<div class=\"frame\">-->\n                    <!--<img src=\" {{ image }} \" width=\"128\" height=\"128\"> -->\n                <!--</div>       -->\n             ",
             styles: ["\n               img {\n                border: 1px solid #0000AA;\n                border-radius: 5px;\n               }\n               \n            "]
         }), 
         __metadata('design:paramtypes', [])

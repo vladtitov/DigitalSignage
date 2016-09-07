@@ -40,33 +40,34 @@ router.post('/processed', function(request:express.Request, response:express.Res
 
     var token:string = asset.token;
     delete asset.token;
-
     asset.path = asset.folder+'/'+asset.filename;
-
-    asset.status='processed';
-    console.log(asset);
     var man:VideoServerConnect = new VideoServerConnect();
+    var folder:string;
 
+    console.log('got processed', asset);
 
-
-    man.updateProcessed(asset).done(
-        folder=>{
-            asset.folder = folder;
-            //console.log(asset2);
-
-            man.downloadFiles(asset,folder).done(
+    man.getAssetFolder(asset).done(
+        res=>{
+            folder= res;
+            man.updateStatus(asset.id,'precessed',folder).done(
                 res=>{
-                    asset.status='ready';
-                    man.finalize(asset,folder).done(
-                    res=>response.json({data:asset})
-                    ,err=>response.json({error:err})
-                )
-                }
-                ,err=>response.json({error:err})
+                    asset.status ='precessed';
+                    man.downloadFiles(asset,folder).done(
+                        asset=>{
+                            man.finalize(asset,folder).done(
+                                asset=> response.json({data:asset})
+                                 ,err=>response.json({error:err})
+                            )
+                        },err=>response.json({error:err})
+                    )
+
+                },err=>response.json({error:err})
             )
-        }
-        ,err=>response.json({error:err})
+        } ,err=>response.json({error:err})
     )
+
+
+
 
 });
 

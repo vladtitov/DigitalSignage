@@ -17,13 +17,15 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 <div class="device-editor">
         
             <h4>Device Details</h4>
+            <a class="previewUrl" *ngIf="deviceUrl && currentItem.layout_id" target="_blank" href="{{deviceUrl}}"><span class="fa fa-eye"></span> Preview</a>
             <form role="form" *ngIf="currentItem">
             <!--<span>{{currentItem.id}}</span>-->
-            <div class="form-group">
-                <label>Divice Url: <a href="{{deviceUrl}}">{{deviceUrl}}</a></label>
+            <div class="form-group" *ngIf="deviceUrl && currentItem.layout_id">
+                <label >Divice Url: </label> <small>{{deviceUrl}}</small>
             </div>
             <div class="form-group">
                 <label>Name</label>
+                <small *ngIf="currentItem.id>0" style="margin-left: 15px">ID: {{currentItem.id}}</small>
                 <input class="form-control" #inpLabel value="{{currentItem.label}}"/>
             </div>
             <div class="form-group">
@@ -32,11 +34,13 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             </div>
             <div class="form-group">
                 <label for="selectLayout">Layout</label>
+                <small *ngIf="currentLayout.props.id>0" style="margin-left: 15px">ID: {{currentLayout.props.id}}</small>
              <select class="form-control"    id="selectLayout"  [(ngModel)]="currentLayout" name="mylayout"> <option *ngFor="let label1 of layouts" [ngValue]="label1">{{label1.props.label}}</option> </select>
             </div>
             <div class="card-256x320">
                 <div class="mythumb">
                     <div class="myimage-container">
+                        <div class="myid" *ngIf="currentLayout.props.id>0"><span>{{currentLayout.props.id}}</span></div>
                         <img class="myimage " src="{{currentLayout.props.image}}" />
                     </div>
                     <div class="props"></div>
@@ -51,6 +55,13 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 </div>
 `
     ,styles:[`
+        h4{
+            display: inline-block;
+        }
+        .previewUrl{
+            float: right;
+            margin-top: 8px;
+        }
         .form{
             padding-top: 7px;
         }
@@ -90,7 +101,7 @@ export class DeviceEditor implements OnInit{
     isInProgress:boolean = false;
 
     deviceUrl:string;
-    deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/screen/mydevice/';
+    deviceBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/device/';
 
     private sub: Subscription;
 
@@ -168,6 +179,7 @@ export class DeviceEditor implements OnInit{
                     var id = data.insertId ? data.insertId : this.currentItem.id;
                     this.getDataById(id);
                     this.onDataChange.emit(id);
+                    this.router.navigate(['./devices-manager',id]);
                     // if(this.devicelist1) this.devicelist1.refreshData();
                 },
                 error => {

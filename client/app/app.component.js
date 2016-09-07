@@ -32,7 +32,7 @@ var AppComponent = (function () {
             console.log('onSubmit res: ', res);
             // this.router.navigate(["./dashboard/content-manager",'view',0]);
             localStorage.removeItem("myuser");
-            window.location.href = "/loginHello";
+            window.location.href = "/login";
         }, function (err) {
             console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;

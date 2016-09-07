@@ -180,6 +180,7 @@ export class VOViewport {
     height: number;
     playertype:string;
     playlist_id: number;
+    selected:boolean;
     constructor (obj:any) {
         for (var str in obj)this[str] = obj[str];
     }
@@ -223,6 +224,17 @@ export class VOUserData{
     passwoed:string;
     sessionid:string;
     token:string;
+    constructor (obj:any) {
+        for (var str in obj)this[str] = obj[str];
+    }
+}
+
+export class VOUserResult{
+    result:string;
+    folder:string;
+    token:string;
+    sid:string;
+    role:string;
     constructor (obj:any) {
         for (var str in obj)this[str] = obj[str];
     }

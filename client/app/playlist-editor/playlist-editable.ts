@@ -13,6 +13,7 @@ import {URLSearchParams} from "@angular/http"
 import {Subscribable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Rx";
 import {UpdateResult} from "../../../server/db/dbDriver";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 
 
 
@@ -22,17 +23,17 @@ import {UpdateResult} from "../../../server/db/dbDriver";
 <div>       
             
             <a class="btn btn-default" (click)="createPlayList()"><span class="fa fa-plus"> </span> Create New</a>
-            <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="deletePlayList()"><span class="fa fa-remove"></span> Delete</a>             
-            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress"
-                [ng2-md-tooltip]="tooltipMessage" placement="top" [tooltipColor]="color">
-            <span class="fa fa-life-saver"></span> Save on Server</a>
+            <a class="btn btn-default" (click)="deletePlayList()" [class.disabled]="toolsDisadled" [ng2-md-tooltip]="deleteTooltip">
+                <span class="fa fa-remove"></span> Delete</a>             
+            <a class="btn btn-default" (click)="saveOnServer()" [class.disabled]="isInProgress" [ng2-md-tooltip]="saveTooltip" style="margin-right: 100px">
+                <span class="fa fa-life-saver"></span> Save on Server</a>
                     
-        
+            <small *ngIf="playlistProps.id>0" style="margin-right: 10px">ID: {{playlistProps.id}};</small>
             <label class="PNameLabel" for="PName">Playlist Name</label>
-           <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
+            <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
-            
+            <a class="previewUrl" *ngIf="playlistUrl && playlistProps.id" target="_blank" href="{{playlistUrl}}"><span class="fa fa-eye"></span> Preview</a>
             <div class="pl-container">
                 <div class="pl-content" >
                     <div class="timeline" flex layout="row" >
@@ -79,15 +80,18 @@ import {UpdateResult} from "../../../server/db/dbDriver";
             
             }
             .PNameLabel{
-                margin-left: 50px;
+
             }
             time-cell{
                 width: 128px;
                 height: 20px;
                 background-color: #0000AA;
                 color: white;                
-            }       
-         
+            }
+            .previewUrl{
+                float: right;
+                margin-top: 6px;
+            }
                 
 `],
     directives:[PlayListItem,PlayListSpacer,TimeCellCompnent],
@@ -112,6 +116,9 @@ export class PlaylistEditable implements OnInit{
         this.addAssetToCollection(item);
     };
 
+    playlistUrl:string;
+    playlistBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/playlist/';
+
     inputItem:VOAsset;
     playlist:VOPlaylist;
     playlistItems: VOPlayLists_Assets[];
@@ -121,6 +128,10 @@ export class PlaylistEditable implements OnInit{
 
     toolsDisadled:boolean;
     isInProgress:boolean = false;
+
+    private saveTooltip:TooltipOptions;
+    private deleteTooltip:TooltipOptions;
+
 
     color:string;
     tooltipMessage:string;
@@ -176,36 +187,37 @@ export class PlaylistEditable implements OnInit{
 
     saveOnServer():void{
         //console.log(this.playlistProps)
+        this.saveTooltip = null;
         this.isInProgress = true;
         this.calculateDuration();
         this.createCover();
         this.playlistservice.saveDataOnServer()
             .subscribe(
                 (result:UpdateResult)=> {
-                    // console.log('save: ', result);
+                    console.log('save: ', result);
                     this.isInProgress = false;
-                    this.showTooltip('green','Success');
+                    this.saveTooltip = {message:'Playlist saved on server',tooltip_class:'btn-success'};
                     if (result.insertId) {
                         // console.log('save: ', result);
-                        this.router.navigate(['./playlist-editor',result.insertId])
+                        this.router.navigate(['./playlist-editor',result.insertId]);
+                        this.toolsDisadled = false;
                     }
                 },
                 error => {
                     this.isInProgress = false;
-                    this.showTooltip('red', 'Error');
+                    this.saveTooltip = {message:'Server error',tooltip_class:'btn-danger'};
+                    // this.showTooltip('red', 'Error');
                 });
                    // this.getDataFromServer();
 
     }
-    showTooltip(color:string, message:string){
-        this.color = color;
-        this.tooltipMessage = message;
-        // if(color == 'green') this.tooltipMessage = 'Success';
-        // else this.tooltipMessage = 'Error';
-        setTimeout(()=>{
-            this.tooltipMessage = '';
-        }, 3000);
-    }
+    // showTooltip(color:string, message:string){
+    //     this.color = color;
+    //     this.tooltipMessage = message;
+    //     setTimeout(()=>{
+    //         this.tooltipMessage = '';
+    //     }, 3000);
+    // }
     onItemDragend(evt:DragEvent):void{
 
     }
@@ -225,8 +237,13 @@ export class PlaylistEditable implements OnInit{
 
         this.sub = this.route.params.subscribe(params => {
             let id = +params['id']; // (+) converts string 'id' to a number
-            if(id == -1) this.toolsDisadled = true;
-            console.log(params)
+            if(id == -1) {
+                this.toolsDisadled = true;
+                this.playlistUrl = null;
+            } else {
+                this.playlistUrl = this.playlistBaseUrl + id;
+            }
+            // console.log(params);
             if(!isNaN(id)) this.playlistservice.getData(id);
         });
     }
@@ -241,11 +258,22 @@ export class PlaylistEditable implements OnInit{
     }
 
     deletePlayList(){
+        this.deleteTooltip = null;
         if(this.playlist && confirm('You want to delete Playlist '+this.playlist.props.label+'?')){
             this.playlistservice.daletePlaylist(this.playlist.props.id)
                 .subscribe(
                     (result:UpdateResult)=>{
-                        if(result.changes)this. createPlayList();
+                        if(result.changes){
+                            this.deleteTooltip = {message:'PlayList deleted from database!',tooltip_class:'btn-success'};
+                            this.createPlayList();
+                        } else {
+                            this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete playList'};
+                            this.toolsDisadled = false;
+                        }
+                    },
+                    error => {
+                        this.deleteTooltip = {message:'Server error',tooltip_class:'btn-danger'};
+                        this.toolsDisadled = false;
                     });
         }
 

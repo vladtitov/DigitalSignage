@@ -8,6 +8,7 @@ import {LayoutsListCards} from "./layouts-list-cards";
 import {LayoutEditorService} from "../layout-editor/layout-editor-service";
 import {UpdateResult} from "../../../server/db/dbDriver";
 import {DeviceEditorService} from "../device/device-editor-service";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 @Component({
     selector:'layouts-assembled'
     ,template:`
@@ -17,7 +18,7 @@ import {DeviceEditorService} from "../device/device-editor-service";
                 <nav>
                     <a [routerLink]="['../layout-template/',-1]" class="btn btn-default"><span class="fa fa-plus"></span> Create New Layout</a>
                     <a class="btn btn-default" [class.disabled]="!currentItem" (click)="onEditClick()"> <span class="fa fa-edit" ></span> Edit Layout</a>
-                    <a #mybtn class="btn btn-default" [class.disabled]="!currentItem" (click)="onDeleteClick($evtnt,mybtn)"><span class="fa fa-minus"></span> Delete Layout</a>
+                    <a #mybtn class="btn btn-default" [class.disabled]="!currentItem" (click)="onDeleteClick($evtnt,mybtn)" [ng2-md-tooltip]="deleteTooltip"><span class="fa fa-minus"></span> Delete Layout</a>
                 </nav>
             </div>
             <div class="panel-body">
@@ -34,6 +35,8 @@ export class LayoutsAssembled{
     currentItem:VOLayout;
     changesResult:UpdateResult;
     error:string;
+
+    private deleteTooltip:TooltipOptions;
 
     constructor(
         private ar:ActivatedRoute
@@ -62,6 +65,7 @@ export class LayoutsAssembled{
     }
 
     onDeleteClick(evt,btn):void{
+        this.deleteTooltip = null;
         var strLabels:string;
 
         if(this.currentItem.usedDevice && this.currentItem.usedDevice.length){
@@ -77,9 +81,20 @@ export class LayoutsAssembled{
             'Used devices: ' + strLabels)){
             this.layoutsEditorService.deleteLayoutById(this.currentItem.props.id)
                 .subscribe(
-                    res=>this.changesResult = res,
-                    err=>this.error=err
-                );
+                    (result:UpdateResult)=>{
+                        if(result.changes){
+                            this.deleteTooltip = {message:'Layout deleted from database!',tooltip_class:'btn-success'};
+                            this.changesResult = result;
+                            this.currentItem = null;
+                        } else this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete layout'};
+                    },
+                    error => {
+                        this.deleteTooltip = {message:'Server error',tooltip_class:'btn-danger'};
+                        this.error=error;
+                    });
+                //     res=>this.changesResult = res,
+                //     err=>this.error=err
+                // );
                     // if(this.devicelist1) this.devicelist1.refreshData();
         }
     }

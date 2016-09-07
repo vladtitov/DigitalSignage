@@ -101,7 +101,7 @@ export class LayoutsController{
         var def: Q.Deferred<any> = Q.defer();
         var db = this.db;
         db.selectById(id,'layouts' ).done(
-            res1=>db.selectColumsById(id,'layout_id','layouts_viewports').done(
+            res1=>db.selectByValue(id,'layout_id','layouts_viewports').done(
                 res2=> def.resolve({props:res1,viewports:res2})
                 ,err=>def.reject(err)
             )

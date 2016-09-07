@@ -134,8 +134,7 @@ var User = (function () {
         var db = new dbDriver_1.DBDriver(null);
         var timestamp = Math.round(Date.now() / 1000);
         password = crypto.createHash('md5').update(password).digest('hex');
-        var sql = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
-        return db.runQuery(sql);
+        return db.updateRow({ id: id, password: password, timestamp: timestamp }, 'users');
     };
     User.prototype.login = function (username, password, sid, ip) {
         password = crypto.createHash('md5').update(password).digest('hex');

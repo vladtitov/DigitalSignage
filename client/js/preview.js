@@ -33,7 +33,6 @@ var htplayer;
         return VOLayoutProps;
     }());
     htplayer.VOLayoutProps = VOLayoutProps;
-    //
     var VOLayout = (function () {
         function VOLayout(obj) {
             for (var str in obj)
@@ -331,10 +330,10 @@ var htplayer;
             $container.append(this.$view);
         };
         HTMyPlayer.prototype.width = function () {
-            return this.layout.width || 1920;
+            return this.layout.props.width || 1920;
         };
         HTMyPlayer.prototype.height = function () {
-            return this.layout.height || 1080;
+            return this.layout.props.height || 1080;
         };
         HTMyPlayer.prototype.start = function () {
         };
@@ -360,6 +359,20 @@ var htplayer;
         HTMyPlayer.prototype.loadLayout = function (layout_id) {
             var _this = this;
             $.get(htplayer.playerURL + 'layouts/byid/' + layout_id).done(function (res) {
+                console.log(res);
+                if (res.data) {
+                    _this.layout = new htplayer.VOLayout(res.data);
+                    _this.setNewViewPorts();
+                    if (_this.onLayotLoaded)
+                        _this.onLayotLoaded();
+                }
+                else
+                    console.warn(res);
+            });
+        };
+        HTMyPlayer.prototype.loadDevice = function (device_id) {
+            var _this = this;
+            $.get(htplayer.playerURL + 'layouts/by-device-id/' + device_id).done(function (res) {
                 console.log(res);
                 if (res.data) {
                     _this.layout = new htplayer.VOLayout(res.data);
@@ -430,16 +443,41 @@ var htplayer;
     var PreviewController = (function () {
         function PreviewController() {
             var _this = this;
-            var params = UtilsServices.utils.getUrlParams();
-            console.log(params);
-            if (!params || !params.layout_id) {
-                console.warn('heed layout_id');
-                return;
+            // let params:any = UtilsServices.utils.getUrlParams();
+            var layout_id;
+            var device_id;
+            var playlist_id;
+            var params = window.location.href.split('/');
+            console.log('params: ', params);
+            var ind = params.indexOf('layout');
+            if (ind != -1) {
+                layout_id = +params[ind + 1];
             }
+            else {
+                ind = params.indexOf('device');
+                if (ind != -1) {
+                    device_id = +params[ind + 1];
+                }
+                else {
+                    ind = params.indexOf('playlist');
+                    if (ind != -1) {
+                        playlist_id = +params[ind + 1];
+                    }
+                }
+            }
+            console.log('layout_id', layout_id);
+            console.log('device_id', device_id);
+            console.log('playlist_id', playlist_id);
+            if (!layout_id && !device_id && !playlist_id)
+                return;
+            console.log(params);
             htplayer.playerURL = '/api/';
-            var id = params.layout_id;
+            // let id = params.layout_id;
             this.player = new htplayer.HTMyPlayer('#ViewportsContainer');
-            this.player.loadLayout(id);
+            if (layout_id)
+                this.player.loadLayout(layout_id);
+            else if (device_id)
+                this.player.loadDevice(device_id);
             this.player.onLayotLoaded = function () {
                 _this.player.appendTo($('#MainContainer'));
                 _this.fitToWindow();

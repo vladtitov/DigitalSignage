@@ -64,24 +64,33 @@ var PlayListLibrary = (function () {
             this.router.navigate(link);
         }
     };
-    PlayListLibrary.prototype.DeletePlaylist = function () {
+    PlayListLibrary.prototype.deletePlaylist = function () {
         var _this = this;
+        this.deleteTooltip = null;
         // console.log('selecteditem', this.selecteditem);
         if (this.playlistid && confirm('Are you want to delete playlist "' + this.selecteditem.props.label + '" ?\n' +
             'Used layouts: ' + this.layoutsLabels)) {
             this.playlistService.daletePlaylist(this.selecteditem.props.id)
                 .subscribe(function (res) {
-                _this.playlistsService.getPlaylists();
-                if (_this.usedInLayout) {
-                    alert("resave layout: " + _this.layoutsLabels);
+                if (res.changes) {
+                    _this.deleteTooltip = { message: 'PlayList deleted from database!', tooltip_class: 'btn-success' };
+                    _this.playlistsService.getPlaylists();
+                    _this.toolsDisadled = true;
+                    if (_this.usedInLayout)
+                        alert("resave layout: " + _this.layoutsLabels);
                 }
+                else
+                    _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete playList' };
+            }, function (error) {
+                _this.deleteTooltip = { message: 'Server error', tooltip_class: 'btn-danger' };
+                _this.toolsDisadled = false;
             });
         }
     };
     PlayListLibrary = __decorate([
         core_1.Component({
             selector: 'playlist-library',
-            template: "\n<div class=\"content-850\">\n            <div class =\"panel-heading\">\n                <h3>Playlists Manager</h3>\n                <nav>                     \n                     <a class=\"btn btn-default\" (click)=\"goAddPlaylist()\"><span class=\"fa fa-plus\"></span> Create New Playlist</a>\n                     <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"goEditPlaylist()\"><span class=\"fa fa-edit\"></span> Edit Playlist</a>\n                     <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"DeletePlaylist()\"><span class=\"fa fa-remove\"></span> Delete Playlist</a>\n                </nav>\n                 <router-outlet></router-outlet>\n            </div>\n            <div class=\"panel-body\">\n                <h4>Playlists</h4>\n                <div class=\"container-scroll\">\n                    <div class=\"scroll-content\"> \n                        <div class=\"item\" *ngFor=\"let item of playlists; let i = index\" layout=\"row\" >\n                           <playlist-simple [playlist]=\"item\" #myItem (click)=\"onPlaylistClick(item, myItem)\"></playlist-simple>\n                        </div>\n                    </div>\n                </div>\n            </div>\n</div>            \n             ",
+            template: "\n<div class=\"content-850\">\n            <div class =\"panel-heading\">\n                <h3>Playlists Manager</h3>\n                <nav>                     \n                     <a class=\"btn btn-default\" (click)=\"goAddPlaylist()\"><span class=\"fa fa-plus\"></span> Create New Playlist</a>\n                     <a class=\"btn btn-default\" (click)=\"goEditPlaylist()\" [class.disabled]=\"toolsDisadled\"><span class=\"fa fa-edit\"></span> Edit Playlist</a>\n                     <a class=\"btn btn-default\" (click)=\"deletePlaylist()\" [class.disabled]=\"toolsDisadled\" [ng2-md-tooltip]=\"deleteTooltip\"><span class=\"fa fa-remove\"></span> Delete Playlist</a>\n                </nav>\n                 <router-outlet></router-outlet>\n            </div>\n            <div class=\"panel-body\">\n                <h4>Playlists</h4>\n                <div class=\"container-scroll\">\n                    <div class=\"scroll-content\"> \n                        <div class=\"item\" *ngFor=\"let item of playlists; let i = index\" layout=\"row\" >\n                           <playlist-simple [playlist]=\"item\" #myItem (click)=\"onPlaylistClick(item, myItem)\"></playlist-simple>\n                        </div>\n                    </div>\n                </div>\n            </div>\n</div>            \n             ",
             styles: ["\n              .container-scroll {\n                width: 870px;\n                height: 425px;\n                overflow-y: scroll;\n                overflow-x: hidden;\n              }\n              \n              .scroll-content {\n                width: 770px;\n              }\n               \n               .item {\n                margin-bottom: 20px;\n               }\n              \n            "],
             directives: [router_1.ROUTER_DIRECTIVES, playlist_simple_1.PlayListSimple],
             providers: [playlists_service_1.PlaylistsService, playlist_service_1.PlayListService]

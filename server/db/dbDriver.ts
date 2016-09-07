@@ -69,9 +69,24 @@ export class DBDriver {
         return deferred.promise;
     }
 
-    selectColumsById(id:number,columns:string,table:string): Q.Promise<any> {
+    selectByValue(value:string | number, column:string, table:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
-        var sql:string =  'SELECT '+columns+' FROM '+table+' WHERE id='+Number(id);
+        var sql:string =  'SELECT * FROM '+table+' WHERE '+column+'=?';
+        this.getdb().all(sql,[value], function(error,row) {
+            if (error) {
+                def.reject(error);
+            } else {
+                def.resolve(row);
+            }
+        });
+
+        return def.promise;
+
+    }
+
+    selectColumnsById(id:number, columns:string, table:string): Q.Promise<any> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string =  'SELECT '+columns+' FROM '+table+' WHERE id='+id;
         this.getdb().get(sql, function(error,row) {
             if (error) {
                 def.reject(error);
@@ -83,6 +98,7 @@ export class DBDriver {
         return def.promise;
 
     }
+
     selectById(id:number,table:string): Q.Promise<any> {
         var def: Q.Deferred<any> = Q.defer();
         var sql:string =  'SELECT * FROM '+table+' WHERE id='+Number(id);
@@ -97,6 +113,48 @@ export class DBDriver {
         return def.promise;
 
     }
+
+    selectAllTable(table:string): Q.Promise<any[]> {
+        var def: Q.Deferred<any> = Q.defer();
+        var sql:string = 'SELECT * FROM '+table;
+        this.getdb().all(sql, (error, rows) => {
+            if (error) {
+                console.log(error);
+                def.reject(error);
+            } else def.resolve(rows);
+        });
+        return def.promise;
+    }
+
+    selectAll(sql:string, data?:any[]): Q.Promise<any[]> {
+        var deferred: Q.Deferred<any> = Q.defer();
+
+        this.getdb().all(sql, data, (error, rows) => {
+            if (error) {
+                console.log(error);
+                deferred.reject(error);
+            } else {
+                deferred.resolve(rows);
+            }
+        });
+        return deferred.promise;
+    }
+
+    selectOne(sql:string, data?:any[]):Q.Promise<any>{
+        var deferred: Q.Deferred<any> = Q.defer();
+
+        this.getdb().get(sql, data, function(error, row) {
+            if (error) {
+                console.log('selectOne ', error);
+                deferred.reject(error);
+            } else {
+                // console.log(row);
+                deferred.resolve(row);
+            }
+        });
+        return deferred.promise;
+    }
+
 
     queryOne(sql: string): Q.Promise<any> {
         var deferred: Q.Deferred<any> = Q.defer();
@@ -202,47 +260,6 @@ export class DBDriver {
             }
         });
 
-        return deferred.promise;
-    }
-
-    selectAllTable(table:string): Q.Promise<any[]> {
-        var def: Q.Deferred<any> = Q.defer();
-        var sql:string = 'SELECT * FROM '+table;
-        this.getdb().all(sql, (error, rows) => {
-            if (error) {
-                console.log(error);
-                def.reject(error);
-            } else def.resolve(rows);
-        });
-        return def.promise;
-    }
-
-    selectAll(sql:string, data?:any[]): Q.Promise<any[]> {
-        var deferred: Q.Deferred<any> = Q.defer();
-
-        this.getdb().all(sql, data, (error, rows) => {
-            if (error) {
-                console.log(error);
-                deferred.reject(error);
-            } else {
-                deferred.resolve(rows);
-            }
-        });
-        return deferred.promise;
-    }
-
-    selectOne(sql:string, data?:any[]):Q.Promise<any>{
-        var deferred: Q.Deferred<any> = Q.defer();
-
-        this.getdb().get(sql, data, function(error, row) {
-            if (error) {
-                console.log('selectOne ', error);
-                deferred.reject(error);
-            } else {
-                // console.log(row);
-                deferred.resolve(row);
-            }
-        });
         return deferred.promise;
     }
 

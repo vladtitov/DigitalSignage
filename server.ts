@@ -83,7 +83,11 @@ app.use(session({
 app.use(express.static(WWW));
 
 app.get('/', function(req:express.Request, res:express.Response){
-    res.sendFile('indexts.html',{ 'root':WWW});
+    var folder = req.session['user_folder'];
+    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+    else res.redirect('/login');
+
+    // res.sendFile('indexts.html',{ 'root':WWW});
 });
 
 app.get('/login', function(req:express.Request, res:express.Response){
@@ -93,16 +97,37 @@ app.get('/login/*', function(req:express.Request, res:express.Response){
     res.sendFile('mylogin.html',{ 'root': WWW});
 });
 
+app.get('/preview/*', function(req:express.Request, res:express.Response){
+    var folder = req.session['user_folder'];
+    if(folder) res.sendFile('player-preview.html',{ 'root': WWW});
+    else res.redirect('/login');
+
+    // res.sendFile('player-preview.html',{ 'root': WWW});
+});
+
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
-    res.sendFile('indexts.html',{ 'root':WWW});
+    var folder = req.session['user_folder'];
+    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+    else res.redirect('/login');
+
+    // res.sendFile('indexts.html',{ 'root':WWW});
 });
 
-app.get('/screen/*', function(req:express.Request, res:express.Response){
-    res.sendFile('screen.html',{ 'root':WWW});
-});
+// app.get('/screen/*', function(req:express.Request, res:express.Response){
+//     var folder = req.session['user_folder'];
+//     if(folder) res.sendFile('screen.html',{ 'root':WWW});
+//     else res.sendFile('mylogin.html',{ 'root': WWW});
+//
+//     // res.sendFile('screen.html',{ 'root':WWW});
+// });
 app.get('/dashboard/*', function(req:express.Request, res:express.Response){
-    res.sendFile('indexts.html',{ 'root':WWW});
+    var folder = req.session['user_folder'];
+    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+    else res.redirect('/login');
+    // else res.sendFile('mylogin.html',{ 'root': WWW});
+
+    // res.sendFile('indexts.html',{ 'root':WWW});
 });
 
 app.get('/apidocs', function(req:express.Request, res:express.Response){
@@ -116,12 +141,12 @@ app.use(function(req:Request, res:Response, next) {
     next();
 });
 
-app.use('/myversion/*',function(req:Request, res:Response, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    next();
-});
+// app.use('/myversion/*',function(req:Request, res:Response, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//
+//     next();
+// });
 
 
 
@@ -163,19 +188,21 @@ app.use('/player/:token/', function(req:Request, res:Response, next) {
         )
 
     }
-})
+});
 
 app.use('/api',bodyParser.urlencoded({extended: true}));
 app.use('/api',bodyParser.json());
 
 app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
+    if(folder) next();
+    else res.json({error:'login'});
 
-    if(!folder){
-        console.log(' user not loged in go to '+SETTINGS.dev_folder)
-        req.session['user_folder'] = SETTINGS.dev_folder;
-    }
-    next();
+    // if(!folder){
+    //     console.log(' user not loged in go to '+SETTINGS.dev_folder)
+    //     req.session['user_folder'] = SETTINGS.dev_folder;
+    // }
+    // next();
 });
 
 const port:number = process.env.PORT || 56777;
@@ -195,7 +222,7 @@ app.get('/api/rss/:id',function(req: express.Request, res:express.Response){
     rss.read(req.params.id,function(result){
         res.json({data:result})
     });
-})
+});
 
 var phantom = require('node-phantom');
 var webshot = require('webshot');
@@ -236,7 +263,7 @@ app.get('/api/webpage/:id',function(req: express.Request, res:express.Response){
         });
 
     });*/
-})
+});
 
 app.listen(port,function(){
     console.log('http://127.0.0.1:' + port);

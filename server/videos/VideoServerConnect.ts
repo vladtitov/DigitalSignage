@@ -10,39 +10,21 @@ import * as path from 'path';
 import * as http from 'http';
 import {IncomingMessage} from "http";
 declare var WWW:string;
-
+declare var SETTINGS:any;
 
 export class FileDownloader{
 
-    destination:string;
-    onComplete:Function;
-    constructor(private url:string, private folder:string,private filename:string){
+    download(url:string, destination:string,callBack?:Function):void{
 
-    }
-
-    getFile():void{
-        this.downloader((err)=>{
-            if(this.onComplete) this.onComplete(err)
-        })
-    }
-
-
-
-
-    downloader(callBack:Function):void{
-
-        var dest = path.resolve(WWW+'/'+this.folder+'/'+this.filename);
-
-        var file:any = fs.createWriteStream(dest);
-       // console.log(url,dest);
-
-
-        http.get(this.url,function(response){
+        var file:any = fs.createWriteStream(destination);
+        http.get(url,function(response){
             response.pipe(file);
             file.on('finish', function() {
-                file.close(callBack);  // close() is async, call cb after close completes.
+                file.close();  // close() is async, call cb after close completes.
+                if (callBack) callBack();
+
             }).on('error', function(err) {
-                fs.unlink(dest);
+                fs.unlink(destination);
                 if (callBack) callBack(err);
             });
         } )
@@ -56,10 +38,10 @@ export  class VideoServerConnect{
     // folder:string;
     // server:string='http://192.168.1.12:56555';
     // server:string='http://192.168.0.82:56555';
-    server:string='http://127.0.0.1:56555';
+    server:string;
 
     constructor(private folder?:string) {
-
+            this.server = SETTINGS.video_server;
     }
 
 
@@ -70,10 +52,13 @@ export  class VideoServerConnect{
        folder+='/userVideos';
         var thumbs:string[] = asset.thumb.split(',');
 
-        var down:FileDownloader = new FileDownloader(this.server+'/'+asset.folder+'/'+asset.filename,folder,asset.filename);
-        down.onComplete=(err)=>{
+        var url:string = this.server+'/'+asset.folder+'/'+asset.filename;
+        var destination = path.resolve(WWW+'/'+folder+'/'+asset.filename);
+
+        var down:FileDownloader = new FileDownloader();
+        down.download(url,destination,(err)=>{
             if(err)def.reject(err);
-            else {
+            else{
                 asset.path = folder+'/'+asset.filename;
                 var ar = thumbs.map(function (item) {
                     return folder +'/'+item;
@@ -81,13 +66,14 @@ export  class VideoServerConnect{
                 asset.thumb= ar.join(',');
                 def.resolve(asset)
             }
-        }
-        down.getFile();
+
+        });
 
 
         thumbs.forEach((filename:string)=>{
-            var d:FileDownloader = new FileDownloader(asset.folder+'/'+filename,folder,filename);
-            d.getFile();
+            url =  this.server+'/'+asset.folder+'/'+filename;
+            destination = path.resolve(WWW+'/'+folder+'/'+filename);
+            down.download(url,destination);
         })
 
 
@@ -97,10 +83,12 @@ export  class VideoServerConnect{
 
 
     sendNotification(asset:VOAsset): Q.Promise<any>{
-        console.log('sendNotification');
+
         var def: Q.Deferred<any> = Q.defer();
-        http.get(this.server+'/'+'wake-up',(res:IncomingMessage)=>{
-            // console.log('sendNotification res', res);
+        var url:string = this.server+'/'+'wake-up';
+        console.log('sendNotification '+url);
+        http.get(url,(res:IncomingMessage)=>{
+            console.log('sendNotification res', res);
             def.resolve(res);
         });
         return def.promise;
@@ -160,18 +148,18 @@ export  class VideoServerConnect{
 
   getStatus(id:number):Q.Promise<any>{
       var db:DBDriver = new DBDriver(null);
-      return db.selectColumsById(id,'status','process');
+      return db.selectColumnsById(id,'status','process');
     }
 
-  updateStatus(asset:VOAsset,folder:string):Q.Promise<any>{
+  updateStatus(process_id:number,status:string,folder:string):Q.Promise<any>{
       var def: Q.Deferred<any> = Q.defer();
 
       var db:DBDriver = new DBDriver(null);
-      db.updateRow({id:asset.id,status:asset.status},'process').done(
+      db.updateRow({id:process_id,status:status},'process').done(
           res=>{
               var db2:DBDriver = new DBDriver(folder);
-              db2.updateRowByColumn({process_id:asset.id,status:asset.status},'process_id','assets').done(
-                  res=>def.resolve(asset)
+              db2.updateRowByColumn({process_id:process_id,status:status},'process_id','assets').done(
+                  res=>def.resolve(res)
                   ,err=>def.reject(err)
               )
           }
@@ -185,9 +173,12 @@ export  class VideoServerConnect{
         var def: Q.Deferred<any> = Q.defer();
 
         this.saveAssetData(asset,folder).done(
-           res=> this.updateStatus(asset,folder).done(
-               res=>def.resolve(asset)
-               ,err=>def.reject(err)
+           res=> this.updateStatus(asset.id,'ready',folder).done(
+               res=>{
+                   asset.status='ready';
+                   def.resolve(asset)
+
+               } ,err=>def.reject(err)
            )
             ,err=>def.reject(err)
         )
@@ -203,8 +194,24 @@ export  class VideoServerConnect{
         return  db2.updateRowByColumn(new VOAsset(asset),'process_id','assets')
     }
 
+    getAssetFolder(asset:VOAsset): Q.Promise<string>{
+        var def: Q.Deferred<any> = Q.defer();
+        var db:DBDriver = new DBDriver(null);
 
-    updateProcessed(asset:VOAsset): Q.Promise<any>{
+        db.selectById(asset.id,'process').done(
+            row =>{
+                if(row) def.resolve(row.folder);
+                else def.reject('notexists')
+            }
+            ,err=>def.reject(err)
+        )
+
+
+        return def.promise;
+
+    }
+
+    /*updateProcessed(asset:VOAsset): Q.Promise<any>{
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
 
@@ -216,12 +223,12 @@ export  class VideoServerConnect{
                        res=>def.resolve(folder)
                        ,err=>def.reject(err)
                    )
-                  /* db.updateRow({id:asset.id,status:asset.status},'process');
+                  /!* db.updateRow({id:asset.id,status:asset.status},'process');
 
                    this.saveAssetData(asset,folder).done(
                        res=>def.resolve(asset)
                        ,err=>def.reject(err)
-                   )*/
+                   )*!/
 
                }else def.reject('notexists')
             }
@@ -230,32 +237,35 @@ export  class VideoServerConnect{
 
 
         return def.promise;
-    }
+    }*/
 
 
 
 
 
     getNextVideo(): Q.Promise<any>{
-        console.log('getNextVideo');
         var status:string = 'newvideo';
         var def: Q.Deferred<any> = Q.defer();
         var db:DBDriver = new DBDriver(null);
-        var sql:string = 'SELECT * FROM process WHERE status=?';
-        db.selectAll(sql,[status]).done(
+       // var sql:string = 'SELECT * FROM process WHERE status=?';
+
+        db.selectByValue(status,'status','process').done(
             res=>{
                 var out:VOAsset;
                 for(var i=0,n= res.length;i<n;i++){
                     var asset:VOAsset = res[i];
                     //console.log(WWW+'/'+asset.path);
                     if(fs.existsSync(WWW+'/'+asset.path)){
+                        asset.status = 'requested';
                         out = asset;
+
                         break
                     }else db.deleteById(asset.id,'process');
                 }
                 if(out){
-                    db.updateRow({id:out.id,status:'requested'},'process')
+                    db.updateRow({id:out.id,status:'requested'},'process');
                 }
+
                 def.resolve(out|| {});
             }
             ,err=>def.reject(err)

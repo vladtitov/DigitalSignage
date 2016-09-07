@@ -8,6 +8,7 @@ import { VOPlaylist } from "../services/models";
 import { PlayListSimple } from "./playlist-simple";
 import {PlayListService} from "../playlist-editor/playlist-service";
 import {UpdateResult} from "../../../server/db/dbDriver";
+import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
 //import {PlayListEditor} from "../playlist-editor/play-list-editor";
 
 
@@ -19,8 +20,8 @@ import {UpdateResult} from "../../../server/db/dbDriver";
                 <h3>Playlists Manager</h3>
                 <nav>                     
                      <a class="btn btn-default" (click)="goAddPlaylist()"><span class="fa fa-plus"></span> Create New Playlist</a>
-                     <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="goEditPlaylist()"><span class="fa fa-edit"></span> Edit Playlist</a>
-                     <a class="btn btn-default" [class.disabled]="toolsDisadled" (click)="DeletePlaylist()"><span class="fa fa-remove"></span> Delete Playlist</a>
+                     <a class="btn btn-default" (click)="goEditPlaylist()" [class.disabled]="toolsDisadled"><span class="fa fa-edit"></span> Edit Playlist</a>
+                     <a class="btn btn-default" (click)="deletePlaylist()" [class.disabled]="toolsDisadled" [ng2-md-tooltip]="deleteTooltip"><span class="fa fa-remove"></span> Delete Playlist</a>
                 </nav>
                  <router-outlet></router-outlet>
             </div>
@@ -63,6 +64,8 @@ export class PlayListLibrary implements OnInit {
     selectedview: PlayListSimple;
     selecteditem: VOPlaylist;
     playlistid:number;
+
+    private deleteTooltip:TooltipOptions;
 
     layoutsLabels:string;
     usedInLayout:boolean;
@@ -118,19 +121,25 @@ export class PlayListLibrary implements OnInit {
         }
     }
 
-    DeletePlaylist() {
+    deletePlaylist() {
+        this.deleteTooltip = null;
         // console.log('selecteditem', this.selecteditem);
         if (this.playlistid && confirm('Are you want to delete playlist "' + this.selecteditem.props.label + '" ?\n' +
                 'Used layouts: ' + this.layoutsLabels)){
             this.playlistService.daletePlaylist(this.selecteditem.props.id)
                 .subscribe(
                     (res:UpdateResult)=>{
-                        this.playlistsService.getPlaylists();
-                        if(this.usedInLayout){
-                            alert("resave layout: " + this.layoutsLabels);
-                        }
-                    }
-                )
+                        if(res.changes){
+                            this.deleteTooltip = {message:'PlayList deleted from database!',tooltip_class:'btn-success'};
+                            this.playlistsService.getPlaylists();
+                            this.toolsDisadled = true;
+                            if(this.usedInLayout) alert("resave layout: " + this.layoutsLabels);
+                        } else this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete playList'};
+                    },
+                    error => {
+                        this.deleteTooltip = {message:'Server error',tooltip_class:'btn-danger'};
+                        this.toolsDisadled = false;
+                    });
         }
     }
 }

@@ -10,6 +10,7 @@ import {PlaylistsService} from "../services/playlists-service";
     selector:'playlist-simple',
     template:`
               <div class="title" [ngClass]="{selected: _selected}">
+              <small style="margin-right: 10px">ID: {{playlistprops.id}};</small>
                 Name: {{playlistprops.label}};
                 Duration: {{playlistprops.duration}};
                 <span *ngIf="playlistprops.dimension">Dimension: {{playlistprops.dimension}};</span>
@@ -46,7 +47,8 @@ import {PlaylistsService} from "../services/playlists-service";
                 height: 20px;
                 background-color: #4b7caa;
                 color: white;
-                margin-bottom: 2px;                
+                margin-bottom: 2px;    
+                padding-left: 10px;
             }              
     
             .selected {

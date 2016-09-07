@@ -26,6 +26,11 @@ var DevicesManager = (function () {
         var _this = this;
         this.sub = this.route.params.subscribe(function (params) {
             var id = +params['id']; // (+) converts string 'id' to a number
+            // console.log('id ', id);
+            if (isNaN(id)) {
+                _this.router.navigate(['./devices-manager', 0]);
+                return;
+            }
             _this.toolsDisadled = (id === -1 || id === 0) ? true : false;
             if (_this.toolsDisadled)
                 _this.devicesList.reset();
@@ -50,11 +55,15 @@ var DevicesManager = (function () {
                 .subscribe(function (data) {
                 if (data.changes) {
                     _this.deleteTooltip = { message: 'Device ' + item.id + ' ' + item.label + ' deleted from database!', tooltip_class: 'btn-success' };
+                    _this.router.navigate(['./devices-manager', 0]);
                 }
                 else
                     _this.deleteTooltip = { tooltip_class: 'btn-danger', message: 'Error to delete device' };
                 console.log('onRemoveResponse', data);
                 _this.devicesList.refreshData();
+            }, function (error) {
+                _this.deleteTooltip = { message: 'Server error', tooltip_class: 'btn-danger' };
+                _this.toolsDisadled = false;
             });
         }
     };

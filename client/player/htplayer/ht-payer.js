@@ -55,6 +55,20 @@ var htplayer;
                     console.warn(res);
             });
         };
+        HTMyPlayer.prototype.loadDevice = function (device_id) {
+            var _this = this;
+            $.get(htplayer.playerURL + 'layouts/by-device-id/' + device_id).done(function (res) {
+                console.log(res);
+                if (res.data) {
+                    _this.layout = new htplayer.VOLayout(res.data);
+                    _this.setNewViewPorts();
+                    if (_this.onLayotLoaded)
+                        _this.onLayotLoaded();
+                }
+                else
+                    console.warn(res);
+            });
+        };
         HTMyPlayer.prototype.setNewViewPorts = function () {
             this.viewports = this.layout.viewports.map(function (item) { return new htplayer.ViewportModel(item); });
             this.createView();
