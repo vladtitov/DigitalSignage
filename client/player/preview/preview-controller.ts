@@ -23,21 +23,25 @@ module htplayer{
             // let params:any = UtilsServices.utils.getUrlParams();
             let layout_id:number;
             let device_id:number;
+            let playlist_id:number;
             let params:string[] = window.location.href.split('/');
             console.log('params: ', params);
+
             let ind:number = params.indexOf('layout');
-            if(ind != -1){
-                layout_id = +params[ind+1];
-            } else {
+            if(ind != -1){ layout_id = +params[ind+1]; }
+            else {
                 ind = params.indexOf('device');
-                if(ind != -1){
-                    device_id = +params[ind+1];
+                if(ind != -1){ device_id = +params[ind+1]; }
+                else {
+                    ind = params.indexOf('playlist');
+                    if(ind != -1){ playlist_id = +params[ind+1]; }
                 }
             }
             console.log('layout_id', layout_id);
             console.log('device_id', device_id);
+            console.log('playlist_id', playlist_id);
 
-            if(!layout_id && !device_id) return;
+            if(!layout_id && !device_id && !playlist_id) return;
 
             console.log(params);
 

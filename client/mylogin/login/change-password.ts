@@ -52,7 +52,10 @@ import {LoginService} from "./login-service";
                                 Show password
                             </md-checkbox>
                             <a *ngIf="message" class="btn btn-success btn-lg" (click)="back()"><span class="fa fa-sign-in"></span>Please Sign In</a>
-                            <button *ngIf="!message" class="btn btn-primary btn-lg btn-block" type="submit" value="Change Password"><span class="fa fa-unlock"></span>Change Password</button>
+                            <button *ngIf="!message" class="btn btn-primary btn-lg btn-block"
+                                    type="submit" value="Change Password"
+                                    [style.cursor]="cursorStyle"
+                                    [disabled]="toolsDisadled"><span class="fa fa-unlock"></span>Change Password</button>
                         </form>
                         <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Sign In</a>
                     </div>
@@ -70,11 +73,12 @@ import {LoginService} from "./login-service";
 })
 
 export class ChangePassword{
-
+    cursorStyle:string = 'pointer';
     userEmail:string;
     token:string;
     message:boolean = false;
     errorMessage: boolean = false;
+    toolsDisadled: boolean = false;
 
     private sub: any;
 
@@ -97,13 +101,15 @@ export class ChangePassword{
     onSubmit(value:any){
         value.token = this.token;
         // console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
 
         this.loginService.changePassword(value).subscribe((res)=>{
             console.log('res ', res);
 
             if(res == 1){
                 this.errorMessage = false;
-                this.message = true;
+                setTimeout(()=>{this.message = true;},1000);
                 // localStorage.setItem('email', this.userEmail);
                 // console.log('onSubmit res', res);
             } else {

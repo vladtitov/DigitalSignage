@@ -60,9 +60,14 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Log In"><span class="fa fa-sign-in"></span>Sign In</button>
+                            <button class="btn btn-primary btn-lg btn-block"
+                                    type="submit" value="Log In"
+                                    [style.cursor]="cursorStyle"
+                                    [disabled]="toolsDisadled"><span class="fa fa-sign-in"></span>Sign In</button>
                         </form>
-                        <a class="panel-footer" (click)="newUser()"><span class="fa fa-user-plus"></span>Create Account</a>
+                        <a class="panel-footer"
+                            (click)="newUser()"
+                            [style.pointer-events]="hrefDisadled ? 'none' : 'auto'"><span class="fa fa-user-plus"></span>Create Account</a>
                     </div>
                     <a (click)="resetPass()"><span class="fa fa-unlock-alt"></span>Reset Password</a>
                 </div>
@@ -79,7 +84,7 @@ import {LoginService} from "./login-service";
 })
 
 export class SignIn{
-
+    cursorStyle:string = 'pointer';
     urlLogin:string = 'account/login';
     inputPass:string = 'inputPass';
     showPass: boolean = false;
@@ -87,10 +92,14 @@ export class SignIn{
     errorMessage: boolean = false;
 
     userEmail:string;
+    hrefDisadled: boolean = false;
+    toolsDisadled: boolean = false;
 
     constructor(private router:Router, private loginService:LoginService){console.log('hello login-manager');}
 
     ngOnInit(){
+        this.hrefDisadled = true;
+        setTimeout(()=>{this.hrefDisadled = false},100);
         if(localStorage.getItem('email')){
             this.userEmail = localStorage.getItem('email');
             localStorage.removeItem('email');
@@ -108,6 +117,8 @@ export class SignIn{
 
     onSubmit(value:any){
         console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
 
         this.loginService.loginServer(value).subscribe((res)=>{
             console.log('res ', res.result);

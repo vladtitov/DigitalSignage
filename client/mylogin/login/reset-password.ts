@@ -35,7 +35,10 @@ import {LoginService} from "./login-service";
                                     style="width: 100%">
                                 </md-input>
                             </div>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="Reset Password"><span class="fa fa-unlock-alt"></span>Reset Password</button>
+                            <button class="btn btn-primary btn-lg btn-block"
+                                    type="submit" value="Reset Password"
+                                    [style.cursor]="cursorStyle"
+                                    [disabled]="toolsDisadled"><span class="fa fa-unlock-alt"></span>Reset Password</button>
                         </form>
                         <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Back</a>
                     </div>
@@ -52,7 +55,8 @@ import {LoginService} from "./login-service";
 })
 
 export class ResetPassword{
-
+    cursorStyle:string = 'pointer';
+    toolsDisadled: boolean = false;
     message:boolean = false;
     errorMessage:boolean = false;
     constructor(private router:Router, private loginService:LoginService){console.log('hello restore-password');}
@@ -63,6 +67,9 @@ export class ResetPassword{
 
     onSubmit(value:any){
         // console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
+
         this.loginService.resetPassword(value).subscribe((res)=>{
 
             console.log('res ', res);

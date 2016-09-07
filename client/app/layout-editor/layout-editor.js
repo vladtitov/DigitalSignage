@@ -132,10 +132,23 @@ var LayoutEditor = (function () {
     LayoutEditor.prototype.onViewPlaylists = function () {
         //this.viewplaylists = !this.viewplaylists;
     };
+    LayoutEditor.prototype.resetViewports = function () {
+        console.log(this.currentViewPorts);
+        this.currentViewPorts.forEach(function (item) {
+            console.log('item', item.selected);
+            if (item.selected)
+                item.selected = false;
+        });
+        // console.log(this.currentViewPorts);
+    };
     LayoutEditor.prototype.onServerSaveClick = function () {
         var _this = this;
-        ///console.log(this.currentViewPorts);
         this.isInProgress = true;
+        this.resetViewports();
+        setTimeout(function () { return _this.saveOnServer(); }, 20);
+    };
+    LayoutEditor.prototype.saveOnServer = function () {
+        var _this = this;
         this.makeSnap(function (dataUrl) {
             _this.currentLayout.props.image = dataUrl;
             _this.currentLayout.props.type = 'lite';

@@ -16,7 +16,7 @@ import {LayoutViewportPlaylists} from "../layouts/layout-viewport-playlists";
                     [style.left]=item.x 
                     [style.width]=item.width 
                     [style.height]=item.height
-                    [style.border]=borderColor
+                    [style.border]="item.selected ? borderColorGold : onDrag ? borderColorRed : borderColorBlack"
                 >
                     
                             <img class="myimage" src="{{ item.image || 'images/transparent.png' }}" 
@@ -111,8 +111,14 @@ export class LayoutEditorViewport implements OnInit{
 
     selected:boolean = false;
 
+    onDrag:boolean = false;
+
     toggleview:boolean = true;
-    borderColor:string='thin solid black';
+    // borderColor:string='thin solid black';
+
+    borderColorBlack:string='thin solid black';
+    borderColorRed:string='medium solid red';
+    borderColorGold:string='medium solid gold';
 
     constructor(private dragService:DragPlayListService){
 
@@ -127,31 +133,34 @@ export class LayoutEditorViewport implements OnInit{
 
 
     onDragEnter(evt:DragEvent):void{
-        console.log("enter")
+        console.log("enter");
 
+        this.item.selected = false;
+        this.onDrag = true;
         setTimeout( () => {this.dragService.onDragEnd = (item:VOPlaylist) => {
 
             this.item.playlist_id = item.props.id;
             this.item.image = item.props.image;
            // console.log(this.item.playlistid)
-        }
-        this.borderColor = 'medium solid red';}, 100);
+        }//this.borderColor = 'medium solid red';
+            this.onDrag = true;}, 20);
        /*this.dragService.emitDragEnd.subscribe(
             (item) => {
                 this.item.playlistid = item.id;
                 this.item.image = item.image;
             }
         )*/
-
-
     }
 
     onDragLeave(evt:DragEvent):void{
         //this.dragService.emitDragEnd.unsubscribe();
+
         setTimeout( () => {
             this.dragService.onDragEnd = null;
-            this.borderColor = 'thin solid white';
-        }, 50);
+            this.onDrag = false;
+            // this.borderColor = 'thin solid black';
+            // this.borderColor = 'thin solid white';
+        }, 10);
         console.log("Leave")
     }
 
@@ -159,6 +168,8 @@ export class LayoutEditorViewport implements OnInit{
         console.log('this.item', this.item);
         this.item.playlist_id = null;
         this.item.image = null;
+        this.item.selected = false;
+        // this.borderColor = 'thin solid black';
     }
 
     onViewportClick(evt:DragEvent):void{
@@ -166,10 +177,10 @@ export class LayoutEditorViewport implements OnInit{
 
         if(!this.item.selected){
             this.item.selected = true;
-            this.borderColor='medium solid gold';
+            // this.borderColor='medium solid gold';
         } else if(this.item.selected) {
             this.item.selected = false;
-            this.borderColor = 'medium solid white';
+            // this.borderColor = 'thin solid black';
         }
 
         this.onportclick.emit(null);

@@ -48,9 +48,15 @@ import {LoginService} from "./login-service";
                             <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
                             </md-checkbox>
-                            <button class="btn btn-primary btn-lg btn-block" type="submit" value="New User"><span class="fa fa-user-plus"></span>Create Account</button>
+                            <button
+                                class="btn btn-primary btn-lg btn-block"
+                                type="submit" value="New User"
+                                [style.cursor]="cursorStyle"
+                                [disabled]="toolsDisadled"><span class="fa fa-user-plus"></span>Create Account</button>
                         </form>
-                        <a class="panel-footer" (click)="back()"><span class="fa fa-arrow-left"></span>Back</a>
+                        <a class="panel-footer"
+                            (click)="back()"
+                            [style.pointer-events]="hrefDisadled ? 'none' : 'auto'"><span class="fa fa-arrow-left"></span>Back</a>
                     </div>
                 </div>
                 
@@ -66,11 +72,18 @@ import {LoginService} from "./login-service";
 })
 
 export class NewUser{
-
+    cursorStyle:string = 'pointer';
     userEmail:string;
     errorMessage: boolean = false;
+    hrefDisadled: boolean = false;
+    toolsDisadled: boolean = false;
 
     constructor(private router:Router, private loginService:LoginService){console.log('hello new-user!');}
+
+    ngOnInit(){
+        this.hrefDisadled = true;
+        setTimeout(()=>{this.hrefDisadled = false},100);
+    }
 
     back(){
         this.router.navigate(["./sign-in"]);
@@ -78,6 +91,8 @@ export class NewUser{
 
     onSubmit(value:any){
         console.log('onSubmit ', value);
+        this.toolsDisadled = true;
+        setTimeout(()=>{this.toolsDisadled = false},1000);
 
         this.loginService.createAccount(value).subscribe((res)=>{
             if(res.token){

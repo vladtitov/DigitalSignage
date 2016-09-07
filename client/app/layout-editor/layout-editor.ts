@@ -238,9 +238,26 @@ export class LayoutEditor implements OnInit {
     onViewPlaylists():void {
         //this.viewplaylists = !this.viewplaylists;
     }
+
+    resetViewports(){
+        console.log(this.currentViewPorts);
+
+        this.currentViewPorts.forEach((item)=>{
+            console.log('item', item.selected);
+            if(item.selected) item.selected = false;
+        });
+
+        // console.log(this.currentViewPorts);
+    }
+
+
     onServerSaveClick():void{
-        ///console.log(this.currentViewPorts);
         this.isInProgress = true;
+        this.resetViewports();
+        setTimeout( () => this.saveOnServer(), 20);
+    }
+
+    saveOnServer():void{
         this.makeSnap((dataUrl)=>{
           this.currentLayout.props.image = dataUrl;
           this.currentLayout.props.type='lite';

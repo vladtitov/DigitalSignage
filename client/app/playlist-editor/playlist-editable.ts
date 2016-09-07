@@ -33,7 +33,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             <input id="PName" type="text" [(ngModel)]="playlistProps.label" name="plalistname"/>
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
-            
+            <a class="previewUrl" *ngIf="playlistUrl && playlistProps.id" target="_blank" href="{{playlistUrl}}"><span class="fa fa-eye"></span> Preview</a>
             <div class="pl-container">
                 <div class="pl-content" >
                     <div class="timeline" flex layout="row" >
@@ -87,8 +87,11 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
                 height: 20px;
                 background-color: #0000AA;
                 color: white;                
-            }       
-         
+            }
+            .previewUrl{
+                float: right;
+                margin-top: 6px;
+            }
                 
 `],
     directives:[PlayListItem,PlayListSpacer,TimeCellCompnent],
@@ -112,6 +115,9 @@ export class PlaylistEditable implements OnInit{
 
         this.addAssetToCollection(item);
     };
+
+    playlistUrl:string;
+    playlistBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/playlist/';
 
     inputItem:VOAsset;
     playlist:VOPlaylist;
@@ -231,7 +237,12 @@ export class PlaylistEditable implements OnInit{
 
         this.sub = this.route.params.subscribe(params => {
             let id = +params['id']; // (+) converts string 'id' to a number
-            if(id == -1) this.toolsDisadled = true;
+            if(id == -1) {
+                this.toolsDisadled = true;
+                this.playlistUrl = null;
+            } else {
+                this.playlistUrl = this.playlistBaseUrl + id;
+            }
             // console.log(params);
             if(!isNaN(id)) this.playlistservice.getData(id);
         });

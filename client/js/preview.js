@@ -446,6 +446,7 @@ var htplayer;
             // let params:any = UtilsServices.utils.getUrlParams();
             var layout_id;
             var device_id;
+            var playlist_id;
             var params = window.location.href.split('/');
             console.log('params: ', params);
             var ind = params.indexOf('layout');
@@ -457,10 +458,17 @@ var htplayer;
                 if (ind != -1) {
                     device_id = +params[ind + 1];
                 }
+                else {
+                    ind = params.indexOf('playlist');
+                    if (ind != -1) {
+                        playlist_id = +params[ind + 1];
+                    }
+                }
             }
             console.log('layout_id', layout_id);
             console.log('device_id', device_id);
-            if (!layout_id && !device_id)
+            console.log('playlist_id', playlist_id);
+            if (!layout_id && !device_id && !playlist_id)
                 return;
             console.log(params);
             htplayer.playerURL = '/api/';
