@@ -11,7 +11,7 @@ var User = (function () {
     }
     User.prototype.copyFolder = function (destination) {
         var def = Q.defer();
-        var orig = WWW + '/clientAssets/folder_template';
+        var orig = WWW + '/folder_template';
         var dest = WWW + '/' + destination;
         fs.copy(orig, dest, function (err) {
             if (err)

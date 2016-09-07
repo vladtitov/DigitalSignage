@@ -29,7 +29,7 @@ export class User{
     copyFolder(destination:string):Promise<any>{
 
         var def: Q.Deferred<any> = Q.defer();
-            var orig = WWW+'/clientAssets/folder_template';
+            var orig = WWW+'/folder_template';
             var dest = WWW+'/'+destination;
 
         fs.copy(orig,dest,(err)=>{

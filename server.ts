@@ -32,31 +32,30 @@ var proxy = httpProxy.createProxyServer({
 });
 
 interface Settings{
+    ENV:string;
     dev_folder:string;
+    video_server:string;
 }
-
 
 
 var path = require('path');
 
-const SETTINGS:Settings = JSON.parse(fs.readFileSync('mysettings.json','utf8'));
+const SETTINGS:Settings = JSON.parse(fs.readFileSync('settings.json','utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL =  ROOT + '/server/db/';
 GLOBAL.SETTINGS = SETTINGS;
 
+if(SETTINGS.ENV == 'prod') {
+    console.log = function () {};
 
-GLOBAL.onError = function (err: any, res:express.Response) {
-    console.log('onError error\n', err);
-    //TODO Remove reason in production
-    res.json({error:'error', reason:err});
-
-    var str: string = "\r\n" + new Date().toLocaleString() + "\r\n";
-    str += JSON.stringify(err);
-    fs.appendFile(SERVER + '/error.log', str);
-};
-
+    console.error = function (err:any) {
+        var str:string = "\r\n" + new Date().toLocaleString() + "\r\n";
+        str += JSON.stringify(err);
+        fs.appendFile(SERVER + '/error.log', str);
+    };
+}
 //////////   Types  only/////////////
 import {Request} from "express";
 import {Response} from "express";

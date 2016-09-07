@@ -11,19 +11,20 @@ var proxy = httpProxy.createProxyServer({
     port: 80
 });
 var path = require('path');
-var SETTINGS = JSON.parse(fs.readFileSync('mysettings.json', 'utf8'));
+var SETTINGS = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 GLOBAL.ROOT = __dirname;
 GLOBAL.WWW = path.resolve(ROOT + '/client/');
 GLOBAL.SERVER = path.resolve(ROOT + '/server/');
 GLOBAL.DBALL = ROOT + '/server/db/';
 GLOBAL.SETTINGS = SETTINGS;
-GLOBAL.onError = function (err, res) {
-    console.log('onError error\n', err);
-    res.json({ error: 'error', reason: err });
-    var str = "\r\n" + new Date().toLocaleString() + "\r\n";
-    str += JSON.stringify(err);
-    fs.appendFile(SERVER + '/error.log', str);
-};
+if (SETTINGS.ENV == 'prod') {
+    console.log = function () { };
+    console.error = function (err) {
+        var str = "\r\n" + new Date().toLocaleString() + "\r\n";
+        str += JSON.stringify(err);
+        fs.appendFile(SERVER + '/error.log', str);
+    };
+}
 var dbDriver_1 = require("./server/db/dbDriver");
 var app = express();
 app.use(cookie());
