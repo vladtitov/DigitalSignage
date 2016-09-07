@@ -185,3 +185,4 @@ router.get('/userdevices', function (request, response) {
     }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
+//# sourceMappingURL=manager.js.map
