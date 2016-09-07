@@ -48,6 +48,8 @@ var ChangePassword = (function () {
                 console.log('wrong');
             }
         }, function (err) {
+            _this.message = false;
+            _this.errorMessage = true;
             console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;
         });

@@ -222,9 +222,10 @@ export class User{
         var timestamp:number = Math.round(Date.now()/1000);
         password = crypto.createHash('md5').update(password).digest('hex');
 
-        var sql:string = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
+        return db.updateRow({id:id,password:password,timestamp:timestamp},'users');
+        // var sql:string = 'UPDATE users SET password = "' + password + '", timestamp = ' + timestamp + ' WHERE id = ' + id;
         // console.log(sql);
-        return db.runQuery(sql);
+        // return db.runQuery(sql);
     }
     // getUserByToken(token:string):Promise<any>{
     //     var db:ObjectDatabase = new ObjectDatabase(null,'users');

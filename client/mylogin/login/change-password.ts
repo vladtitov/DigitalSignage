@@ -118,6 +118,8 @@ export class ChangePassword{
                 console.log('wrong');
             }
         }, (err)=>{
+            this.message = false;
+            this.errorMessage = true;
             console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
         });
