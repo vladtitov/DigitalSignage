@@ -34,7 +34,11 @@ app.use(session({
 }));
 app.use(express.static(WWW));
 app.get('/', function (req, res) {
-    res.sendFile('indexts.html', { 'root': WWW });
+    var folder = req.session['user_folder'];
+    if (folder)
+        res.sendFile('indexts.html', { 'root': WWW });
+    else
+        res.redirect('/login');
 });
 app.get('/login', function (req, res) {
     res.sendFile('mylogin.html', { 'root': WWW });
@@ -43,16 +47,25 @@ app.get('/login/*', function (req, res) {
     res.sendFile('mylogin.html', { 'root': WWW });
 });
 app.get('/preview/*', function (req, res) {
-    res.sendFile('player-preview.html', { 'root': WWW });
+    var folder = req.session['user_folder'];
+    if (folder)
+        res.sendFile('player-preview.html', { 'root': WWW });
+    else
+        res.redirect('/login');
 });
 app.get('/dashboard', function (req, res) {
-    res.sendFile('indexts.html', { 'root': WWW });
-});
-app.get('/screen/*', function (req, res) {
-    res.sendFile('screen.html', { 'root': WWW });
+    var folder = req.session['user_folder'];
+    if (folder)
+        res.sendFile('indexts.html', { 'root': WWW });
+    else
+        res.redirect('/login');
 });
 app.get('/dashboard/*', function (req, res) {
-    res.sendFile('indexts.html', { 'root': WWW });
+    var folder = req.session['user_folder'];
+    if (folder)
+        res.sendFile('indexts.html', { 'root': WWW });
+    else
+        res.redirect('/login');
 });
 app.get('/apidocs', function (req, res) {
     res.sendFile('index.html', { 'root': path.resolve(WWW + '/apidocs/') });
@@ -60,11 +73,6 @@ app.get('/apidocs', function (req, res) {
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-app.use('/myversion/*', function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
 app.all('/proxy/*', function (req, res) {
@@ -104,11 +112,10 @@ app.use('/api', bodyParser.urlencoded({ extended: true }));
 app.use('/api', bodyParser.json());
 app.use('/api', function (req, res, next) {
     var folder = req.session['user_folder'];
-    if (!folder) {
-        console.log(' user not loged in go to ' + SETTINGS.dev_folder);
-        req.session['user_folder'] = SETTINGS.dev_folder;
-    }
-    next();
+    if (folder)
+        next();
+    else
+        res.json({ error: 'login' });
 });
 var port = process.env.PORT || 56777;
 app.use('/player/:token', require('./server/player/manager'));
@@ -141,3 +148,4 @@ app.listen(port, function () {
     console.log('http://127.0.0.1:' + port);
     console.log('http://127.0.0.1:' + port + '/api');
 });
+//# sourceMappingURL=server.js.map

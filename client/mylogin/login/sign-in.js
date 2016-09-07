@@ -25,10 +25,9 @@ var SignIn = (function () {
         this.urlLogin = 'account/login';
         this.inputPass = 'inputPass';
         this.showPass = false;
-        this.errorMessage = false;
+        this.wrongMessage = false;
         this.hrefDisadled = false;
         this.toolsDisadled = false;
-        console.log('hello login-manager');
     }
     SignIn.prototype.ngOnInit = function () {
         var _this = this;
@@ -47,38 +46,34 @@ var SignIn = (function () {
     };
     SignIn.prototype.onSubmit = function (value) {
         var _this = this;
-        console.log('onSubmit ', value);
+        // console.log('onSubmit ', value);
         this.toolsDisadled = true;
         setTimeout(function () { _this.toolsDisadled = false; }, 1000);
         this.loginService.loginServer(value).subscribe(function (res) {
-            console.log('res ', res.result);
+            // console.log('res ', res.result);
             if (res.result == 'logedin') {
-                _this.errorMessage = false;
-                console.log('onSubmit res: ', res);
-                // this.router.navigate(["./dashboard/content-manager",'view',0]);
-                res = JSON.stringify(res);
-                localStorage.setItem('myuser', res);
+                _this.wrongMessage = false;
+                localStorage.setItem('myuser', JSON.stringify(res));
                 window.location.href = "/";
             }
             else {
-                _this.errorMessage = true;
-                console.log('wrong');
+                _this.wrongMessage = true;
             }
         }, function (err) {
-            console.log('onSubmit error ', err);
+            // console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;
         });
     };
     SignIn.prototype.handleError = function (error) {
         var errMsg = (error.message) ? error.message :
             error.status ? error.status + " - " + error.statusText : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     };
     SignIn = __decorate([
         core_1.Component({
             selector: 'sign-in',
-            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <!--<a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>-->\n            <!--<a [routerLink]=\"['./restore-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>-->\n\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Sign in to your account</h3>\n                        <hr>                                        \n                        <div *ngIf=\"errorMessage\" class=\"errorMessage\">\n                            <h5> Incorrect username or password </h5>\n                            <hr>\n                        </div>\n                        <!--<form action=\"account/login\" method=\"post\" role=\"form\" #loginForm=\"ngForm\">-->\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    [(ngModel)] = \"userEmail\"\n                                    required\n                                    type=\"email\"\n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\"\n                                    type=\"submit\" value=\"Log In\"\n                                    [style.cursor]=\"cursorStyle\"\n                                    [disabled]=\"toolsDisadled\"><span class=\"fa fa-sign-in\"></span>Sign In</button>\n                        </form>\n                        <a class=\"panel-footer\"\n                            (click)=\"newUser()\"\n                            [style.pointer-events]=\"hrefDisadled ? 'none' : 'auto'\"><span class=\"fa fa-user-plus\"></span>Create Account</a>\n                    </div>\n                    <a (click)=\"resetPass()\"><span class=\"fa fa-unlock-alt\"></span>Reset Password</a>\n                </div>\n                \n            </div>\n\n\n</div>",
+            template: "\n<div>\n\n            <!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user\"></span> Sign In</a>-->\n            <!--<a [routerLink]=\"['./new-user']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Create Account</a>-->\n            <!--<a [routerLink]=\"['./restore-password']\" class=\"btn\"><span class=\"fa fa-unlock-alt\"></span> Restore Password</a>-->\n\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Sign in to your account</h3>\n                        <hr>                                        \n                        <div *ngIf=\"wrongMessage\" class=\"errorMessage\">\n                            <h5> Incorrect username or password </h5>\n                            <hr>\n                        </div>\n                        <!--<form action=\"account/login\" method=\"post\" role=\"form\" #loginForm=\"ngForm\">-->\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    [(ngModel)] = \"userEmail\"\n                                    required\n                                    type=\"email\"\n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button class=\"btn btn-primary btn-lg btn-block\"\n                                    type=\"submit\" value=\"Log In\"\n                                    [style.cursor]=\"cursorStyle\"\n                                    [disabled]=\"toolsDisadled\"><span class=\"fa fa-sign-in\"></span>Sign In</button>\n                        </form>\n                        <a class=\"panel-footer\"\n                            (click)=\"newUser()\"\n                            [style.pointer-events]=\"hrefDisadled ? 'none' : 'auto'\"><span class=\"fa fa-user-plus\"></span>Create Account</a>\n                    </div>\n                    <a (click)=\"resetPass()\"><span class=\"fa fa-unlock-alt\"></span>Reset Password</a>\n                </div>\n                \n            </div>\n\n\n</div>",
             styles: ["\n\n    "]
         }), 
         __metadata('design:paramtypes', [router_1.Router, login_service_1.LoginService])

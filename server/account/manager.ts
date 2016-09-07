@@ -81,7 +81,7 @@ router.post('/login', function (request:express.Request, response:express.Respon
         (user)=> {
             var out: any = {};
             out.result = 'logedin';
-            out.namesp = user.folder;
+            out.folder = user.folder;
             out.token = user.token;
             out.sid = user.sid;
             out.role = user.role;
@@ -152,7 +152,7 @@ router.post('/change-password', function (request:express.Request, response:expr
             if(res){
                 // console.log('res ', res);
                 user.updateUserPass(res.id, password).done(
-                    final => response.json({data:final.changes})
+                    final => response.json({data:final})
                     ,error=>response.json({error:error})
                 )
             } else response.json({error:error});
@@ -196,7 +196,32 @@ router.post('/loginplayer', function (request:express.Request, response:express.
 
 
     }else  response.json({error:'reqired'})
-})
+});
+
+router.post('/new-user-admin', function (request:express.Request, response:express.Response) {
+    var body:any=request.body;
+    var ip:string =  request.connection.remoteAddress;
+    var password = body.password;
+    if(password && password.length>5){
+
+        var user:User = new User();
+
+        user.createUser(body.username,body.password,ip,'admin').done(
+            (newuser:RUsers)=>{
+                console.log('new user', newuser);
+                user.createAccount(newuser).done(
+                    final => response.json({data:final})
+                    ,error=>response.json({error:error})
+                );
+            }
+            ,error=>response.json({error:error})
+        )
+
+
+    }else  response.json({error:'reqired'});
+
+});
+
 router.post('/new-user-player', function (request:express.Request, response:express.Response) {
     var body:any=request.body;
     var ip:string =  request.connection.remoteAddress;

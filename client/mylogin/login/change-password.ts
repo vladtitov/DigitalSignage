@@ -2,6 +2,7 @@
 import {Component} from "@angular/core";
 import {Router, ActivatedRoute} from '@angular/router';
 import {LoginService} from "./login-service";
+import {UpdateResult} from "../../app/services/models";
 
 @Component({
     selector: 'change-password'
@@ -102,25 +103,26 @@ export class ChangePassword{
         value.token = this.token;
         // console.log('onSubmit ', value);
         this.toolsDisadled = true;
-        setTimeout(()=>{this.toolsDisadled = false},1000);
 
-        this.loginService.changePassword(value).subscribe((res)=>{
-            console.log('res ', res);
+        this.loginService.changePassword(value).subscribe((res:UpdateResult)=>{
+            // console.log('res ', res);
 
-            if(res == 1){
+            if(res.changes){
                 this.errorMessage = false;
-                setTimeout(()=>{this.message = true;},1000);
+                setTimeout(()=>{this.message = true},1000);
                 // localStorage.setItem('email', this.userEmail);
                 // console.log('onSubmit res', res);
             } else {
                 this.message = false;
                 this.errorMessage = true;
-                console.log('wrong');
+                setTimeout(()=>{this.toolsDisadled = false},1000);
+                // console.log('wrong');
             }
         }, (err)=>{
             this.message = false;
             this.errorMessage = true;
-            console.log('onSubmit error ', err);
+            setTimeout(()=>{this.toolsDisadled = false},1000);
+            // console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
         });
     }
@@ -128,7 +130,7 @@ export class ChangePassword{
     private handleError (error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     }
     

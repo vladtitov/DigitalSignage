@@ -110,7 +110,6 @@ export class LayoutEditorViewport implements OnInit{
     @Output () onportclick = new EventEmitter();
 
     selected:boolean = false;
-
     onDrag:boolean = false;
 
     toggleview:boolean = true;

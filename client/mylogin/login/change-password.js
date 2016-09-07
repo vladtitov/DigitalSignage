@@ -35,29 +35,29 @@ var ChangePassword = (function () {
         value.token = this.token;
         // console.log('onSubmit ', value);
         this.toolsDisadled = true;
-        setTimeout(function () { _this.toolsDisadled = false; }, 1000);
         this.loginService.changePassword(value).subscribe(function (res) {
-            console.log('res ', res);
-            if (res == 1) {
+            // console.log('res ', res);
+            if (res.changes) {
                 _this.errorMessage = false;
                 setTimeout(function () { _this.message = true; }, 1000);
             }
             else {
                 _this.message = false;
                 _this.errorMessage = true;
-                console.log('wrong');
+                setTimeout(function () { _this.toolsDisadled = false; }, 1000);
             }
         }, function (err) {
             _this.message = false;
             _this.errorMessage = true;
-            console.log('onSubmit error ', err);
+            setTimeout(function () { _this.toolsDisadled = false; }, 1000);
+            // console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;
         });
     };
     ChangePassword.prototype.handleError = function (error) {
         var errMsg = (error.message) ? error.message :
             error.status ? error.status + " - " + error.statusText : 'Server error';
-        console.error(errMsg);
+        // console.error(errMsg);
         return errMsg;
     };
     ChangePassword = __decorate([

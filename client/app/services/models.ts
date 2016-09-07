@@ -228,3 +228,14 @@ export class VOUserData{
         for (var str in obj)this[str] = obj[str];
     }
 }
+
+export class VOUserResult{
+    result:string;
+    folder:string;
+    token:string;
+    sid:string;
+    role:string;
+    constructor (obj:any) {
+        for (var str in obj)this[str] = obj[str];
+    }
+}

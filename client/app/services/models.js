@@ -119,3 +119,12 @@ var VOUserData = (function () {
     return VOUserData;
 }());
 exports.VOUserData = VOUserData;
+var VOUserResult = (function () {
+    function VOUserResult(obj) {
+        for (var str in obj)
+            this[str] = obj[str];
+    }
+    return VOUserResult;
+}());
+exports.VOUserResult = VOUserResult;
+//# sourceMappingURL=models.js.map
