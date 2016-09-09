@@ -11,4 +11,3 @@ router.get('/token', function (req, res) {
 });
 router.use('/', express.static('app'));
 module.exports = router;
-//# sourceMappingURL=app.js.map

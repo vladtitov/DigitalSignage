@@ -161,4 +161,3 @@ router.delete('/mydevice/:id', function (request, response) {
     controllerDevice.deleteDevice(id).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map
