@@ -46,7 +46,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
                             <div>                                                        
                                 <playlist-editable-item
                                     [item]="item" [position]="i" #myitem                               
-                                    (dragmove)="onDragMove$event(item)"
+                                    (dragmove)="onDragMove($event,item)"
                                     (dragend)="onDragEnd($event,item)" 
                                     (onremovemeDrag)="onremovemeDrag($event)"
                                     (dragstart)="onDragItemStart($event,item,myitem)" 
@@ -115,6 +115,8 @@ export class PlaylistEditable implements OnInit{
 
         this.addAssetToCollection(item);
     };
+
+    @Output () addToCartEnd = new EventEmitter();
 
     playlistUrl:string;
     playlistBaseUrl:string = window.location.protocol+'//'+window.location.host+'/preview/playlist/';
@@ -228,11 +230,11 @@ export class PlaylistEditable implements OnInit{
         }
         this.timeCells = ar;
         this.playlistservice.currentItem$.subscribe((item)=> {
-            this.playlist = item
+            this.playlist = item;
             this.playlistItems = this.playlist.list;
             this.playlistProps = item.props;
 
-        }, (error)=> {alert (error.toString())})
+        }, (error)=> {alert (error.toString())});
 
 
         this.sub = this.route.params.subscribe(params => {
@@ -343,17 +345,22 @@ export class PlaylistEditable implements OnInit{
     }
 
     addAssetToCollection(item:VOAsset):void{
-
+        // console.log('addAssetToCollection');
+        // console.log('item', item);
+        if(!item) return;
             // var vo:VOPlayLists_Assets = new VOPlayLists_Assets({item,position:this.playlistItems.length});
             var vo:VOPlayLists_Assets = new VOPlayLists_Assets(item);
+        // console.log('vo', vo.lasting);
             if(!vo.lasting) vo.lasting = 10;
             this.selectedItem = vo;
+        // console.log('playlistItems', this.playlistItems);
             if(!this.playlistItems) this.playlistItems = [];
             this.playlistItems.push(vo);
             // console.log('VO ', vo);
             // console.log('this.selectedItem ', this.selectedItem);
             // console.log('this.playlistItems ', this.playlistItems);
             this.calculateDuration();
+        // this.addToCartEnd.emit(null);
     }
 
     onDragEnd(evt:DragEvent,item:VOPlayLists_Assets):void{

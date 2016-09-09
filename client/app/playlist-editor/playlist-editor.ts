@@ -32,6 +32,7 @@ import {AssetCard} from "../assets/asset-card";
                             [dragEnter]="dragEnter"
                             (selectInnerEmitter)="onDragStartInner($event)" 
                             [addToCart]="addToCart"
+                            (addToCartEnd)="addToCartEnd()"
                         ></playlist-editable>
                     </div>
                 </div>
@@ -134,15 +135,16 @@ export class PlayListEditor implements OnInit{
     }
 
     onPlayListDargLeave(evt:DragEvent):void{
-        console.log('onPlayListDrag   Leave');
+        // console.log('onPlayListDrag   Leave');
         this.dragEnter = null;
-        console.log(this.enterY,evt.offsetY)
+        this.addToCartEnd();
+        // console.log(this.enterY,evt.offsetY)
     }
 
     onPlayListDargEnter(evt:DragEvent):void{
 
 
-    console.log('onPlayListDargEnter');
+    // console.log('onPlayListDargEnter');
        if(this.dragItem){
            this.enterY = evt.offsetY;
            this.addToCart = this.dragItem;
@@ -184,7 +186,7 @@ export class PlayListEditor implements OnInit{
         this.fullItem = null;
     }
     onDragStart (item: VOAsset) {
-        console.log(item);
+        // console.log(item);
         this.dragItem = item;
     }
     onDragEnd(item:VOAsset){
@@ -194,13 +196,17 @@ export class PlayListEditor implements OnInit{
     onItemDobleClick(item:VOAsset):void{
 
         this.addToCart = item;
+        setTimeout(()=>this.addToCart = null, 500);
     }
 
     onDragOut (evt) {
        // if (!this.isMove) this.offCart(this.dragItem);
     }
 
-
+    addToCartEnd(){
+        // console.log('addToCartEnd');
+        this.addToCart = null
+    }
 
 
 

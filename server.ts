@@ -82,9 +82,13 @@ app.use(session({
 app.use(express.static(WWW));
 
 app.get('/', function(req:express.Request, res:express.Response){
-    var folder = req.session['user_folder'];
-    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
-    else res.redirect('/login');
+    if(SETTINGS.ENV == 'prod'){
+        var folder = req.session['user_folder'];
+        if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+        else res.redirect('/login');
+    } else if(SETTINGS.ENV == 'dev') {
+        res.sendFile('indexts.html',{ 'root':WWW});
+    }
 
     // res.sendFile('indexts.html',{ 'root':WWW});
 });
@@ -97,18 +101,27 @@ app.get('/login/*', function(req:express.Request, res:express.Response){
 });
 
 app.get('/preview/*', function(req:express.Request, res:express.Response){
-    var folder = req.session['user_folder'];
-    if(folder) res.sendFile('player-preview.html',{ 'root': WWW});
-    else res.redirect('/login');
+    if(SETTINGS.ENV == 'prod'){
+        var folder = req.session['user_folder'];
+        if(folder) res.sendFile('player-preview.html',{ 'root': WWW});
+        else res.redirect('/login');
+    } else if(SETTINGS.ENV == 'dev') {
+        res.sendFile('player-preview.html',{ 'root': WWW});
+    }
 
     // res.sendFile('player-preview.html',{ 'root': WWW});
 });
 
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
-    var folder = req.session['user_folder'];
-    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
-    else res.redirect('/login');
+    if(SETTINGS.ENV == 'prod'){
+        var folder = req.session['user_folder'];
+        if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+        else res.redirect('/login');
+    } else if(SETTINGS.ENV == 'dev') {
+        res.sendFile('indexts.html',{ 'root':WWW});
+    }
+
 
     // res.sendFile('indexts.html',{ 'root':WWW});
 });
@@ -121,9 +134,14 @@ app.get('/dashboard', function(req:express.Request, res:express.Response){
 //     // res.sendFile('screen.html',{ 'root':WWW});
 // });
 app.get('/dashboard/*', function(req:express.Request, res:express.Response){
-    var folder = req.session['user_folder'];
-    if(folder) res.sendFile('indexts.html',{ 'root':WWW});
-    else res.redirect('/login');
+    if(SETTINGS.ENV == 'prod'){
+        var folder = req.session['user_folder'];
+        if(folder) res.sendFile('indexts.html',{ 'root':WWW});
+        else res.redirect('/login');
+    } else if(SETTINGS.ENV == 'dev') {
+        res.sendFile('indexts.html',{ 'root':WWW});
+    }
+
     // else res.sendFile('mylogin.html',{ 'root': WWW});
 
     // res.sendFile('indexts.html',{ 'root':WWW});
@@ -194,8 +212,18 @@ app.use('/api',bodyParser.json());
 
 app.use('/api',function(req:Request, res:Response, next) {
     var folder = req.session['user_folder'];
-    if(folder) next();
-    else res.json({error:'login'});
+    if(SETTINGS.ENV == 'prod') {
+        if (folder) next();
+        else res.json({error: 'login'});
+    }
+    else if(SETTINGS.ENV == 'dev') {
+        if (folder) next();
+        else if(!folder){
+            console.log(' user not loged in go to '+SETTINGS.dev_folder);
+            req.session['user_folder'] = SETTINGS.dev_folder;
+            next();
+        }
+    }
 
     // if(!folder){
     //     console.log(' user not loged in go to '+SETTINGS.dev_folder)
