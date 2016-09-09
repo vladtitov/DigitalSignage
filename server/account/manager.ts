@@ -199,6 +199,7 @@ router.post('/loginplayer', function (request:express.Request, response:express.
 });
 
 router.post('/new-user-admin', function (request:express.Request, response:express.Response) {
+
     var body:any=request.body;
     var ip:string =  request.connection.remoteAddress;
     var password = body.password;

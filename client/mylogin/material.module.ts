@@ -5,7 +5,7 @@ import { NgModule, ModuleWithProviders  }       from '@angular/core';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { MdCoreModule } from '@angular2-material/core';
 import { MdInputModule } from '@angular2-material/input';
-// import { MdProgressCircleModule } from '@angular2-material/progress-circle';
+import { MdProgressCircleModule } from '@angular2-material/progress-circle';
 // import { MdToolbarModule } from '@angular2-material/toolbar';
 
 @NgModule({     
@@ -15,7 +15,7 @@ import { MdInputModule } from '@angular2-material/input';
       MdCheckboxModule,
       MdCoreModule,
       MdInputModule,
-      // MdProgressCircleModule,
+      MdProgressCircleModule,
       // MdToolbarModule
     ]
 })

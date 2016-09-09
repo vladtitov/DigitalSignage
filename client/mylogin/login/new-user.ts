@@ -20,8 +20,15 @@ import {VOUserResult, VOUserData} from "../../app/services/models";
                     <div class="panel" id="login">
                         <h3>Create Account</h3>
                         <hr>
-                        <div *ngIf="existsMessage" class="errorMessage">
-                            <h5> This username already exists </h5>
+                        <div *ngIf="progressCircle">
+                            <div layout="row" layout-sm="column" layout-align="space-around">
+                                <md-progress-circle mode="indeterminate" [style.width]="'50px'" color="accent"></md-progress-circle>
+                            </div>
+                            <hr>
+                        </div>
+                        <div *ngIf="existsMessage || errMessage" class="errorMessage">
+                            <h5 *ngIf="existsMessage"> This username already exists </h5>
+                            <h5 *ngIf="errMessage"> Error processing. Please reload. </h5>
                             <hr>
                         </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
@@ -75,9 +82,11 @@ import {VOUserResult, VOUserData} from "../../app/services/models";
 export class NewUser{
     cursorStyle:string = 'pointer';
     userName:string;
+    errMessage:boolean = false;
     existsMessage: boolean = false;
     hrefDisadled: boolean = false;
     toolsDisadled: boolean = false;
+    progressCircle: boolean = false;
 
     constructor(private router:Router, private loginService:LoginService){}
 
@@ -93,20 +102,30 @@ export class NewUser{
     onSubmit(value:VOUserData){
         // console.log('onSubmit ', value);
         this.toolsDisadled = true;
-        setTimeout(()=>{this.toolsDisadled = false},1000);
+        this.existsMessage = false;
+        this.errMessage = false;
+        this.progressCircle = true;
+        // setTimeout(()=>{this.toolsDisadled = false},1000);
 
         this.loginService.createAccount(value).subscribe((res:VOUserResult)=>{
             if(res.token){
                 localStorage.setItem('email', this.userName);
+                this.toolsDisadled = false;
+                this.progressCircle = false;
                 // console.log('onSubmit res', res);
                 this.back();
             } else {
+                this.progressCircle = false;
                 this.existsMessage = true;
+                this.toolsDisadled = false;
                 // console.log('wrong');
             }
         }, (err)=>{
             // console.log('onSubmit error ', err);
             this.handleError(err); // = <any>err;
+            this.progressCircle = false;
+            this.errMessage = true;
+            this.toolsDisadled = false;
         });
     }
 
