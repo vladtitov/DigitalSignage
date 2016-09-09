@@ -14,7 +14,7 @@ var core_1 = require('@angular/core');
 var checkbox_1 = require('@angular2-material/checkbox');
 var core_2 = require('@angular2-material/core');
 var input_1 = require('@angular2-material/input');
-// import { MdProgressCircleModule } from '@angular2-material/progress-circle';
+var progress_circle_1 = require('@angular2-material/progress-circle');
 // import { MdToolbarModule } from '@angular2-material/toolbar';
 var MaterialModule = (function () {
     function MaterialModule() {
@@ -33,6 +33,7 @@ var MaterialModule = (function () {
                 checkbox_1.MdCheckboxModule,
                 core_2.MdCoreModule,
                 input_1.MdInputModule,
+                progress_circle_1.MdProgressCircleModule,
             ]
         }), 
         __metadata('design:paramtypes', [])

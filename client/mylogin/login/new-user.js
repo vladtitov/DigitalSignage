@@ -16,9 +16,11 @@ var NewUser = (function () {
         this.router = router;
         this.loginService = loginService;
         this.cursorStyle = 'pointer';
+        this.errMessage = false;
         this.existsMessage = false;
         this.hrefDisadled = false;
         this.toolsDisadled = false;
+        this.progressCircle = false;
     }
     NewUser.prototype.ngOnInit = function () {
         var _this = this;
@@ -32,19 +34,29 @@ var NewUser = (function () {
         var _this = this;
         // console.log('onSubmit ', value);
         this.toolsDisadled = true;
-        setTimeout(function () { _this.toolsDisadled = false; }, 1000);
+        this.existsMessage = false;
+        this.errMessage = false;
+        this.progressCircle = true;
+        // setTimeout(()=>{this.toolsDisadled = false},1000);
         this.loginService.createAccount(value).subscribe(function (res) {
             if (res.token) {
                 localStorage.setItem('email', _this.userName);
+                _this.toolsDisadled = false;
+                _this.progressCircle = false;
                 // console.log('onSubmit res', res);
                 _this.back();
             }
             else {
+                _this.progressCircle = false;
                 _this.existsMessage = true;
+                _this.toolsDisadled = false;
             }
         }, function (err) {
             // console.log('onSubmit error ', err);
             _this.handleError(err); // = <any>err;
+            _this.progressCircle = false;
+            _this.errMessage = true;
+            _this.toolsDisadled = false;
         });
     };
     NewUser.prototype.handleError = function (error) {
@@ -56,7 +68,7 @@ var NewUser = (function () {
     NewUser = __decorate([
         core_1.Component({
             selector: 'new-user',
-            template: "\n<div>\n            \n<!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Back</a>-->\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Create Account</h3>\n                        <hr>\n                        <div *ngIf=\"existsMessage\" class=\"errorMessage\">\n                            <h5> This username already exists </h5>\n                            <hr>\n                        </div>\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    [(ngModel)] = \"userName\"\n                                    required\n                                    type=\"email\"\n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button\n                                class=\"btn btn-primary btn-lg btn-block\"\n                                type=\"submit\" value=\"New User\"\n                                [style.cursor]=\"cursorStyle\"\n                                [disabled]=\"toolsDisadled\"><span class=\"fa fa-user-plus\"></span>Create Account</button>\n                        </form>\n                        <a class=\"panel-footer\"\n                            (click)=\"back()\"\n                            [style.pointer-events]=\"hrefDisadled ? 'none' : 'auto'\"><span class=\"fa fa-arrow-left\"></span>Back</a>\n                    </div>\n                </div>\n                \n            </div>\n\n</div>",
+            template: "\n<div>\n            \n<!--<a [routerLink]=\"['./sign-in']\" class=\"btn\"><span class=\"fa fa-user-plus\"></span> Back</a>-->\n\n            <div class=\"loginform\">\n                <div class=\"logo\">\n                    <img src=\"../../images/hero.png\" alt=\"\">\n                </div>\n                \n                <div class=\"content\">\n                    <div class=\"panel\" id=\"login\">\n                        <h3>Create Account</h3>\n                        <hr>\n                        <div *ngIf=\"progressCircle\">\n                            <div layout=\"row\" layout-sm=\"column\" layout-align=\"space-around\">\n                                <md-progress-circle mode=\"indeterminate\" [style.width]=\"'50px'\" color=\"accent\"></md-progress-circle>\n                            </div>\n                            <hr>\n                        </div>\n                        <div *ngIf=\"existsMessage || errMessage\" class=\"errorMessage\">\n                            <h5 *ngIf=\"existsMessage\"> This username already exists </h5>\n                            <h5 *ngIf=\"errMessage\"> Error processing. Please reload. </h5>\n                            <hr>\n                        </div>\n                        <form (ngSubmit)=\"onSubmit(loginForm.value)\" #loginForm=\"ngForm\">                \n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Email address\" \n                                    name=\"username\" \n                                    [(ngModel)] = \"userName\"\n                                    required\n                                    type=\"email\"\n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>\n                            <div class=\"form-group\">\n                                <md-input \n                                    placeholder=\"Password\"\n                                    name=\"password\"\n                                    ngModel\n                                    required\n                                    minLength = \"6\"\n                                    [type]=\"showPass ? 'text': 'password'\" \n                                    style=\"width: 100%\">\n                                </md-input>\n                            </div>                            \n                            <md-checkbox [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"showPass\" aria-label=\"Checkbox 1\">\n                                Show password\n                            </md-checkbox>\n                            <button\n                                class=\"btn btn-primary btn-lg btn-block\"\n                                type=\"submit\" value=\"New User\"\n                                [style.cursor]=\"cursorStyle\"\n                                [disabled]=\"toolsDisadled\"><span class=\"fa fa-user-plus\"></span>Create Account</button>\n                        </form>\n                        <a class=\"panel-footer\"\n                            (click)=\"back()\"\n                            [style.pointer-events]=\"hrefDisadled ? 'none' : 'auto'\"><span class=\"fa fa-arrow-left\"></span>Back</a>\n                    </div>\n                </div>\n                \n            </div>\n\n</div>",
             styles: ["\n        h3{\n            color: #ff0000;\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [router_1.Router, login_service_1.LoginService])
