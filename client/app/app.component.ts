@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import './rxjs-operators';
 
@@ -25,12 +25,16 @@ import { Observable } from 'rxjs/Observable';
     directives: [ROUTER_DIRECTIVES]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 
     constructor(private http:Http) { }
 
     private dataUrl = 'account/';
     private logoutUrl ='logout';
+
+    ngOnInit(){
+        $('#PRELOADER').remove()
+    }
 
     logoutServer(){
 

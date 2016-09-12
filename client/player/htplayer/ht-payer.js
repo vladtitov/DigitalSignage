@@ -41,6 +41,20 @@ var htplayer;
             this.layout = layout;
             this.setNewViewPorts();
         };
+        HTMyPlayer.prototype.loadPlaylist = function (playlist_id) {
+            var _this = this;
+            $.get(htplayer.playerURL + 'layouts/byid/' + playlist_id).done(function (res) {
+                console.log(res);
+                if (res.data) {
+                    _this.layout = new htplayer.VOLayout(res.data);
+                    _this.setNewViewPorts();
+                    if (_this.onLayotLoaded)
+                        _this.onLayotLoaded();
+                }
+                else
+                    console.warn(res);
+            });
+        };
         HTMyPlayer.prototype.loadLayout = function (layout_id) {
             var _this = this;
             $.get(htplayer.playerURL + 'layouts/byid/' + layout_id).done(function (res) {
