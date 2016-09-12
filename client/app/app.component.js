@@ -19,6 +19,9 @@ var AppComponent = (function () {
         this.dataUrl = 'account/';
         this.logoutUrl = 'logout';
     }
+    AppComponent.prototype.ngOnInit = function () {
+        $('#PRELOADER').remove();
+    };
     AppComponent.prototype.logoutServer = function () {
         var _this = this;
         // let body = JSON.stringify(data);

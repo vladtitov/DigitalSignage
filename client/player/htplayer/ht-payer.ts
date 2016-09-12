@@ -68,6 +68,17 @@ module htplayer{
             this.setNewViewPorts();
         }
 
+        loadPlaylist(playlist_id:number):void{
+            $.get(playerURL+'layouts/byid/'+playlist_id).done((res)=>{
+                console.log(res);
+                if(res.data){
+                    this.layout = new VOLayout(res.data);
+                    this.setNewViewPorts();
+                    if(this.onLayotLoaded)this.onLayotLoaded();
+                }else console.warn(res)
+            })
+        }
+
         loadLayout(layout_id:number):void{
             $.get(playerURL+'layouts/byid/'+layout_id).done((res)=>{
                 console.log(res);

@@ -40,7 +40,33 @@
 <!-- 3. Display the application -->
 <body>
 
-<my-app>Loading...</my-app>
-<my-table></my-table>
+<my-app></my-app>
+<div id="PRELOADER"> <style>
+    #PRELOADER{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: black;
+        opacity: 0.5;
+    }
+    #PRELOADER div{
+        color: white;
+        position: absolute;
+        width: 150px;
+        height: 50px;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        font-size: x-large;
+    }
+</style>
+    <div >Loading...</div>
+    <!--<img src="images/ajax-loading_2x.gif"/>-->
+</div>
+
 </body>
 </html>
