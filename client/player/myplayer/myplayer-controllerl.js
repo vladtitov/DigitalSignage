@@ -1,22 +1,38 @@
 /**
  * Created by Vlad on 8/11/2016.
  */
+///<reference path="../../typings/jquery/jquery.d.ts"/>
 ///<reference path="AssetsModel.ts"/>
 var myplayer;
 (function (myplayer) {
     ////SUM of playlist + Viewport
     var PlayerController = (function () {
-        function PlayerController(serverURL, obj) {
-            this.serverURL = serverURL;
+        function PlayerController() {
             this.timestamp = 0;
-            this.myinterval = 0;
+            this.serverURL = '/api/';
             this.timer = 0;
             this.currentIndex = -1;
+            var obj = {
+                x: 0,
+                y: 0,
+                width: 1080,
+                height: 1080
+            };
             this.model = new myplayer.PlayerModel(obj);
             this.view = new myplayer.PlayerView(this.model);
-            this.playlist_id = this.model.playlist_id;
-            this.loadPlaylist();
-            this.startInterval();
+            // this.playlist_id = this.model.playlist_id;
+            var hrefArr = window.location.href.split('/');
+            var ind = hrefArr.indexOf('playlist_id');
+            if (ind != -1) {
+                this.playlist_id = hrefArr[ind + 1];
+                this.loadPlaylist();
+            }
+            else {
+                ind = hrefArr.indexOf('assets');
+                if (ind != -1) {
+                    var assets = hrefArr[ind + 1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
+                }
+            }
         }
         PlayerController.prototype.loadPlaylist = function () {
             var _this = this;
@@ -29,38 +45,6 @@ var myplayer;
                     _this.model.setItems(ar);
                     if (_this.onReady)
                         _this.onReady();
-                }
-            });
-        };
-        PlayerController.prototype.needNewPlaylist = function () {
-            console.log('new  playlist');
-            this.loadPlaylist();
-        };
-        PlayerController.prototype.startInterval = function () {
-            var _this = this;
-            if (this.myinterval === 0)
-                this.myinterval = setInterval(function () { return _this.loadPlaylistStats(); }, 10000);
-        };
-        PlayerController.prototype.stopInterval = function () {
-            clearInterval(this.myinterval);
-            this.myinterval = 0;
-        };
-        PlayerController.prototype.loadPlaylistStats = function () {
-            var _this = this;
-            this.startInterval();
-            var url = this.serverURL + '/playlist-timestamp/' + this.playlist_id;
-            // console.log(url);
-            $.get(url).done(function (res) {
-                //  console.log(res);
-                if (res.data) {
-                    if (_this.timestamp == 0) {
-                        _this.timestamp = res.data.timestamp;
-                        return;
-                    }
-                    if (_this.timestamp != res.data.timestamp)
-                        _this.needNewPlaylist();
-                    else
-                        console.log('old  playlist');
                 }
             });
         };
