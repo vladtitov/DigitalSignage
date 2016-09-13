@@ -106,3 +106,4 @@ var TableModel = (function () {
     return TableModel;
 }());
 exports.TableModel = TableModel;
+//# sourceMappingURL=TableModel.js.map

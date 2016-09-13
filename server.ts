@@ -112,6 +112,17 @@ app.get('/preview/*', function(req:express.Request, res:express.Response){
     // res.sendFile('player-preview.html',{ 'root': WWW});
 });
 
+app.get('/playlist-preview/*', function(req:express.Request, res:express.Response){
+    if(SETTINGS.ENV == 'prod'){
+        var folder = req.session['user_folder'];
+        if(folder) res.sendFile('playlist-preview.html',{ 'root': WWW});
+        else res.redirect('/login');
+    } else if(SETTINGS.ENV == 'dev') {
+        res.sendFile('playlist-preview.html',{ 'root': WWW});
+    }
+
+    // res.sendFile('player-preview.html',{ 'root': WWW});
+});
 
 app.get('/dashboard', function(req:express.Request, res:express.Response){
     if(SETTINGS.ENV == 'prod'){

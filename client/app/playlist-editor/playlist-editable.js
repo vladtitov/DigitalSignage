@@ -26,7 +26,7 @@ var PlaylistEditable = (function () {
         this.router = router;
         this.isMove = false;
         this.addToCartEnd = new core_1.EventEmitter();
-        this.playlistBaseUrl = window.location.protocol + '//' + window.location.host + '/preview/playlist/';
+        this.playlistBaseUrl = window.location.protocol + '//' + window.location.host + '/playlist-preview/';
         this.playlistProps = new models_1.VOPlayListProps({});
         this.isInProgress = false;
         this.selectInnerEmitter = new core_1.EventEmitter();
@@ -60,6 +60,8 @@ var PlaylistEditable = (function () {
             total += item.lasting;
         });
         this.playlistProps.duration = total;
+        if (!total)
+            this.previewShow = false;
         // console.log('total', total);
     };
     PlaylistEditable.prototype.createCover = function () {
@@ -136,11 +138,14 @@ var PlaylistEditable = (function () {
         this.sub = this.route.params.subscribe(function (params) {
             var id = +params['id']; // (+) converts string 'id' to a number
             if (id == -1) {
+                _this.previewShow = false;
                 _this.toolsDisadled = true;
-                _this.playlistUrl = null;
+                _this.assetsUrl = _this.playlistBaseUrl + 'assets/';
             }
             else {
-                _this.playlistUrl = _this.playlistBaseUrl + id;
+                _this.previewShow = true;
+                _this.playlistUrl = _this.playlistBaseUrl + 'playlist_id/' + id;
+                _this.playlistPreviewUrl = _this.playlistUrl;
             }
             // console.log(params);
             if (!isNaN(id))
@@ -232,9 +237,30 @@ var PlaylistEditable = (function () {
         else if (evt.offsetX > 100) {
         }
     };
+    PlaylistEditable.prototype.addAssetToUrl = function (asset_id) {
+        var _this = this;
+        if (!this.playlistUrl) {
+            this.playlistPreviewUrl = this.assetsUrl + asset_id + ',';
+        }
+        else {
+            this.playlistPreviewUrl = this.playlistBaseUrl + 'assets/';
+            this.playlistItems.forEach(function (item) {
+                _this.playlistPreviewUrl += item.asset_id + ',';
+            });
+            // this.playlistPreviewUrl += asset_id + ',';
+            console.log('playlistPreviewUrl end', this.playlistPreviewUrl);
+        }
+        // var hrefArr:string[] = this.assetsUrl.split('/');
+        // var ind:number = hrefArr.indexOf('assets');
+        // if(ind === (hrefArr.length - 1)){
+        //     this.playlistPreviewUrl = this.assetsUrl + asset_id;
+        // } else {
+        //     this.playlistPreviewUrl = this.assetsUrl + ',' + asset_id;
+        // }
+    };
     PlaylistEditable.prototype.addAssetToCollection = function (item) {
         // console.log('addAssetToCollection');
-        // console.log('item', item);
+        console.log('item', item);
         if (!item)
             return;
         // var vo:VOPlayLists_Assets = new VOPlayLists_Assets({item,position:this.playlistItems.length});
@@ -251,6 +277,8 @@ var PlaylistEditable = (function () {
         // console.log('this.selectedItem ', this.selectedItem);
         // console.log('this.playlistItems ', this.playlistItems);
         this.calculateDuration();
+        this.addAssetToUrl(vo.asset_id);
+        this.previewShow = true;
         // this.addToCartEnd.emit(null);
     };
     PlaylistEditable.prototype.onDragEnd = function (evt, item) {
@@ -342,7 +370,7 @@ var PlaylistEditable = (function () {
     PlaylistEditable = __decorate([
         core_1.Component({
             selector: 'playlist-editable',
-            template: "\n<div>       \n            \n            <a class=\"btn btn-default\" (click)=\"createPlayList()\"><span class=\"fa fa-plus\"> </span> Create New</a>\n            <a class=\"btn btn-default\" (click)=\"deletePlayList()\" [class.disabled]=\"toolsDisadled\" [ng2-md-tooltip]=\"deleteTooltip\">\n                <span class=\"fa fa-remove\"></span> Delete</a>             \n            <a class=\"btn btn-default\" (click)=\"saveOnServer()\" [class.disabled]=\"isInProgress\" [ng2-md-tooltip]=\"saveTooltip\" style=\"margin-right: 100px\">\n                <span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                    \n            <small *ngIf=\"playlistProps.id>0\" style=\"margin-right: 10px\">ID: {{playlistProps.id}};</small>\n            <label class=\"PNameLabel\" for=\"PName\">Playlist Name</label>\n            <input id=\"PName\" type=\"text\" [(ngModel)]=\"playlistProps.label\" name=\"plalistname\"/>\n            \n            <span> Duration:</span><span>{{playlistProps.duration}}</span>\n            <a class=\"previewUrl\" *ngIf=\"playlistUrl && playlistProps.id\" target=\"_blank\" href=\"{{playlistUrl}}\"><span class=\"fa fa-eye\"></span> Preview</a>\n            <div class=\"pl-container\">\n                <div class=\"pl-content\" >\n                    <div class=\"timeline\" flex layout=\"row\" >\n                        <div *ngFor=\"let mytime of timeCells\">\n                            <time-cell [timecell]=\"mytime\" ></time-cell>\n                        </div>                 \n                    </div>\n                    <div flex layout=\"row\"  class = \"cart\" (dragend)=\"onItemDragend(item)\">\n                        <div class=\"item\"  *ngFor=\"let item of playlistItems; let i = index\" layout=\"row\"  (dragend)=\"onDragItemEnd($event, item)\">\n                            <div>                                                        \n                                <playlist-editable-item\n                                    [item]=\"item\" [position]=\"i\" #myitem                               \n                                    (dragmove)=\"onDragMove($event,item)\"\n                                    (dragend)=\"onDragEnd($event,item)\" \n                                    (onremovemeDrag)=\"onremovemeDrag($event)\"\n                                    (dragstart)=\"onDragItemStart($event,item,myitem)\" \n                                    (dragover)=\"onItemDragOver($event,item)\"                                                       \n                                ></playlist-editable-item>\n                            </div>\n                        </div>\n                        <div id=\"emtyline\">\n                                                               \n                        </div>\n                    </div>\n                </div>                 \n            </div>\n</div>\n",
+            template: "\n<div>       \n            \n            <a class=\"btn btn-default\" (click)=\"createPlayList()\"><span class=\"fa fa-plus\"> </span> Create New</a>\n            <a class=\"btn btn-default\" (click)=\"deletePlayList()\" [class.disabled]=\"toolsDisadled\" [ng2-md-tooltip]=\"deleteTooltip\">\n                <span class=\"fa fa-remove\"></span> Delete</a>             \n            <a class=\"btn btn-default\" (click)=\"saveOnServer()\" [class.disabled]=\"isInProgress\" [ng2-md-tooltip]=\"saveTooltip\" style=\"margin-right: 100px\">\n                <span class=\"fa fa-life-saver\"></span> Save on Server</a>\n                    \n            <small *ngIf=\"playlistProps.id>0\" style=\"margin-right: 10px\">ID: {{playlistProps.id}};</small>\n            <label class=\"PNameLabel\" for=\"PName\">Playlist Name</label>\n            <input id=\"PName\" type=\"text\" [(ngModel)]=\"playlistProps.label\" name=\"plalistname\"/>\n            \n            <span> Duration:</span><span>{{playlistProps.duration}}</span>\n            \n            <a class=\"previewUrl\" *ngIf=\"previewShow\" target=\"_blank\" href=\"{{playlistPreviewUrl}}\"><span class=\"fa fa-eye\"></span> Preview</a>\n            \n            <div class=\"pl-container\">\n                <div class=\"pl-content\" >\n                    <div class=\"timeline\" flex layout=\"row\" >\n                        <div *ngFor=\"let mytime of timeCells\">\n                            <time-cell [timecell]=\"mytime\" ></time-cell>\n                        </div>                 \n                    </div>\n                    <div flex layout=\"row\"  class = \"cart\" (dragend)=\"onItemDragend(item)\">\n                        <div class=\"item\"  *ngFor=\"let item of playlistItems; let i = index\" layout=\"row\"  (dragend)=\"onDragItemEnd($event, item)\">\n                            <div>                                                        \n                                <playlist-editable-item\n                                    [item]=\"item\" [position]=\"i\" #myitem                               \n                                    (dragmove)=\"onDragMove($event,item)\"\n                                    (dragend)=\"onDragEnd($event,item)\" \n                                    (onremovemeDrag)=\"onremovemeDrag($event)\"\n                                    (dragstart)=\"onDragItemStart($event,item,myitem)\" \n                                    (dragover)=\"onItemDragOver($event,item)\"                                                       \n                                ></playlist-editable-item>\n                            </div>\n                        </div>\n                        <div id=\"emtyline\">\n                                                               \n                        </div>\n                    </div>\n                </div>                 \n            </div>\n</div>\n",
             styles: ["\n            .pl-container{\n                width: 100%;\n                min-height: 170px;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n                margin-top: 10px;\n            }\n            .pl-content{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n            .title{\n            \n            }\n            .PNameLabel{\n\n            }\n            time-cell{\n                width: 128px;\n                height: 20px;\n                background-color: #0000AA;\n                color: white;                \n            }\n            .previewUrl{\n                float: right;\n                margin-top: 6px;\n            }\n                \n"],
             directives: [playlist_editable_item_1.PlayListItem, PlayListSpacer_1.PlayListSpacer, TimeCell_1.TimeCellCompnent],
             providers: [playlist_service_1.PlayListService]

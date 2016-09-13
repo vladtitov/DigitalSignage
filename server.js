@@ -64,6 +64,18 @@ app.get('/preview/*', function (req, res) {
         res.sendFile('player-preview.html', { 'root': WWW });
     }
 });
+app.get('/playlist-preview/*', function (req, res) {
+    if (SETTINGS.ENV == 'prod') {
+        var folder = req.session['user_folder'];
+        if (folder)
+            res.sendFile('playlist-preview.html', { 'root': WWW });
+        else
+            res.redirect('/login');
+    }
+    else if (SETTINGS.ENV == 'dev') {
+        res.sendFile('playlist-preview.html', { 'root': WWW });
+    }
+});
 app.get('/dashboard', function (req, res) {
     if (SETTINGS.ENV == 'prod') {
         var folder = req.session['user_folder'];
@@ -180,3 +192,4 @@ app.listen(port, function () {
     console.log('http://127.0.0.1:' + port);
     console.log('http://127.0.0.1:' + port + '/api');
 });
+//# sourceMappingURL=server.js.map
