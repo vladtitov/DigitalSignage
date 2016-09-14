@@ -39,7 +39,10 @@ var LoginService = (function () {
         // let headers = new Headers({ 'Content-Type': 'application/json' }); //'application/x-www-form-urlencoded'
         // let options = new RequestOptions({ headers: headers });
         return this.http.post(this.dataUrl + this.createUrl, data)
-            .map(function (res) { return new models_1.VOUserResult(res.json().data); })
+            .map(function (res) {
+            console.log('create account', res.json());
+            return new models_1.VOUserResult(res.json().data);
+        })
             .catch(this.handleError);
     };
     LoginService.prototype.resetPassword = function (data) {
