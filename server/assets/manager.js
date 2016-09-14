@@ -161,4 +161,3 @@ router.post('/upload', function (req, response) {
     });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

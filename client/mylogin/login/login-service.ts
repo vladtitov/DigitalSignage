@@ -38,7 +38,9 @@ export class LoginService {
         // let options = new RequestOptions({ headers: headers });
 
         return this.http.post(this.dataUrl+this.createUrl, data)
-            .map((res)=> {return new VOUserResult(res.json().data)})
+            .map((res)=> {
+                console.log('create account', res.json());
+                return new VOUserResult(res.json().data)})
             .catch(this.handleError);
     }
 

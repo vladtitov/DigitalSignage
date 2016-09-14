@@ -126,4 +126,3 @@ var PlaylistItemsTable = (function (_super) {
     return PlaylistItemsTable;
 }(TableModel_1.TableModel));
 exports.PlaylistItemsTable = PlaylistItemsTable;
-//# sourceMappingURL=PlaylistItemsTable.js.map
