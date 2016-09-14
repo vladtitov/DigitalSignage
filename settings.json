@@ -1,5 +1,5 @@
 {
-  "ENV":"prod",
+  "ENV":"dev",
   "dev_folder":"clientAssets\/folder_dev",
   "video_server":"http://192.168.1.12:56555"
 }
