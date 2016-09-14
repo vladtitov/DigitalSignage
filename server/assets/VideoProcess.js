@@ -7,3 +7,4 @@ var VideoProcess = (function () {
     return VideoProcess;
 }());
 exports.VideoProcess = VideoProcess;
+//# sourceMappingURL=VideoProcess.js.map

@@ -41,16 +41,19 @@ var myplayer;
             // }
         }
         PlayerController.prototype.loadAssets = function () {
-            var url = this.serverURL + 'assets/select-assets/' + this.assetsID;
+            var _this = this;
+            var url = this.serverURL + 'assets/select-assets/';
             console.log('loadAssets  ' + url);
-            // $.get(url).done((res)=>{
-            //     if(res.data && res.data.list){
-            //         this.timestamp =0;
-            //         var ar:VOAssetItem[] = res.data.list.map(item=>new VOAssetItem(item));
-            //         this.model.setItems(ar);
-            //         if(this.onReady)this.onReady();
-            //     }
-            // })
+            $.post(url, { assetsID: this.assetsID }).done(function (res) {
+                console.log('res', res);
+                if (res.data && res.data.length) {
+                    _this.timestamp = 0;
+                    var ar = res.data.map(function (item) { return new myplayer.VOAssetItem(item); });
+                    _this.model.setItems(ar);
+                    if (_this.onReady)
+                        _this.onReady();
+                }
+            });
         };
         PlayerController.prototype.loadPlaylist = function () {
             var _this = this;
