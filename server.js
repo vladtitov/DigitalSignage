@@ -192,4 +192,3 @@ app.listen(port, function () {
     console.log('http://127.0.0.1:' + port);
     console.log('http://127.0.0.1:' + port + '/api');
 });
-//# sourceMappingURL=server.js.map

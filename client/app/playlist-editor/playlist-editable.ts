@@ -34,7 +34,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             
             <span> Duration:</span><span>{{playlistProps.duration}}</span>
             
-            <a class="previewUrl" *ngIf="previewShow" target="_blank" href="{{playlistPreviewUrl}}"><span class="fa fa-eye"></span> Preview</a>
+            <a class="previewUrl" *ngIf="previewShow" target="_blank" (click)="onPreview()"><span class="fa fa-eye"></span> Preview</a>
             
             <div class="pl-container">
                 <div class="pl-content" >
@@ -60,7 +60,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
                                                                
                         </div>
                     </div>
-                </div>                 
+                </div>
             </div>
 </div>
 `,
@@ -94,6 +94,9 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
                 float: right;
                 margin-top: 6px;
             }
+            a {
+                cursor: pointer;
+            }
                 
 `],
     directives:[PlayListItem,PlayListSpacer,TimeCellCompnent],
@@ -120,10 +123,8 @@ export class PlaylistEditable implements OnInit{
 
     @Output () addToCartEnd = new EventEmitter();
 
-    playlistUrl:string;
-    assetsUrl:string;
     playlistPreviewUrl:string;
-    playlistBaseUrl:string = window.location.protocol+'//'+window.location.host+'/playlist-preview/';
+    playlistBaseUrl:string = window.location.protocol+'//'+window.location.host+'/playlist-preview/assets/';
 
     inputItem:VOAsset;
     playlist:VOPlaylist;
@@ -155,6 +156,19 @@ export class PlaylistEditable implements OnInit{
     @Output() selectInnerEmitter:EventEmitter<{}> = new EventEmitter();
     onremovemeDrag(item){
         this.selectInnerEmitter.next(item);
+    }
+
+    onPreview(){
+        var assets = this.playlistItems.map((item:VOPlayLists_Assets)=>{
+           return item.id;
+        });
+
+        this.playlistPreviewUrl = this.playlistBaseUrl + assets.join(',');
+
+        console.log('assets', assets);
+        console.log('playlistPreviewUrl', this.playlistPreviewUrl);
+
+        window.open(this.playlistPreviewUrl,"_blank");
     }
 
     calculateDuration():void{
@@ -247,12 +261,8 @@ export class PlaylistEditable implements OnInit{
             if(id == -1) {
                 this.previewShow = false;
                 this.toolsDisadled = true;
-                this.assetsUrl = this.playlistBaseUrl + 'assets/';
-                // this.playlistUrl = null;
             } else {
                 this.previewShow = true;
-                this.playlistUrl = this.playlistBaseUrl + 'playlist_id/' + id;
-                this.playlistPreviewUrl = this.playlistUrl;
             }
             // console.log(params);
             if(!isNaN(id)) this.playlistservice.getData(id);
@@ -353,32 +363,11 @@ export class PlaylistEditable implements OnInit{
       }
     }
 
-    addAssetToUrl(asset_id:number){
-        if(!this.playlistUrl){
-            this.playlistPreviewUrl = this.assetsUrl + asset_id + ',';
-        } else {
-            this.playlistPreviewUrl = this.playlistBaseUrl + 'assets/';
-            this.playlistItems.forEach((item:VOPlayLists_Assets)=>{
-                this.playlistPreviewUrl += item.asset_id + ',';
-            });
-            // this.playlistPreviewUrl += asset_id + ',';
-            console.log('playlistPreviewUrl end', this.playlistPreviewUrl);
-        }
-
-        // var hrefArr:string[] = this.assetsUrl.split('/');
-        // var ind:number = hrefArr.indexOf('assets');
-        // if(ind === (hrefArr.length - 1)){
-        //     this.playlistPreviewUrl = this.assetsUrl + asset_id;
-        // } else {
-        //     this.playlistPreviewUrl = this.assetsUrl + ',' + asset_id;
-        // }
-
-    }
 
     addAssetToCollection(item:VOAsset):void{
         // console.log('addAssetToCollection');
-        console.log('item', item);
         if(!item) return;
+        // console.log('item id', item.id);
             // var vo:VOPlayLists_Assets = new VOPlayLists_Assets({item,position:this.playlistItems.length});
             var vo:VOPlayLists_Assets = new VOPlayLists_Assets(item);
         // console.log('vo', vo.lasting);
@@ -391,7 +380,6 @@ export class PlaylistEditable implements OnInit{
             // console.log('this.selectedItem ', this.selectedItem);
             // console.log('this.playlistItems ', this.playlistItems);
             this.calculateDuration();
-            this.addAssetToUrl(vo.asset_id);
             this.previewShow = true;
         // this.addToCartEnd.emit(null);
     }

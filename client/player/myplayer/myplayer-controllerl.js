@@ -22,18 +22,36 @@ var myplayer;
             this.view = new myplayer.PlayerView(this.model);
             // this.playlist_id = this.model.playlist_id;
             var hrefArr = window.location.href.split('/');
-            var ind = hrefArr.indexOf('playlist_id');
+            var ind = hrefArr.indexOf('assets');
             if (ind != -1) {
-                this.playlist_id = hrefArr[ind + 1];
-                this.loadPlaylist();
+                this.assetsID = hrefArr[ind + 1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
+                console.log('assets', this.assetsID);
+                this.loadAssets();
             }
-            else {
-                ind = hrefArr.indexOf('assets');
-                if (ind != -1) {
-                    var assets = hrefArr[ind + 1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
-                }
-            }
+            // var ind:number = hrefArr.indexOf('playlist_id');
+            // if(ind != -1){
+            //     this.playlist_id = hrefArr[ind+1];
+            //     this.loadPlaylist()
+            // } else {
+            //     ind = hrefArr.indexOf('assets');
+            //     if(ind != -1) {
+            //         var assets = hrefArr[ind+1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
+            //
+            //     }
+            // }
         }
+        PlayerController.prototype.loadAssets = function () {
+            var url = this.serverURL + 'assets/select-assets/' + this.assetsID;
+            console.log('loadAssets  ' + url);
+            // $.get(url).done((res)=>{
+            //     if(res.data && res.data.list){
+            //         this.timestamp =0;
+            //         var ar:VOAssetItem[] = res.data.list.map(item=>new VOAssetItem(item));
+            //         this.model.setItems(ar);
+            //         if(this.onReady)this.onReady();
+            //     }
+            // })
+        };
         PlayerController.prototype.loadPlaylist = function () {
             var _this = this;
             var url = this.serverURL + '/playlist/' + this.playlist_id;

@@ -90,6 +90,17 @@ router.get('/byid/:id', function (req, res) {
         onError(err, res);
     });
 });
+router.post('/select-assets/', function (request, response) {
+    var folder = request.session['user_folder'];
+    if (!folder) {
+        response.json({ error: 'login' });
+        return;
+    }
+    var body = request.body;
+    var assetsID = body.assetsID.split(',').map(Number);
+    var ctr = new AssetsController_1.AssetsController();
+    ctr.getAssets(assetsID, folder).done(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
+});
 router.get('/used-playlist/:id', function (request, response) {
     var folder = request.session['user_folder'];
     if (!folder) {
@@ -141,7 +152,7 @@ router.post('/upload', function (req, response) {
         }
         else if (asset.type === 'video') {
             var video = new VideoServerConnect_1.VideoServerConnect(folder);
-            video.insertProcess(asset, folder).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
+            video.insertProcess(asset).then(function (res) { return response.json({ data: res }); }, function (err) { return response.json({ error: err }); });
         }
         console.log('uploadFile done');
     }, function (error) {
@@ -150,4 +161,3 @@ router.post('/upload', function (req, response) {
     });
 });
 module.exports = router;
-//# sourceMappingURL=manager.js.map

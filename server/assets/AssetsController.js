@@ -22,7 +22,22 @@ var AssetsController = (function () {
             'WHERE asset_id = ' + id + ')').done(function (res) { return db.runQuery('DELETE FROM playlists_assets WHERE asset_id = ' + id).done(function (res) { return db.runQuery('DELETE FROM assets WHERE id = ' + id).done(function (res) { return deferred.resolve(res); }, function (err) { return deferred.reject(err); }); }, function (err) { return deferred.reject(err); }); }, function (err) { return deferred.reject(err); });
         return deferred.promise;
     };
+    AssetsController.prototype.getAssets = function (assetsID, folder) {
+        var deferred = Q.defer();
+        var db = new dbDriver_1.DBDriver(folder);
+        var sql = 'SELECT * FROM assets WHERE id = ' + assetsID.join(' OR id = ');
+        db.queryAll(sql).done(function (res) {
+            var assetsArr = [];
+            for (var i = 0; i < assetsID.length; i++) {
+                res.forEach(function (val) {
+                    if (assetsID[i] === val.id)
+                        assetsArr.push(val);
+                });
+            }
+            deferred.resolve(assetsArr);
+        }, function (err) { return deferred.reject(err); });
+        return deferred.promise;
+    };
     return AssetsController;
 }());
 exports.AssetsController = AssetsController;
-//# sourceMappingURL=AssetsController.js.map

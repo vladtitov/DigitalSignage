@@ -87,4 +87,3 @@ var DevicesController = (function () {
     return DevicesController;
 }());
 exports.DevicesController = DevicesController;
-//# sourceMappingURL=DevicesController.js.map

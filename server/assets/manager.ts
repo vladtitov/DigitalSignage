@@ -118,8 +118,6 @@ router.get('/select-all', function (req:express.Request, res:express.Response) {
     });
 });
 
-
-
 router.post('/byid/:id', function (req:express.Request, res:express.Response) {
     var data:VOAsset = new VOAsset(req.body);
     var folder:string = req.session['user_folder'];
@@ -242,6 +240,25 @@ router.get('/byid/:id', function (req:express.Request, res:express.Response) {
     });
 });
 
+router.post('/select-assets/', function (request:express.Request, response:express.Response) {
+    var folder:string = request.session['user_folder'];
+    if(!folder){
+        response.json({error:'login'});
+        return;
+    }
+    var body:any = request.body;
+
+    var assetsID:number[] = body.assetsID.split(',').map(Number);
+    // console.log('assetsID', assetsID);
+
+    var ctr:AssetsController = new AssetsController();
+
+    ctr.getAssets(assetsID,folder).done(
+        res => response.json({data:res})
+        , err => response.json({error:err})
+    );
+});
+
 router.get('/used-playlist/:id', function (request:express.Request, response:express.Response) {
 
     var folder:string = request.session['user_folder'];
@@ -353,7 +370,7 @@ router.post('/upload', function(req:express.Request,response:express.Response) {
            // response.json({data:'success'});
             var video:VideoServerConnect = new VideoServerConnect(folder);
 
-            video.insertProcess(asset,folder).then(
+            video.insertProcess(asset).then(
                 res => response.json({data:res})
                 ,err => response.json({error: err})
             );

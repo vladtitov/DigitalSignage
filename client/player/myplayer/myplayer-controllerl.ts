@@ -22,6 +22,7 @@ module myplayer{
         onReady:Function;
         serverURL:string = '/api/';
         playlist_id:string;
+        assetsID: string;
 
         constructor () {
             var obj:any = {
@@ -34,19 +35,42 @@ module myplayer{
             this.view = new PlayerView(this.model);
             // this.playlist_id = this.model.playlist_id;
             var hrefArr:string[] = window.location.href.split('/');
-            var ind:number = hrefArr.indexOf('playlist_id');
-            if(ind != -1){
-                this.playlist_id = hrefArr[ind+1];
-                this.loadPlaylist()
-            } else {
-                ind = hrefArr.indexOf('assets');
-                if(ind != -1) {
-                    var assets = hrefArr[ind+1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
 
-                }
+            var ind = hrefArr.indexOf('assets');
+            if(ind != -1) {
+                this.assetsID = hrefArr[ind+1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
+                console.log('assets', this.assetsID);
+                this.loadAssets();
             }
 
 
+            // var ind:number = hrefArr.indexOf('playlist_id');
+            // if(ind != -1){
+            //     this.playlist_id = hrefArr[ind+1];
+            //     this.loadPlaylist()
+            // } else {
+            //     ind = hrefArr.indexOf('assets');
+            //     if(ind != -1) {
+            //         var assets = hrefArr[ind+1]; // /assets/35,48,54,135   SELECT * FROM assets WHERE id = 35 OR id = 48 ..
+            //
+            //     }
+            // }
+
+
+        }
+
+        loadAssets():void{
+            var url:string = this.serverURL+'assets/select-assets/';
+            console.log('loadAssets  '+url);
+            $.post(url,{assetsID:this.assetsID}).done((res)=>{
+                console.log('res', res);
+                if(res.data && res.data.length){
+                    this.timestamp =0;
+                    var ar:VOAssetItem[] = res.data.map(item=>new VOAssetItem(item));
+                    this.model.setItems(ar);
+                    if(this.onReady)this.onReady();
+                }
+            });
         }
 
 

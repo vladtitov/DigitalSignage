@@ -5,6 +5,7 @@ import Promise = Q.Promise;
 
 import {VOAsset, VOPlayLists_Assets, VOPlaylist} from "../../client/app/services/models";
 import {DBDriver} from "../db/dbDriver";
+import {forEach} from "../../client/node_modules/@angular/router/src/utils/collection";
 
 
 
@@ -40,6 +41,34 @@ export class AssetsController{
             )
             , err => deferred.reject(err)
         );
+        return deferred.promise;
+    }
+
+    getAssets(assetsID:number[], folder:string): Q.Promise<any>{
+        var deferred: Q.Deferred<any> = Q.defer();
+        var db = new DBDriver(folder);
+
+        // var assetsIdSql = assetsID.map((val)=>{
+        //     return 'id = ' + val;
+        // });
+
+        var sql:string = 'SELECT * FROM assets WHERE id = ' + assetsID.join(' OR id = ');
+
+        db.queryAll(sql).done(
+            (res:VOAsset[]) => {
+                // console.log('res', res);
+                var assetsArr:VOAsset[] = [];
+                for(var i = 0; i<assetsID.length; i++){
+                    res.forEach((val:VOAsset)=>{
+                        if(assetsID[i] === val.id) assetsArr.push(val);
+                    });
+                }
+
+                deferred.resolve(assetsArr)
+            }
+            , err => deferred.reject(err)
+        );
+
         return deferred.promise;
     }
 

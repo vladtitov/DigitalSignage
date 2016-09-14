@@ -28,18 +28,28 @@ var myplayer;
             this.model = new myplayer.PlayerModel(obj);
             this.view = new myplayer.PlayerView(this.model);
             var hrefArr = window.location.href.split('/');
-            var ind = hrefArr.indexOf('playlist_id');
+            var ind = hrefArr.indexOf('assets');
             if (ind != -1) {
-                this.playlist_id = hrefArr[ind + 1];
-                this.loadPlaylist();
-            }
-            else {
-                ind = hrefArr.indexOf('assets');
-                if (ind != -1) {
-                    var assets = hrefArr[ind + 1];
-                }
+                this.assetsID = hrefArr[ind + 1];
+                console.log('assets', this.assetsID);
+                this.loadAssets();
             }
         }
+        PlayerController.prototype.loadAssets = function () {
+            var _this = this;
+            var url = this.serverURL + 'assets/select-assets/';
+            console.log('loadAssets  ' + url);
+            $.post(url, { assetsID: this.assetsID }).done(function (res) {
+                console.log('res', res);
+                if (res.data && res.data.length) {
+                    _this.timestamp = 0;
+                    var ar = res.data.map(function (item) { return new myplayer.VOAssetItem(item); });
+                    _this.model.setItems(ar);
+                    if (_this.onReady)
+                        _this.onReady();
+                }
+            });
+        };
         PlayerController.prototype.loadPlaylist = function () {
             var _this = this;
             var url = this.serverURL + '/playlist/' + this.playlist_id;
