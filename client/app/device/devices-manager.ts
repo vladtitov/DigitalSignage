@@ -91,14 +91,14 @@ export class DevicesManager implements OnInit{
                 .subscribe((data:UpdateResult) => {
 
                     if(data.changes){
-                        this.deleteTooltip = {message:'Device '+item.id+' '+item.label+' deleted from database!',tooltip_class:'btn-success'};
+                        this.deleteTooltip = {placement: 'right', message:'Device '+item.id+' '+item.label+' deleted from database!',tooltip_class:'btn-success'};
                         this.router.navigate(['./devices-manager',0]);
                     }else  this.deleteTooltip = {tooltip_class:'btn-danger',message:'Error to delete device'};
                    console.log('onRemoveResponse', data);
                     this.devicesList.refreshData();
                 },
                 error => {
-                    this.deleteTooltip = {message:'Server error',tooltip_class:'btn-danger'};
+                    this.deleteTooltip = {placement: 'right', message:'Server error',tooltip_class:'btn-danger'};
                     this.toolsDisadled = false;
                 });
         }

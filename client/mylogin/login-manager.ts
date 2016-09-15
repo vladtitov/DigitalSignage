@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import './rxjs-operators';
 
@@ -15,6 +15,9 @@ import './rxjs-operators';
 
 export class LoginManager {
 
+    ngOnInit(){
+        $('#PRELOADER').remove();
+    }
 
 }
 

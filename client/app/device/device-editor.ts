@@ -20,7 +20,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             <a class="previewUrl" *ngIf="deviceUrl && currentItem.layout_id" target="_blank" href="{{deviceUrl}}"><span class="fa fa-eye"></span> Preview</a>
             <form role="form" *ngIf="currentItem">
             <!--<span>{{currentItem.id}}</span>-->
-            <div class="form-group" *ngIf="deviceUrl && currentItem.layout_id">
+            <div class="form-group">
                 <label >Divice Url: </label> <small>{{deviceUrl}}</small>
             </div>
             <div class="form-group">

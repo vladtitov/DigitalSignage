@@ -14,6 +14,9 @@ require('./rxjs-operators');
 var LoginManager = (function () {
     function LoginManager() {
     }
+    LoginManager.prototype.ngOnInit = function () {
+        $('#PRELOADER').remove();
+    };
     LoginManager = __decorate([
         core_1.Component({
             selector: 'login-app',
