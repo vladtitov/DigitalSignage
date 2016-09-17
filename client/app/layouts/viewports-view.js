@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var viewport_view_1 = require("./viewport-view");
 var ViewportsView = (function () {
     function ViewportsView(ar, myrouter) {
         this.ar = ar;
@@ -46,7 +45,6 @@ var ViewportsView = (function () {
             selector: 'viewports-view',
             template: "\n               \n               <div class=\"viewports-view\">\n                    <div class=\"mycontent\" #myview *ngFor=\"let item of viewports\">\n                    <viewport-view [item]=\"item\" [viewports]=\"viewports\" (onview)=\"onClickViewport()\"></viewport-view>\n                      \n                    </div>\n               </div>\n              ",
             styles: ["  \n                .mycontent {\n                    position: relative;\n                }\n                \n                viewport-view {\n                    position: absolute;\n                }\n                \n                p {\n                    text-align: center;\n                }\n            "],
-            directives: [router_1.ROUTER_DIRECTIVES, viewport_view_1.ViewPortView]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router])
     ], ViewportsView);

@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require("@angular/core");
 var router_1 = require('@angular/router');
-var layouts_list_cards_1 = require("./layouts-list-cards");
 var layout_editor_service_1 = require("../layout-editor/layout-editor-service");
 var device_editor_service_1 = require("../device/device-editor-service");
 var LayoutsAssembled = (function () {
@@ -75,7 +74,6 @@ var LayoutsAssembled = (function () {
         core_1.Component({
             selector: 'layouts-assembled',
             template: "\n<div>\n            <div class =\"panel-heading\">\n                <h3>Layouts Manager</h3>\n                <nav>\n                    <a [routerLink]=\"['../layout-template/',-1]\" class=\"btn btn-default\"><span class=\"fa fa-plus\"></span> Create New Layout</a>\n                    <a class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\" ></span> Edit Layout</a>\n                    <a #mybtn class=\"btn btn-default\" [class.disabled]=\"!currentItem\" (click)=\"onDeleteClick($evtnt,mybtn)\" [ng2-md-tooltip]=\"deleteTooltip\"><span class=\"fa fa-minus\"></span> Delete Layout</a>\n                </nav>\n            </div>\n            <div class=\"panel-body\">\n                <layouts-list-cards [changesResult]=\"changesResult\" (onselect)=\"onLayoutSelected($event)\"  ></layouts-list-cards>\n            </div>\n</div>\n",
-            directives: [router_1.ROUTER_DIRECTIVES, layouts_list_cards_1.LayoutsListCards],
             providers: [layout_editor_service_1.LayoutEditorService, device_editor_service_1.DeviceEditorService]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, layout_editor_service_1.LayoutEditorService, device_editor_service_1.DeviceEditorService])

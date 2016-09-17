@@ -6,7 +6,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 
 import {RSSService, RSSItem} from "../services/rss-service";
-import {DomSanitizationService, SafeHtml} from "@angular/platform-browser";
+// import {DomSanitizationService, SafeHtml} from "@angular/platform-browser";
 import {buffer} from "rxjs/operator/buffer";
 
 @Component({
@@ -28,10 +28,10 @@ import {buffer} from "rxjs/operator/buffer";
 
 export class RSSView implements OnInit{
     @Input() rssItem:RSSItem;
-    rssContent:SafeHtml;
+    // rssContent:SafeHtml;
 
     constructor(
-        private _sanitizer:DomSanitizationService
+        // private _sanitizer:DomSanitizationService
     ){
 
     }
@@ -48,7 +48,7 @@ export class RSSView implements OnInit{
 
 @Component({
     selector: 'rss-content',
-    directives:[RSSView],
+    // directives:[RSSView],
     providers: [RSSService],
     template: `<div class="wraper">
                 <div class="form-horizontal">

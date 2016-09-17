@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require("@angular/core");
 var models_1 = require("../services/models");
-var ViewPortThumb_1 = require("./ViewPortThumb");
 var DeviceThumb = (function () {
     function DeviceThumb() {
     }
@@ -28,8 +27,7 @@ var DeviceThumb = (function () {
         core_1.Component({
             selector: 'device-thumb',
             template: "\n            <div class=\"relative\">\n                        <div *ngFor=\"let myport of layout.viewports\">                         \n                        <viewport-thumb [item]=\"myport\"></viewport-thumb>\n                       </div>\n            \n            </div>\n",
-            styles: ["\n\n.relative{\nposition: relative;\n}\n\n"],
-            directives: [ViewPortThumb_1.ViewPortThumb]
+            styles: ["\n\n.relative{\nposition: relative;\n}\n\n"]
         }), 
         __metadata('design:paramtypes', [])
     ], DeviceThumb);

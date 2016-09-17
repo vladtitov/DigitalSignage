@@ -12,7 +12,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
 var playlists_service_1 = require("../services/playlists-service");
 var LayoutViewportPlaylists = (function () {
     function LayoutViewportPlaylists(playlistService) {
@@ -50,9 +49,7 @@ var LayoutViewportPlaylists = (function () {
         core_1.Component({
             selector: 'layout-viewport-playlists',
             template: "\n                <div class=\"layout-viewport-playlists\">\n                    <h5>TEST </h5>\n                     <div class=\"playlist\" *ngFor=\"let playlist of playlists\">\n                          <div class=\"playlistitem\" *ngFor=\"let item of playlist.list\">\n                                <img src=\"{{ item.asset.path }}\" width=\"100px\">\n                          </div>\n                    </div>\n               </div>\n      \n              ",
-            styles: ["\n              .playlistitem {\n                float:left;\n              }  \n              "],
-            directives: [router_1.ROUTER_DIRECTIVES],
-            providers: []
+            styles: ["\n              .playlistitem {\n                float:left;\n              }  \n              "]
         }), 
         __metadata('design:paramtypes', [playlists_service_1.PlaylistsService])
     ], LayoutViewportPlaylists);

@@ -13,12 +13,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 //import {DomSanitizationService} from '@angular/platform-browser';
 var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
 var assets_service_1 = require('../services/assets-service');
 var models_1 = require("../services/models");
-var content_filter_pipe_1 = require("./content-filter.pipe");
-var content_search_pipe_1 = require("./content-search.pipe");
-var asset_card_1 = require("./asset-card");
+// import { ContentFilterPipe } from "./content-filter.pipe";
+// import { ContentSearchPipe } from "./content-search.pipe";
+// import {AssetCard} from "./asset-card";
 var asset_service_1 = require("./asset-service");
 var AssetLibrary = (function () {
     function AssetLibrary(assetsService //old ???
@@ -81,9 +80,6 @@ var AssetLibrary = (function () {
             selector: 'asset-library',
             template: "\n<div>\n                 <div class=\"tools control-group pull-right form-inline\">\n                     <label for=\"types\"><span class=\"fa fa-file-code-o\"></span></label>\n                     <select class=\"form-control\" id=\"types\" #dropdowntype (change)=\"onChange(dropdowntype.value)\">\n                        <option *ngFor=\"let i of types\">{{i}}</option>\n                      </select>\n                      <div class=\"form-group has-feedback has-feedback-left\">\n                          <input type=\"text\" class=\"form-control\" #inputsearch (input)=\"onSearch(inputsearch.value)\">\n                          <i class=\"form-control-feedback fa fa-search\"></i>\n                     </div>\n                 </div>\n                 <div class=\"asset-library\">\n                    <div class=\"myscroll\">\n                        <div class=\"myscroll-content\">                    \n                                \n                             <div class=\"card\" (click)=\"onClickItem(item)\" *ngFor=\"let item of assets | contentfilter: typevalue | contentsearch: searchvalue\">\n                                <asset-card [item]=\"item\" [size]=\"128\"></asset-card>                                              \n                             </div>\n                        \n                        </div>\n                    </div>\n                 </div>\n</div>\n                ",
             styles: ["\n                .tools {\n                    margin-top: -60px;\n                }\n                \n                .myscroll {\n                    height: 450px;\n                    overflow-y: scroll;\n                    width: 100%;\n                }\n                \n                .myscroll-content{\n                    width: 100%;\n                }\n                \n                .card {\n                    float: left;\n                }\n                \n                .card p {\n                    text-align: center;\n                }\n                \n          "],
-            directives: [router_1.ROUTER_DIRECTIVES, asset_card_1.AssetCard],
-            providers: [assets_service_1.AssetsService],
-            pipes: [content_filter_pipe_1.ContentFilterPipe, content_search_pipe_1.ContentSearchPipe]
         }), 
         __metadata('design:paramtypes', [assets_service_1.AssetsService, asset_service_1.AssetService])
     ], AssetLibrary);

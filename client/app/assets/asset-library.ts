@@ -3,13 +3,13 @@
  */
 //import {DomSanitizationService} from '@angular/platform-browser';
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+
 
 import { AssetsService} from '../services/assets-service';
 import {VOAsset, UpdateResult} from "../services/models";
-import { ContentFilterPipe } from "./content-filter.pipe";
-import { ContentSearchPipe } from "./content-search.pipe";
-import {AssetCard} from "./asset-card";
+// import { ContentFilterPipe } from "./content-filter.pipe";
+// import { ContentSearchPipe } from "./content-search.pipe";
+// import {AssetCard} from "./asset-card";
 import {AssetService} from "./asset-service";
 
 
@@ -64,9 +64,9 @@ import {AssetService} from "./asset-service";
                 }
                 
           `],
-    directives: [ROUTER_DIRECTIVES, AssetCard],
-    providers: [AssetsService],
-    pipes: [ContentFilterPipe, ContentSearchPipe]
+    // directives: [AssetCard],
+    // providers: [AssetsService],
+    // pipes: [ContentFilterPipe, ContentSearchPipe]
 })
 
 

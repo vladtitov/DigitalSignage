@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
 require('./rxjs-operators');
 var http_1 = require('@angular/http');
 var Observable_1 = require('rxjs/Observable');
@@ -58,7 +57,6 @@ var AppComponent = (function () {
         core_1.Component({
             selector: 'my-app',
             template: "    \n    <nav>     \n     <a [routerLink]=\"['./content-manager','view',0]\" class=\"btn\"><span class=\"fa fa-picture-o\"></span> Content</a>\n     <a [routerLink]=\"['./playlist-library']\" class=\"btn\"><span class=\"fa fa-film\"></span> Playlists library</a>\n     <a [routerLink]=\"['./layouts-assembled']\" class=\"btn\"><span class=\"fa fa-th-large\"></span> Layouts</a>\n     <a [routerLink]=\"['./layout-template',-1]\" class=\"btn\"><span class=\"fa fa-magic\"></span> New Layout</a>  \n     <a [routerLink]=\"['./devices-manager', 0]\" class=\"btn\"><span class=\"fa fa-desktop\"></span> Publish</a>\n     <a  (click)=\"logoutServer()\" class=\"btn\" style=\"float: right\"><span class=\"fa fa-sign-out\"></span> Sign Out</a>\n   \n     \n    </nav>\n    <router-outlet></router-outlet>\n  ",
-            directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [http_1.Http])
     ], AppComponent);

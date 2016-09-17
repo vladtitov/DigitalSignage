@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var checkbox_1 = require('@angular2-material/checkbox');
+// import { MdCheckbox } from '@angular2-material/checkbox';
 var message_model_1 = require("./message-model");
 var MessageList = (function () {
     function MessageList() {
@@ -51,7 +51,6 @@ var MessageList = (function () {
             selector: 'message-list',
             template: "<md-data-table>\n                <thead>\n                <tr>\n                    <th class=\"md-text-cell\">Active</th>\n                    <th class=\"md-text-cell\">Content</th>\n                </tr>\n                </thead>\n                <tbody *ngIf=\"messages.length > 0\">\n                    <tr *ngFor=\"let message of messages\" [ngClass]=\"{'selected': message.selected, 'editable': message.editable}\" (click)=\"onSelected(message)\">\n                        <td class=\"md-text-cell\">\n                            <md-checkbox (change)=\"toggleChangeActive(message)\" [checked]=\"message.active\"></md-checkbox>\n                        </td>\n                        <td class=\"md-text-cell\" attr.contenteditable = \"{{ message.editable }}\" (input)=\"inputChange(message, $event)\" (click)=\"toggleEditable(message)\">\n                            {{ message.body}}\n                        </td>\n                </tr>\n                </tbody>\n                </md-data-table>\n                ",
             styles: ["\n    .selected {\n    background-color: khaki;\n    }\n    .selected{\n        background-color: #fbfff0;\n    }"],
-            directives: [checkbox_1.MdCheckbox]
         }), 
         __metadata('design:paramtypes', [])
     ], MessageList);

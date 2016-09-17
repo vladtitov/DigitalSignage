@@ -2,7 +2,7 @@
  * Created by Vlad on 7/24/2016.
  */
 import { Component, OnInit } from "@angular/core";
-import { ROUTER_DIRECTIVES, RouterConfig, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import { PlaylistsService } from "../services/playlists-service";
 import { VOPlaylist } from "../services/models";
 import { PlayListSimple } from "./playlist-simple";
@@ -54,8 +54,8 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
                }
               
             `],
-    directives: [ROUTER_DIRECTIVES, PlayListSimple],
-    providers: [PlaylistsService,PlayListService]
+    // directives: [PlayListSimple],
+    // providers: [PlaylistsService,PlayListService]
 })
 
 export class PlayListLibrary implements OnInit {

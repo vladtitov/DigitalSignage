@@ -3,8 +3,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+// import { RouterConfig } from '@angular/router';
 
 import {VOViewport, VOLayout, VOLayoutProps, UpdateResult, VOTemplate, VODevice} from "../services/models";
 //import {LayoutAssemplerView} from "./layoutassembler-view";
@@ -100,7 +100,7 @@ declare var  domtoimage:any;
             
             `]
     ,
-    directives: [ROUTER_DIRECTIVES,AssemblerPlayLists,LayoutEditorViewport],
+    // directives: [AssemblerPlayLists,LayoutEditorViewport],
     providers: [LayoutEditorService,DeviceEditorService,LayoutsTemlatesService,DragPlayListService]
 })
 

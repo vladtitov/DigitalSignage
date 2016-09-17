@@ -14,24 +14,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
+var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
 var app_routing_1 = require('./app.routing');
-var http_1 = require('@angular/http');
-var content_manager_1 = require("./assets/content-manager");
-var playlist_library_1 = require("./play-list/playlist-library");
-var playlist_editor_1 = require("./playlist-editor/playlist-editor");
-var playlist_editable_1 = require("./playlist-editor/playlist-editable");
-var layouts_assembled_1 = require("./layouts/layouts-assembled");
-var layout_editor_1 = require("./layout-editor/layout-editor");
-var layouts_template_1 = require("./layouts/layouts-template");
-var devices_manager_1 = require("./device/devices-manager");
-var devices_list_1 = require("./device/devices-list");
-var device_editor_1 = require("./device/device-editor");
-var ng2_md_tooltip_1 = require("./shared/ng2-md-tooltip/ng2-md-tooltip");
-var tooltip_text_1 = require("./shared/ng2-md-tooltip/tooltip-text");
-//import { HeroesModule } from './heroes/heroes.module';
-//import { LoginComponent } from './login.component';
-//import { DialogService }  from './dialog.service';
+var assets_module_1 = require("./assets/assets.module");
+var playlist_module_1 = require("./play-list/playlist.module");
+var layouts_module_1 = require("./layouts/layouts.module");
+var devices_module_1 = require("./device/devices.module");
+var shared_module_1 = require("./shared/shared.module");
+var router_1 = require("@angular/router");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -42,27 +33,18 @@ var AppModule = (function () {
                 forms_1.FormsModule,
                 http_1.HttpModule,
                 http_1.JsonpModule,
-                app_routing_1.routing
+                router_1.RouterModule.forRoot(app_routing_1.routerConfig),
+                assets_module_1.AssetsModule,
+                playlist_module_1.PlaylistModule,
+                layouts_module_1.LayoutsModule,
+                devices_module_1.DevicesModule,
+                shared_module_1.SharedModule
             ],
             declarations: [
-                app_component_1.AppComponent,
-                content_manager_1.ContentManager,
-                playlist_library_1.PlayListLibrary,
-                playlist_editor_1.PlayListEditor,
-                playlist_editable_1.PlaylistEditable,
-                layouts_assembled_1.LayoutsAssembled,
-                layout_editor_1.LayoutEditor,
-                layouts_template_1.LayoutsTemplate,
-                devices_manager_1.DevicesManager,
-                devices_list_1.DevicesList,
-                device_editor_1.DeviceEditor,
-                ng2_md_tooltip_1.Ng2MdTooltip,
-                tooltip_text_1.TooltipText
+                app_component_1.AppComponent
             ],
-            providers: [
-                app_routing_1.appRoutingProviders,
-            ],
-            entryComponents: [tooltip_text_1.TooltipText],
+            providers: [],
+            // entryComponents: [ TooltipText ],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])

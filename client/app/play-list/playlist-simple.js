@@ -12,7 +12,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Vlad on 7/24/2016.
  */
 var core_1 = require("@angular/core");
-var playlist_frame_1 = require("./playlist-frame");
 var models_1 = require("../services/models");
 var playlists_service_1 = require("../services/playlists-service");
 var PlayListSimple = (function () {
@@ -51,7 +50,6 @@ var PlayListSimple = (function () {
             selector: 'playlist-simple',
             template: "\n              <div class=\"title\" [ngClass]=\"{selected: _selected}\">\n              <small style=\"margin-right: 10px\">ID: {{playlistprops.id}};</small>\n                Name: {{playlistprops.label}};\n                Duration: {{playlistprops.duration}};\n                <span *ngIf=\"playlistprops.dimension\">Dimension: {{playlistprops.dimension}};</span>\n                <span *ngIf=\"playlistprops.description\">Description: {{playlistprops.description}};</span>\n              </div>\n              <div class=\"container-scroll\">\n                     <div class=\"scroll-content\">      \n                        <div flex layout=\"row\">\n                          <div class=\"item\"  *ngFor=\"let item of playlistlist; let i = index\" layout=\"row\">\n                               <playlist-frame [item]=\"item\" #myitem ></playlist-frame>  \n                          </div>\n                       \n                     </div>\n                  </div>\n              </div>\n            ",
             styles: ["\n            .container-scroll{\n                width: 100%;\n                display: block;\n                background-color: #e7f1ff;\n            }\n            \n            .scroll-content{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n                height: 150px;\n                padding-left: 10px;\n            }\n            \n            .title{\n                width: 100%;\n                height: 20px;\n                background-color: #4b7caa;\n                color: white;\n                margin-bottom: 2px;    \n                padding-left: 10px;\n            }              \n    \n            .selected {\n                background-color: #aa861e;\n               }\n            \n            .item {\n                height: 130px;\n                width: 130px;\n                float: left;\n                margin-right: 10px;\n            }\n\n            "],
-            directives: [playlist_frame_1.PlayListFrame]
         }), 
         __metadata('design:paramtypes', [playlists_service_1.PlaylistsService])
     ], PlayListSimple);

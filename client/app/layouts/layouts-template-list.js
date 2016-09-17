@@ -14,7 +14,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var layouts_templates_service_1 = require("../services/layouts-templates-service");
-var layout_thumb_1 = require("./layout-thumb");
 var LayoutsTemplateList = (function () {
     function LayoutsTemplateList(ar, myrouter, templatesService) {
         this.ar = ar;
@@ -52,9 +51,7 @@ var LayoutsTemplateList = (function () {
         core_1.Component({
             selector: 'layouts-template-list',
             template: "\n<div>\n                <h4>Templates library</h4>\n                 <div class=\"slider-horizont\">\n                     <div class=\"mycontent\" >\n                            <div  flex layout=\"row\"  class=\"layouts\">\n                                <div *ngFor=\"let layout of layouts\" class=\"layout box-shadow thumb-150\" [class.box-selected]=\"layout.selected\"  (click)=\"onLayoutClick(layout)\">                               \n                                    <img class=\"image\" src=\"{{layout.image}}\"  />\n                                </div>\n                            </div>\n                    </div>\n                </div>\n </div>              \n              ",
-            styles: ["\n\n            .slider-horizont{\n                width: 100%;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n            }\n            .mycontent{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n           \n           .layout {\n                margin: 10px; \n                \n           } \n           .thumb-150{\n                position: relative;\n                width: 156px;\n                height: 156px;\n            }\n           .image{\n               max-width: 150px;\n               max-height: 150px;\n               position:absolute;\n               top:0;\n               bottom: 0;\n               left: 0;\n               right:0;\n               margin:auto;\n           }\n           \n     "],
-            directives: [router_1.ROUTER_DIRECTIVES, layout_thumb_1.LayoutThumb],
-            providers: [layouts_templates_service_1.LayoutsTemlatesService]
+            styles: ["\n\n            .slider-horizont{\n                width: 100%;\n                overflow-x: scroll;\n                display: block;\n                background-color: #e7f1ff;\n            }\n            .mycontent{\n                background-color: #e7f1ff;\n                width: 100%;\n                display: block;\n            }\n           \n           .layout {\n                margin: 10px; \n                \n           } \n           .thumb-150{\n                position: relative;\n                width: 156px;\n                height: 156px;\n            }\n           .image{\n               max-width: 150px;\n               max-height: 150px;\n               position:absolute;\n               top:0;\n               bottom: 0;\n               left: 0;\n               right:0;\n               margin:auto;\n           }\n           \n     "]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, layouts_templates_service_1.LayoutsTemlatesService])
     ], LayoutsTemplateList);

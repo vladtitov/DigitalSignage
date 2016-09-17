@@ -78,8 +78,7 @@ var Ng2MdTooltip = (function () {
     ], Ng2MdTooltip.prototype, "tooltipColor", void 0);
     Ng2MdTooltip = __decorate([
         core_1.Directive({
-            selector: "[ng2-md-tooltip]",
-            providers: [position_serv_1.PositionService]
+            selector: "[ng2-md-tooltip]"
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, core_1.ViewContainerRef, core_1.ComponentFactoryResolver, position_serv_1.PositionService])
     ], Ng2MdTooltip);

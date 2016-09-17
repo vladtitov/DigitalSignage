@@ -116,7 +116,6 @@ var htplayer;
         return VOLayoutProps;
     }());
     htplayer.VOLayoutProps = VOLayoutProps;
-    //
     var VOLayout = (function () {
         function VOLayout(obj) {
             for (var str in obj)

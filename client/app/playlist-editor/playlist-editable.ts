@@ -5,7 +5,7 @@ import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 import {VOAsset, VOPlayLists_Assets, VOPlaylist, VOPlayListProps} from "../services/models";
 import {PlayListService} from "./playlist-service";
 import {PlayListItem} from "./playlist-editable-item";
-import {PlayListSpacer} from "./PlayListSpacer";
+// import {PlayListSpacer} from "./PlayListSpacer";
 import {Router} from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {TimeCellVO, TimeCellCompnent} from "./TimeCell";
@@ -99,7 +99,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             }
                 
 `],
-    directives:[PlayListItem,PlayListSpacer,TimeCellCompnent],
+    // directives:[PlayListItem,PlayListSpacer,TimeCellCompnent],
     providers:[PlayListService]
 
 })

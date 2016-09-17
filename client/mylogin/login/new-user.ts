@@ -22,7 +22,7 @@ import {VOUserResult, VOUserData} from "../../app/services/models";
                         <hr>
                         <div *ngIf="progressCircle">
                             <div layout="row" layout-sm="column" layout-align="space-around">
-                                <md-progress-circle mode="indeterminate" [style.width]="'50px'" color="accent"></md-progress-circle>
+                                
                             </div>
                             <hr>
                         </div>
@@ -33,29 +33,27 @@ import {VOUserResult, VOUserData} from "../../app/services/models";
                         </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="Email address" 
                                     name="username" 
                                     [(ngModel)] = "userName"
                                     required
                                     type="email"
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="Password"
                                     name="password"
                                     ngModel
                                     required
                                     minLength = "6"
                                     [type]="showPass ? 'text': 'password'" 
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>                            
-                            <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
+                            <label> <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
-                            </md-checkbox>
+                            </label>
                             <button
                                 class="btn btn-primary btn-lg btn-block"
                                 type="submit" value="New User"

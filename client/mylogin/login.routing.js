@@ -14,6 +14,5 @@ exports.loginRoutes = [
     { path: 'change-password/:token', component: change_password_1.ChangePassword },
     { path: '**', component: sign_in_1.SignIn }
 ];
-exports.loginRoutingProviders = [];
 exports.routing = router_1.RouterModule.forRoot(exports.loginRoutes);
 //# sourceMappingURL=login.routing.js.map

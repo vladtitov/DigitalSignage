@@ -8,7 +8,7 @@ import {PositionService} from "./position-serv";
 
 @Directive({
     selector: "[ng2-md-tooltip]"
-    ,providers:[ PositionService]
+    // ,providers:[ PositionService]
 })
 
 export class Ng2MdTooltip  implements OnChanges {

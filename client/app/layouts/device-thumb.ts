@@ -22,7 +22,7 @@ position: relative;
 
 `]
 
-    ,directives:[ViewPortThumb]
+    // ,directives:[ViewPortThumb]
 })
 
 

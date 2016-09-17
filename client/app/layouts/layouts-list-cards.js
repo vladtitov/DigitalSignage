@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require("@angular/core");
 var models_1 = require("../services/models");
-var layout_thumb_1 = require("../layouts/layout-thumb");
 var layouts_list_service_1 = require("./layouts-list-service");
 var LayoutsListCards = (function () {
     function LayoutsListCards(listService) {
@@ -58,9 +57,7 @@ var LayoutsListCards = (function () {
         core_1.Component({
             selector: 'layouts-list-cards',
             template: "\n<div>\n\n             <h4>Layouts</h4>\n                 <div class=\"slider-vertical\">\n                     <div class=\"mycontent\" >\n                            <div class=\"layouts\">\n                                <div #mylayout class=\"card-256x320\" *ngFor=\"let layout of layouts\" (click)=\"onLayoutClick(layout)\">                               \n                                    <layout-thumb [layout]=\"layout\" ></layout-thumb>                                                      \n                                </div>\n                            </div>\n                    </div>\n                  </div>\n\n</div>\n",
-            styles: ["\n\n    .slider-vertical{\n        overflow-y: scroll;\n        height: 600px;\n        width: 100%;\n    }\n\n\n"],
-            directives: [layout_thumb_1.LayoutThumb],
-            providers: [layouts_list_service_1.LayoutsListService]
+            styles: ["\n\n    .slider-vertical{\n        overflow-y: scroll;\n        height: 600px;\n        width: 100%;\n    }\n\n\n"]
         }), 
         __metadata('design:paramtypes', [layouts_list_service_1.LayoutsListService])
     ], LayoutsListCards);

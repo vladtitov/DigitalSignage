@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require("@angular/core");
 var models_1 = require("../services/models");
-var ViewPortThumb_1 = require("./ViewPortThumb");
 var LayoutThumb = (function () {
     function LayoutThumb() {
         this.layout = new models_1.VOLayout({});
@@ -29,8 +28,7 @@ var LayoutThumb = (function () {
         core_1.Component({
             selector: 'layout-thumb',
             template: "\n            <div class=\"mythumb\" [class.box-selected]=\"layout.selected\">\n            \n                  <div class=\"myimage-container\">\n                      <img  class=\"myimage\" src=\"{{layout.props.image}}\"/>       \n                  </div>\n                  <div class=\"myid\"><span>{{layout.props.id}}</span></div>\n                  <div class=\"params pos-bottom\">\n                  <div>{{layout.props.label}}</div>\n                  \n                </div>\n                           \n            </div>\n",
-            styles: ["\n\n\n \n\n"],
-            directives: [ViewPortThumb_1.ViewPortThumb]
+            styles: ["\n\n\n \n\n"]
         }), 
         __metadata('design:paramtypes', [])
     ], LayoutThumb);

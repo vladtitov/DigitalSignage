@@ -27,7 +27,7 @@ import {ViewPortThumb} from "./ViewPortThumb";
 
 `]
 
-    ,directives:[ViewPortThumb]
+    // ,directives:[ViewPortThumb]
 })
 
 

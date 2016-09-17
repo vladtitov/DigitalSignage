@@ -14,7 +14,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var devices_list_1 = require("./devices-list");
-var device_editor_1 = require("./device-editor");
 var device_editor_service_1 = require("./device-editor-service");
 var DevicesManager = (function () {
     function DevicesManager(router, route, deviceEditorService) {
@@ -78,9 +77,7 @@ var DevicesManager = (function () {
         core_1.Component({
             selector: 'devices-manager',
             template: "\n<div class=\"content-850\">\n            <div class =\"panel-heading\">\n                <h3>Devices Manager</h3>\n                <nav>\n                     <a [routerLink]=\"['/devices-manager', -1]\" class=\"btn btn-default\" ><span class=\"fa fa-plus\"></span> Create New Device</a>\n                     <!--<a class=\"btn btn-default\" (click)=\"onEditClick()\"> <span class=\"fa fa-edit\"></span> Edit</a>-->\n                     <a class=\"btn btn-default\" [ng2-md-tooltip]=\"deleteTooltip\" [class.disabled]=\"toolsDisadled\" (click)=\"onRemoveClick()\"><span class=\"fa fa-minus\"></span> Delete Device</a>\n                </nav>\n            </div>           \n            <div class=\"panel-body\">\n            \n                <div class=\"item\">\n                    <devices-list (selecteditem)= \"onCurrentItem($event)\" #devicelist2></devices-list>\n                </div>\n                <div class=\"item\">\n                    <device-editor (onDataChange)=\"onDataChange2($event)\" [devicelist1]=\"devicelist2\"></device-editor>\n                </div>\n            </div>\n\n</div>\n",
-            styles: ["\n        .item{\n            float: left;\n            margin-left: 20px;\n            }\n    "],
-            directives: [router_1.ROUTER_DIRECTIVES, devices_list_1.DevicesList, device_editor_1.DeviceEditor],
-            providers: [device_editor_service_1.DeviceEditorService]
+            styles: ["\n        .item{\n            float: left;\n            margin-left: 20px;\n            }\n    "]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.ActivatedRoute, device_editor_service_1.DeviceEditorService])
     ], DevicesManager);

@@ -3,8 +3,7 @@
  */
 
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {VOLayout, VOViewport} from "../services/models";
 
@@ -33,7 +32,7 @@ import { AssemblerViewports } from "./assempler-viewports";
                 }
               `]
     ,
-    directives: [ ROUTER_DIRECTIVES,AssemblerViewports ]
+    // directives: [ AssemblerViewports ]
 })
 
 export class LayoutAssemplerView implements OnInit {

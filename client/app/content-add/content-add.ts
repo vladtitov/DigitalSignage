@@ -4,8 +4,8 @@
 
 import { Component, Output, EventEmitter } from '@angular/core';
 //import { MD_TABS_DIRECTIVES } from '@angular2-material/tabs';
-import { ROUTER_DIRECTIVES, Router, ActivatedRoute } from '@angular/router';
-import {FileContent} from "./content-files";
+import { Router, ActivatedRoute } from '@angular/router';
+// import {FileContent} from "./content-files";
 //import {RssContent} from "./content-rss";
 //import {WebContent} from "./content-web";
 
@@ -30,7 +30,7 @@ import {FileContent} from "./content-files";
                     font-weight: bold;
                 }
             `],
-    directives: [ROUTER_DIRECTIVES, FileContent]
+    // directives: [ROUTER_DIRECTIVES, FileContent]
 })
 
 export class AddContent {

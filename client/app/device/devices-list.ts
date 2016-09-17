@@ -4,8 +4,8 @@
 import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {VODevice} from "../services/models";
 import {DeviceListService} from "./device-list-service";
-import {DeviceThumb} from "../layouts/device-thumb";
-import {DeviceListItem} from "./device-list-item";
+// import {DeviceThumb} from "../layouts/device-thumb";
+// import {DeviceListItem} from "./device-list-item";
 import {Router} from "@angular/router";
 
 @Component({
@@ -40,8 +40,8 @@ import {Router} from "@angular/router";
     }
 
 `]
-    ,providers:[DeviceListService]
-    ,directives:[DeviceThumb,DeviceListItem]
+    // ,providers:[DeviceListService]
+    // ,directives:[DeviceThumb,DeviceListItem]
 })
 
 export class DevicesList implements OnInit{

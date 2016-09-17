@@ -63,7 +63,7 @@ import {PlaylistsService} from "../services/playlists-service";
             }
 
             `],
-    directives:[PlayListFrame]
+    // directives:[PlayListFrame]
 })
 
 

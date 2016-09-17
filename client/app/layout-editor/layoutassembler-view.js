@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var assempler_viewports_1 = require("./assempler-viewports");
 var LayoutAssemplerView = (function () {
     function LayoutAssemplerView(ar, myrouter) {
         this.ar = ar;
@@ -47,7 +46,6 @@ var LayoutAssemplerView = (function () {
             selector: 'layoutassembler-view',
             template: "\n<div>\n                <div>\n                <assembler-playlists></assembler-playlists>\n                \n                </div>\n               <div class=\"layout-view\" *ngIf=\"mylayout\">\n                  <assembler-viewports   [viewports]=\"mylayout.viewports\" (onview)=\"onClickViewport()\"></assembler-viewports>\n               </div>\n</div>\n              ",
             styles: [" \n               .layout-view {\n                   margin-top: 20px; \n                   width: 800px;\n                   height: 800px;\n                }\n              "],
-            directives: [router_1.ROUTER_DIRECTIVES, assempler_viewports_1.AssemblerViewports]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router])
     ], LayoutAssemplerView);

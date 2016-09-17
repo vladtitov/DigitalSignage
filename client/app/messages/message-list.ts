@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import { MdCheckbox } from '@angular2-material/checkbox';
+// import { MdCheckbox } from '@angular2-material/checkbox';
 import {Message} from "./message-model";
 
 @Component({
@@ -30,7 +30,7 @@ import {Message} from "./message-model";
     .selected{
         background-color: #fbfff0;
     }`],
-        directives: [MdCheckbox]
+        // directives: [MdCheckbox]
     })
 
 export class MessageList {

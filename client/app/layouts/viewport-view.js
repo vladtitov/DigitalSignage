@@ -16,9 +16,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require("@angular/core");
 var models_1 = require("../services/models");
-//import {DragPlayListService} from "../services/DragPlayListService";
-/*import {ViewportService} from "../services/viewport-service";*/
-var layout_viewport_playlists_1 = require("../layouts/layout-viewport-playlists");
 var ViewPortView = (function () {
     function ViewPortView() {
         this.onview = new core_1.EventEmitter();
@@ -56,8 +53,6 @@ var ViewPortView = (function () {
             selector: 'viewport-view',
             template: "    \n                <div class=\"mydiv\"\n                 [style.top]=item.y [style.left]=item.x \n                 [style.width]=item.width \n                 [style.height]=item.height\n                 [style.border]=borderColor\n                >\n                    <img src=\"{{ item.image }}\" width=\"{{ item.width }}\" height=\" {{ item.height }}\">\n                        \n                    <div class=\"cover\"\n                        (dragenter)=\"onDragEnter($event)\"\n                        (dragleave)=\"onDragLeave($event)\"\n                        (click)=\"onClickViewport($event)\"\n                        >                \n                     </div>      \n                         \n                </div>\n            ",
             styles: ["\n             .mydiv {\n                 background-color: whitesmoke; \n                       \n                 position: absolute;\n                 }\n                 .cover{\n                     position: absolute;\n                     top:0;\n                     left: 0;\n                     width: 100%;\n                     height: 100%;\n                     z-index: 1000;\n                     background-color: rgba(255, 255, 255, 0.1);\n             }\n            "],
-            directives: [layout_viewport_playlists_1.LayoutViewportPlaylists],
-            providers: []
         }), 
         __metadata('design:paramtypes', [])
     ], ViewPortView);

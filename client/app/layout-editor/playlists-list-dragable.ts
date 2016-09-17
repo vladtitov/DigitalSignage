@@ -3,8 +3,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+// import { RouterConfig } from '@angular/router';
 
 import { VOPlaylist } from "../services/models";
 
@@ -57,9 +57,7 @@ import {DragPlayListService} from "./drag-playlist-service";
                  /*padding: 7px;*/
                /*} */
             `]
-    ,
-    directives: [ ROUTER_DIRECTIVES ]
-    ,providers:[PlaylistsService]
+    // ,providers:[PlaylistsService]
 })
 
 export class AssemblerPlayLists implements OnInit {

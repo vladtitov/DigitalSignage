@@ -58,8 +58,7 @@ var AssemblerViewports = (function () {
         core_1.Component({
             selector: 'assembler-viewports',
             template: "\n<div>\n               <p>Playlists available</p>\n              <playlists-list></playlists-list>\n                <a class=\"btn btn-default\" (click) = \"makeSnap()\"><span class=\"fa fa-life-saver\"></span> MakeSnap</a>\n               <div   id=\"assebleVP\"  class=\"assembler-viewports\">\n                    <div class=\"mycontent\" #myview *ngFor=\"let item of viewports\">\n                    <viewport-assembler [item]=\"item\" [viewports]=\"viewports\" (onview)=\"onClickViewport()\"></viewport-assembler>\n                      \n                    </div>\n               </div>\n               <div id=\"SnapResult\">\n               \n               \n                </div>\n</div>\n              ",
-            styles: ["  \n                .mycontent {\n                    position: relative;\n                }\n                \n                          \n                \n                p {\n                    text-align: center;\n                }\n            "],
-            directives: [router_1.ROUTER_DIRECTIVES]
+            styles: ["  \n                .mycontent {\n                    position: relative;\n                }\n                \n                          \n                \n                p {\n                    text-align: center;\n                }\n            "]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router])
     ], AssemblerViewports);

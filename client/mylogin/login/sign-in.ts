@@ -38,29 +38,27 @@ import {VOUserData, VOUserResult} from "../../app/services/models";
                         <!--<form action="account/login" method="post" role="form" #loginForm="ngForm">-->
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="Email address" 
                                     name="username" 
                                     [(ngModel)] = "userEmail"
                                     required
                                     type="email"
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="Password"
                                     name="password"
                                     ngModel
                                     required
                                     minLength = "6"
                                     [type]="showPass ? 'text': 'password'" 
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>                            
-                            <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
+                            <label><input type="checkbox" [ngModelOptions]="{standalone: true}"  [(ngModel)]="showPass" aria-label="Checkbox 1"/>
                                 Show password
-                            </md-checkbox>
+                            </label>
                             <button class="btn btn-primary btn-lg btn-block"
                                     type="submit" value="Log In"
                                     [style.cursor]="cursorStyle"

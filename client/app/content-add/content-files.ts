@@ -46,7 +46,7 @@ import { UPLOAD_DIRECTIVES } from './uploader/ng2-uploader';
               </div>
                  
              `,
-    directives: [UPLOAD_DIRECTIVES],
+    // directives: [UPLOAD_DIRECTIVES],
     styles:[`
             
             .wraper {

@@ -3,8 +3,7 @@
  */
 
 import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { VOViewport } from "../services/models";
 
@@ -41,8 +40,6 @@ declare var  html2canvas:any;
                     text-align: center;
                 }
             `]
-    ,
-    directives: [ ROUTER_DIRECTIVES ]
 })
 
 export class AssemblerViewports implements OnInit {

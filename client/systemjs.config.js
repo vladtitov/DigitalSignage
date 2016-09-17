@@ -4,77 +4,48 @@
  */
 (function(global) {
     // map tells the System loader where to look for things
-    var map = {
-        'app':                        'app', // 'dist',
-        'loginapp':                    'mylogin',
-       'app-screen':                        'app-screen', // 'dist',
-        '@angular':                   'node_modules/@angular',
-        'angular2':                   'node_modules/@angular',
-        '@angular/router-deprecated':'node_modules/@angular/router-deprecated',
-        '@angular2-material':         'node_modules/@angular2-material',
-        'ng2-material':         'node_modules/ng2-material',
-       // 'dragula': 'node_modules/dragula/dist/dragula.js',
-       // 'ng2-dragula': 'node_modules/ng2-dragula',
-        'ng2-uploader':'node_modules/ng2-uploader',
-        'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
-        'rxjs':                       'node_modules/rxjs',
-        'moment': 'node_modules/moment/moment.js'
-    };
-    // packages tells the System loader how to load when no filename and/or no extension
-    var packages = {
-        'app':                        { main: 'main.js',  defaultExtension: 'js' },
-        'mylogin':                    { main: 'main.js',  defaultExtension: 'js' },
-        'app-screen':                        { main: 'main.js',  defaultExtension: 'js' },
-        'rxjs':                       { defaultExtension: 'js' },
-        'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
-        'ng2-material':         { main: 'index.js', defaultExtension: 'js' },
-        //'ng2-dragula':{ main: 'ng2-dragula.js', defaultExtension: 'js' },
-        'ng2-uploader':{ main: 'ng2-uploader.js', defaultExtension: 'js' }
-    };
-    var ngPackageNames = [
-        'common',
-        'compiler',
-        'core',
-        'forms',
-        'http',
-        'platform-browser',
-        'platform-browser-dynamic',
-        'router',
-        'upgrade',
-    ];
 
-    var materialPkgs = [
-        'core',
-        'checkbox',
-        'input',
-        'list'
-    ];
+    System.config({
+        paths: {
+            // paths serve as alias
+            'npm:': 'node_modules/'
+        },
+        // map tells the System loader where to look for things
+        map: {
+            // our app is within the app folder
+            app: 'app',
+            loginapp: 'mylogin',
+            'app-screen': 'app-screen',
+            // angular bundles
+            '@angular/common':                   'npm:@angular/common/bundles/common.umd.js',
+            '@angular/compiler':                 'npm:@angular/compiler/bundles/compiler.umd.js',
+            '@angular/core':                     'npm:@angular/core/bundles/core.umd.js',
+            '@angular/forms':                    'npm:@angular/forms/bundles/forms.umd.js',
+            '@angular/http':                     'npm:@angular/http/bundles/http.umd.js',
+            '@angular/platform-browser':         'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
+            '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+            '@angular/router':                   'npm:@angular/router/bundles/router.umd.js',
+            '@angular/upgrade':                  'npm:@angular/upgrade/bundles/upgrade.umd.js',
+            // other libraries
 
+            'rxjs': 'npm:rxjs',
 
-    var materialPackages = [
-        'core', 'toolbar', 'button', 'card', 'checkbox', 'icon', 'input', 'list', 'progress-bar',
-        'progress-circle', 'radio', 'sidenav', 'grid-list', 'tabs', 'slide-toggle'
-    ];
-    materialPackages.forEach(function(item) {
-        packages['@angular2-material/' + item] = { main: item };
+            'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
+            'moment':                     'npm:moment/moment.js',
+
+            'ng2-uploader':               'npm:ng2-uploader',
+            'ng2-material':               'npm:ng2-material'
+        },
+        // packages tells the System loader how to load when no filename and/or no extension
+        packages: {
+            app: { main: './main.js', defaultExtension: 'js' },
+            loginapp: { main: './main.js', defaultExtension: 'js' },
+            'app-screen': { main: 'main.js', defaultExtension: 'js' },
+            rxjs: { defaultExtension: 'js' },
+            'angular2-in-memory-web-api': { main: './index.js', defaultExtension: 'js' },
+            'ng2-material': { main: 'index.js', defaultExtension: 'js' },
+            'ng2-uploader': { main: 'ng2-uploader.js', defaultExtension: 'js' }
+        }
     });
-
-    // Individual files (~300 requests):
-    function packIndex(pkgName) {
-        packages['@angular/'+pkgName] = { main: 'index.js', defaultExtension: 'js' };
-    }
-    // Bundled (~40 requests):
-    function packUmd(pkgName) {
-        packages['@angular/'+pkgName] = { main: '/bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
-    }
-    packages['@angular/router-deprecated'] = { main: '/bundles/router-deprecated' + '.umd.js', defaultExtension: 'js' };
-    // Most environments should use UMD; some (Karma) need the individual index files
-    var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
-
-    ngPackageNames.forEach(setPackageConfig);
-    var config = {
-        map: map,
-        packages: packages
-    };
-    System.config(config);
+////////////////////////////////////////////////////
 })(this);

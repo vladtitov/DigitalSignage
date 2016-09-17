@@ -2,6 +2,7 @@
  * Created by Dmitriy Prilutsky on 13.07.2016.
  */
 
+import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule }   from '@angular/router';
 
 import {SignIn} from "./login/sign-in";
@@ -19,8 +20,4 @@ export const loginRoutes: Routes = [
 
 ];
 
-export const loginRoutingProviders: any[] = [
-
-];
-
-export const routing = RouterModule.forRoot(loginRoutes);
+export const routing:ModuleWithProviders = RouterModule.forRoot(loginRoutes);

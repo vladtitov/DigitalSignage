@@ -9,7 +9,7 @@ import {TooltipOptions} from "./ng2-md-tooltip";
         <div class="tooltip-text {{myClass}}" [ngStyle]="myStyle">{{message}}</div>
 `
 
-    ,providers:[PositionService]
+    // ,providers:[PositionService]
 })
 
 export class TooltipText implements AfterViewInit {

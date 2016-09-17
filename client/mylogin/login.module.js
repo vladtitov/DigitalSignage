@@ -14,10 +14,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
-var material_module_1 = require('./material.module');
+// import { MaterialModule } from './material.module'
 var login_routing_1 = require('./login.routing');
 var http_1 = require('@angular/http');
-var router_1 = require('@angular/router');
 var login_manager_1 = require('./login-manager');
 var sign_in_1 = require("./login/sign-in");
 var new_user_1 = require("./login/new-user");
@@ -40,9 +39,7 @@ var LoginModule = (function () {
                 forms_1.FormsModule,
                 http_1.HttpModule,
                 http_1.JsonpModule,
-                login_routing_1.routing,
-                material_module_1.MaterialModule,
-                router_1.RouterModule
+                login_routing_1.routing
             ],
             declarations: [
                 login_manager_1.LoginManager,
@@ -52,7 +49,6 @@ var LoginModule = (function () {
                 change_password_1.ChangePassword
             ],
             providers: [
-                login_routing_1.loginRoutingProviders,
                 login_service_1.LoginService
             ],
             bootstrap: [login_manager_1.LoginManager]

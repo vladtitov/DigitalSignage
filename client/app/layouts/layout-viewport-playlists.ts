@@ -3,9 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { PlaylistsService } from "../services/playlists-service";
 import { VOViewport, VOPlaylist } from "../services/models";
@@ -29,9 +27,6 @@ import { VOViewport, VOPlaylist } from "../services/models";
                 float:left;
               }  
               `]
-    ,
-    directives: [ROUTER_DIRECTIVES],
-    providers:[]
 })
 
 export class LayoutViewportPlaylists implements OnInit {

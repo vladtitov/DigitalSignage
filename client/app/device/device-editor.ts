@@ -4,7 +4,7 @@
 import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 import {VOLayout, VODevice, UpdateResult} from "../services/models";
 import {DeviceEditorService} from "./device-editor-service";
-import {LayoutThumb} from "../layouts/layout-thumb";
+// import {LayoutThumb} from "../layouts/layout-thumb";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {DevicesList} from "./devices-list";
@@ -82,8 +82,8 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
         }
 
 `]
-    ,providers:[DeviceEditorService, LayoutsListService]
-    ,directives:[LayoutThumb]
+    // ,providers:[DeviceEditorService, LayoutsListService]
+    // ,directives:[LayoutThumb]
 })
 
 export class DeviceEditor implements OnInit{
@@ -96,7 +96,7 @@ export class DeviceEditor implements OnInit{
     labels: string[];
 
     color:string;
-    tooltipOptions:TooltipOptions
+    tooltipOptions:TooltipOptions;
 
     isInProgress:boolean = false;
 

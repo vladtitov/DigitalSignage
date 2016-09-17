@@ -14,8 +14,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var models_1 = require("../services/models");
 var device_list_service_1 = require("./device-list-service");
-var device_thumb_1 = require("../layouts/device-thumb");
-var device_list_item_1 = require("./device-list-item");
+// import {DeviceThumb} from "../layouts/device-thumb";
+// import {DeviceListItem} from "./device-list-item";
 var router_1 = require("@angular/router");
 var DevicesList = (function () {
     function DevicesList(deviceListService, router) {
@@ -60,9 +60,7 @@ var DevicesList = (function () {
         core_1.Component({
             selector: 'devices-list',
             template: "\n<div>\n             <h4>Devices</h4>\n             <div class=\"slider-vertical\">\n                 <div class=\"mycontent\" >\n                    <div class=\"device\" *ngFor=\"let mydevice2 of devicesList\" (click)=\"onDeviceClick(mydevice2)\">                                                      \n                        <device-list-item [mydevice]=\"mydevice2\"></device-list-item>\n                    </div>\n                </div>\n              </div>\n\n\n</div>\n",
-            styles: ["\n\n    .slider-vertical{\n        overflow-y: scroll;\n        height: 600px;\n        width: 286px;\n    }\n    .device{\n        height: 128px;\n        background-color: whitesmoke;\n        margin: 10px;\n        margin-left: 0px;\n        box-shadow: grey 3px 5px 4px;\n    }\n\n"],
-            providers: [device_list_service_1.DeviceListService],
-            directives: [device_thumb_1.DeviceThumb, device_list_item_1.DeviceListItem]
+            styles: ["\n\n    .slider-vertical{\n        overflow-y: scroll;\n        height: 600px;\n        width: 286px;\n    }\n    .device{\n        height: 128px;\n        background-color: whitesmoke;\n        margin: 10px;\n        margin-left: 0px;\n        box-shadow: grey 3px 5px 4px;\n    }\n\n"]
         }), 
         __metadata('design:paramtypes', [device_list_service_1.DeviceListService, router_1.Router])
     ], DevicesList);

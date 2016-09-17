@@ -3,15 +3,16 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+// import { RouterConfig } from '@angular/router';
 
-import { AddContent }  from '../content-add/content-add';
+// import { AddContent }  from '../content-add/content-add';
 import {VOAsset, VOPlayListProps, UpdateResult} from "../services/models";
-import { AssetEditor} from "./asset-editor";
-import {AssetLibrary} from "./asset-library";
+// import { AssetEditor} from "./asset-editor";
+// import {AssetLibrary} from "./asset-library";
 import {AssetService} from "./asset-service";
-import {PlayListService} from "../playlist-editor/playlist-service";
+
+// import {PlayListService} from "../playlist-editor/playlist-service";
 
 @Component({
     selector: 'content-manager',
@@ -80,8 +81,8 @@ import {PlayListService} from "../playlist-editor/playlist-service";
                 }
             `]
     ,
-    directives: [ROUTER_DIRECTIVES, AddContent, AssetLibrary, AssetEditor]
-    , providers: [AssetService,PlayListService]
+    // directives: [ AddContent, AssetLibrary, AssetEditor]
+    // , providers: [AssetService,PlayListService]
 })
 
 
@@ -104,7 +105,7 @@ export class ContentManager implements OnInit {
         private ar:ActivatedRoute
         , private router:Router
         , private assetService:AssetService
-        , private playListService:PlayListService
+        // , private playListService:PlayListService
     ) { }
 
     ngOnInit() {

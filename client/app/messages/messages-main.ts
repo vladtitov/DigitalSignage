@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
-
 
 import { MessageService} from '../services/message-service';
 import { MessageTools } from './message-tools';
@@ -18,7 +16,7 @@ import {Message} from "./message-model";
                </div>
                </div>`,
     styleUrls: ['app/messages/messages-main.css'],
-    directives: [MessageTools, MessageList, ROUTER_DIRECTIVES],
+    // directives: [MessageTools, MessageList],
     providers: [MessageService]
 })
 export class MessagesMain implements OnInit {

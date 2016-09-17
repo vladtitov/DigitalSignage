@@ -27,14 +27,13 @@ import {VOUserData} from "../../app/services/models";
                         </div>
                         <form (ngSubmit)="onSubmit(loginForm.value)" #loginForm="ngForm">                
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="Email address" 
                                     name="username" 
                                     ngModel 
                                     required
                                     type="email" 
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>
                             <button class="btn btn-primary btn-lg btn-block"
                                     type="submit" value="Reset Password"

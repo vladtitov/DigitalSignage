@@ -49,7 +49,6 @@ var htplayer;
         return VOLayoutProps;
     }());
     htplayer.VOLayoutProps = VOLayoutProps;
-    //
     var VOLayout = (function () {
         function VOLayout(obj) {
             for (var str in obj)
@@ -575,10 +574,10 @@ var htplayer;
             $container.append(this.$view);
         };
         HTMyPlayer.prototype.width = function () {
-            return this.layout.width || 1920;
+            return this.layout.props.width || 1920;
         };
         HTMyPlayer.prototype.height = function () {
-            return this.layout.height || 1080;
+            return this.layout.props.height || 1080;
         };
         HTMyPlayer.prototype.start = function () {
         };
@@ -601,9 +600,37 @@ var htplayer;
             this.layout = layout;
             this.setNewViewPorts();
         };
+        HTMyPlayer.prototype.loadPlaylist = function (playlist_id) {
+            var _this = this;
+            $.get(htplayer.playerURL + 'layouts/byid/' + playlist_id).done(function (res) {
+                console.log(res);
+                if (res.data) {
+                    _this.layout = new htplayer.VOLayout(res.data);
+                    _this.setNewViewPorts();
+                    if (_this.onLayotLoaded)
+                        _this.onLayotLoaded();
+                }
+                else
+                    console.warn(res);
+            });
+        };
         HTMyPlayer.prototype.loadLayout = function (layout_id) {
             var _this = this;
             $.get(htplayer.playerURL + 'layouts/byid/' + layout_id).done(function (res) {
+                console.log(res);
+                if (res.data) {
+                    _this.layout = new htplayer.VOLayout(res.data);
+                    _this.setNewViewPorts();
+                    if (_this.onLayotLoaded)
+                        _this.onLayotLoaded();
+                }
+                else
+                    console.warn(res);
+            });
+        };
+        HTMyPlayer.prototype.loadDevice = function (device_id) {
+            var _this = this;
+            $.get(htplayer.playerURL + 'layouts/by-device-id/' + device_id).done(function (res) {
                 console.log(res);
                 if (res.data) {
                     _this.layout = new htplayer.VOLayout(res.data);

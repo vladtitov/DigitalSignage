@@ -9,10 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
 var message_service_1 = require('../services/message-service');
-var message_tools_1 = require('./message-tools');
-var message_list_1 = require('./message-list');
 var MessagesMain = (function () {
     function MessagesMain(messageService) {
         this.messageService = messageService;
@@ -55,7 +52,7 @@ var MessagesMain = (function () {
             selector: 'div',
             template: "<div class =\"panel panel-default\">\n               <div class=\"panel-heading\">\n               <message-tools (added)=\"onMessageAdded($event)\" (deleted)=\"onMessageDeleted()\" (saved)=\"saveMessages()\"></message-tools>\n               </div>\n               <div class=\"panel-body\">\n               <message-list [messages]=\"messages\"></message-list>\n               </div>\n               </div>",
             styleUrls: ['app/messages/messages-main.css'],
-            directives: [message_tools_1.MessageTools, message_list_1.MessageList, router_1.ROUTER_DIRECTIVES],
+            // directives: [MessageTools, MessageList],
             providers: [message_service_1.MessageService]
         }), 
         __metadata('design:paramtypes', [message_service_1.MessageService])

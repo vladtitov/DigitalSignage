@@ -10,8 +10,6 @@ import {Component} from "@angular/core";
             <layouts-assembled-liat></layouts-assembled-liat>
 </div>
 `
-    ,directives:[]
-    ,providers:[]
 })
 export class PublishMain{
 

@@ -3,7 +3,7 @@
  */
 
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {VOLayout, VOTemplate} from "../services/models";
 import { LayoutsTemlatesService } from "../services/layouts-templates-service";
 import {LayoutThumb} from "./layout-thumb";
@@ -61,9 +61,9 @@ import {LayoutThumb} from "./layout-thumb";
            }
            
      `]
-    ,
-    directives: [ ROUTER_DIRECTIVES,LayoutThumb ]
-    ,providers:[LayoutsTemlatesService]
+    // ,
+    // directives: [ LayoutThumb ]
+    // ,providers:[LayoutsTemlatesService]
 })
 
 export class LayoutsTemplateList implements OnInit {

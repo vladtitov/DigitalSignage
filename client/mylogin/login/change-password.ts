@@ -39,19 +39,18 @@ import {UpdateResult} from "../../app/services/models";
                                 <!--</md-input>-->
                             <!--</div>-->
                             <div class="form-group">
-                                <md-input 
+                                <input 
                                     placeholder="New Password"
                                     name="password"
                                     ngModel
                                     required
                                     minLength = "6"
                                     [type]="showPass ? 'text': 'password'" 
-                                    style="width: 100%">
-                                </md-input>
+                                    style="width: 100%"/>
                             </div>                            
-                            <md-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
+                            <label><input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="showPass" aria-label="Checkbox 1">
                                 Show password
-                            </md-checkbox>
+                            </label>
                             <a *ngIf="message" class="btn btn-success btn-lg" (click)="back()"><span class="fa fa-sign-in"></span>Please Sign In</a>
                             <button *ngIf="!message" class="btn btn-primary btn-lg btn-block"
                                     type="submit" value="Change Password"

@@ -101,8 +101,7 @@ import {LayoutViewportPlaylists} from "../layouts/layout-viewport-playlists";
                  background-color: rgba(255, 255, 255, 0.1);
              }
             `],
-    directives: [],
-    providers:[ ]
+    // providers:[ ]
 })
 
 export class LayoutEditorViewport implements OnInit{

@@ -18,9 +18,7 @@ var PublishMain = (function () {
     PublishMain = __decorate([
         core_1.Component({
             selector: 'published-main',
-            template: "\n<div>\n            <layouts-assembled-liat></layouts-assembled-liat>\n</div>\n",
-            directives: [],
-            providers: []
+            template: "\n<div>\n            <layouts-assembled-liat></layouts-assembled-liat>\n</div>\n"
         }), 
         __metadata('design:paramtypes', [])
     ], PublishMain);

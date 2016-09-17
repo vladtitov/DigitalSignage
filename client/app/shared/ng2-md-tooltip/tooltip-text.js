@@ -52,8 +52,7 @@ var TooltipText = (function () {
     TooltipText = __decorate([
         core_1.Component({
             selector: "tooltip-text",
-            template: "\n        <div class=\"tooltip-text {{myClass}}\" [ngStyle]=\"myStyle\">{{message}}</div>\n",
-            providers: [position_serv_1.PositionService]
+            template: "\n        <div class=\"tooltip-text {{myClass}}\" [ngStyle]=\"myStyle\">{{message}}</div>\n"
         }),
         __param(2, core_1.Inject(core_1.ChangeDetectorRef)), 
         __metadata('design:paramtypes', [core_1.ElementRef, position_serv_1.PositionService, core_1.ChangeDetectorRef])

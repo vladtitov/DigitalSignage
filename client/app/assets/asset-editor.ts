@@ -9,8 +9,7 @@ import { AssetLibrary } from "./asset-library";
 import { AssetService } from "./asset-service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
-import {AssetCard} from "./asset-card";
-import {NgTooltip} from "../shared/ng-tooltip";
+// import {AssetCard} from "./asset-card";
 
 // import {MY_DIRECTIVES} from "../app.directives";
 
@@ -170,8 +169,8 @@ import {NgTooltip} from "../shared/ng-tooltip";
                 }
                 
               `]
-    , directives: [AssetLibrary, AssetCard, NgTooltip]
-    , providers: [  ]
+    // , directives: [AssetLibrary, AssetCard]
+    // , providers: [  ]
 })
 
 

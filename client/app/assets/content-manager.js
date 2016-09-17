@@ -13,17 +13,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var content_add_1 = require('../content-add/content-add');
-var asset_editor_1 = require("./asset-editor");
-var asset_library_1 = require("./asset-library");
+// import { AssetEditor} from "./asset-editor";
+// import {AssetLibrary} from "./asset-library";
 var asset_service_1 = require("./asset-service");
-var playlist_service_1 = require("../playlist-editor/playlist-service");
+// import {PlayListService} from "../playlist-editor/playlist-service";
 var ContentManager = (function () {
-    function ContentManager(ar, router, assetService, playListService) {
+    function ContentManager(ar, router, assetService) {
         this.ar = ar;
         this.router = router;
         this.assetService = assetService;
-        this.playListService = playListService;
         this.selectedIndex = 0;
         this.isAddContent = false;
     }
@@ -122,10 +120,8 @@ var ContentManager = (function () {
             selector: 'content-manager',
             template: "\n<div>               \n                 <div class =\"panel-heading\">\n                  <h3>Content manager</h3>\n                    <nav>\n                             <a class=\"btn btn-default\" (click)=\"onAddAsset()\"><span class=\"fa fa-plus\"></span> Add Content</a>\n                             <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"onEditAsset()\"> <span class=\"fa fa-edit\"></span> Edit Content</a>\n                             <a class=\"btn btn-default\" [class.disabled]=\"toolsDisadled\" (click)=\"onDeleteAsset()\"><span class=\"fa fa-minus\"></span> Delete Content</a>\n                    </nav>\n                 </div>\n                 <div class=\"panel-body\">\n                     <asset-library #assetLibrary [changesResult]=\"changesResult\" (onselect)=\"onLibrarySelect($event)\"></asset-library>\n                     <asset-editor *ngIf=\"editorVisible\" #assetEditor [_currentAsset]=\"currentAsset\"></asset-editor>\n                </div>\n                \n                \n                <div *ngIf=\"isAddContent\">\n                    <div id=\"myModal\" class=\"modal\" role=\"dialog\">\n                        <div class=\"modal-dialog\">\n                            <div class=\"modal-content\">\n                                <div class=\"modal-header\">\n                                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" (click)=\"onModalClose()\">&times;</button>\n                                    <h4 class=\"modal-title\">Add content</h4>\n                                </div>\n                                    <div class=\"modal-body\">\n                                        <add-content \n                                            (hided)=\"onHided()\"\n                                            (showed)=\"onShowed()\"\n                                            (closed)=\"onModalClose()\"\n                                            (changed)=\"onUpload()\">\n                                        </add-content>\n                                    </div>\n                              <div class=\"modal-footer\">\n                                    \n                              </div>\n                            </div>\n                            <div *ngIf=\"isHide\" class=\"shadow\"></div>\n                        </div>\n                    </div>\n                </div>\n</div>\n                ",
             styles: ["\n                .modal {\n                    display: block;\n                    background-color: rgba(0, 0, 0, 0.31);\n                }\n                \n                .modal-header {\n                    text-align: center;\n                }\n                \n                .modal-content {\n                    width: 500px;\n                }\n                \n                .shadow {\n                    position: absolute;\n                    background-color: rgba(0, 0, 0, 0.11);\n                    width: 500px;\n                    height: 120px;\n                    top:0;\n                }\n            "],
-            directives: [router_1.ROUTER_DIRECTIVES, content_add_1.AddContent, asset_library_1.AssetLibrary, asset_editor_1.AssetEditor],
-            providers: [asset_service_1.AssetService, playlist_service_1.PlayListService]
         }), 
-        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, asset_service_1.AssetService, playlist_service_1.PlayListService])
+        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, asset_service_1.AssetService])
     ], ContentManager);
     return ContentManager;
 }());

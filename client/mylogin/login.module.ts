@@ -5,11 +5,10 @@ import { NgModule }       from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
 import { FormsModule }    from '@angular/forms';
 
-import { MaterialModule } from './material.module'
+// import { MaterialModule } from './material.module'
 
-import { routing, loginRoutingProviders } from './login.routing';
+import { routing } from './login.routing';
 import { HttpModule, JsonpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 
 import { LoginManager }       from './login-manager';
 import {SignIn} from "./login/sign-in";
@@ -32,9 +31,9 @@ import {ChangePassword} from "./login/change-password";
         FormsModule,
         HttpModule,
         JsonpModule,
-        routing,
-        MaterialModule,
-        RouterModule
+        routing
+        // MaterialModule,
+
       //  HeroesModule
     ],
     declarations: [
@@ -47,7 +46,6 @@ import {ChangePassword} from "./login/change-password";
      //   LoginComponent
     ],
     providers: [
-        loginRoutingProviders,
         LoginService
      //   DialogService
     ],

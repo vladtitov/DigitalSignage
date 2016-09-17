@@ -37,8 +37,8 @@ import {LayoutsListService} from "./layouts-list-service";
 
 `]
 
-    ,directives:[LayoutThumb]
-    ,providers:[LayoutsListService]
+    // ,directives:[LayoutThumb]
+    // ,providers:[LayoutsListService]
 })
 
 export class LayoutsListCards implements OnInit{

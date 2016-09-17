@@ -2,7 +2,7 @@
  * Created by Vlad on 7/24/2016.
  */
 import {Component, ViewChild, Input, OnInit} from "@angular/core";
-import {ROUTER_DIRECTIVES, ActivatedRoute, Router, RouterConfig} from "@angular/router";
+import { ActivatedRoute, Router} from "@angular/router";
 import {DevicesList} from "./devices-list";
 import {DeviceEditor} from "./device-editor";
 import {VODevice, UpdateResult} from "../services/models";
@@ -40,8 +40,8 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             margin-left: 20px;
             }
     `]
-    ,directives:[ROUTER_DIRECTIVES, DevicesList, DeviceEditor]
-    ,providers:[DeviceEditorService]
+    // ,directives:[ DevicesList, DeviceEditor]
+    // ,providers:[DeviceEditorService]
 })
 export class DevicesManager implements OnInit{
 

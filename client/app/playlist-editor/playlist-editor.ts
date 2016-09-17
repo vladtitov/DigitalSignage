@@ -2,7 +2,7 @@
  * Created by Vlad on 7/18/2016.
  */
 import {Component, OnInit} from '@angular/core';
-import {ROUTER_DIRECTIVES, ActivatedRoute} from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 
 //import {PlayListService} from "./playlist.service";
 import {PlaylistEditable} from "./playlist-editable";
@@ -11,9 +11,9 @@ import {AssetsService} from "../services/assets-service";
 import {VOAsset, VOPlaylist} from "../services/models";
 import {Observable, Subscription} from "rxjs/Rx";
 import {AssetItem} from "./asset-item";
-import {ContentFilterPipe} from "../assets/content-filter.pipe";
-import {ContentSearchPipe} from "../assets/content-search.pipe";
-import {AssetCard} from "../assets/asset-card";
+// // import {ContentFilterPipe} from "../assets/content-filter.pipe";
+// import {ContentSearchPipe} from "../assets/content-search.pipe";
+// import {AssetCard} from "../assets/asset-card";
 
 
 @Component({
@@ -99,9 +99,9 @@ import {AssetCard} from "../assets/asset-card";
                 }
 
 `],
-    directives: [ROUTER_DIRECTIVES,PlaylistEditable,AssetCard]
-    ,providers: [AssetsService]
-    ,pipes: [ContentFilterPipe, ContentSearchPipe]
+    // directives: [PlaylistEditable,AssetCard]
+    // ,providers: [AssetsService]
+    // ,pipes: [ContentFilterPipe, ContentSearchPipe]
 })
 
 

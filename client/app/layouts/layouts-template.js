@@ -14,7 +14,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var models_1 = require("../services/models");
-var layouts_template_list_1 = require("./layouts-template-list");
 var LayoutsTemplate = (function () {
     /// viewports:VOViewport[];
     function LayoutsTemplate(ar, myrouter, sroute, router) {
@@ -54,9 +53,7 @@ var LayoutsTemplate = (function () {
         core_1.Component({
             selector: 'layouts-template',
             template: "\n<div>\n            <div class =\"panel-heading\">            \n            <h3>New Layout from template</h3>\n                <a *ngIf=\"currentItem\" class=\"btn btn-default\" [class.disabled]=\"!currentItem.id\" (click)=\"onNextClick()\"><span class=\"fa fa-arrow-right\"></span> Next</a>\n            </div>\n            <div class=\"panel-body\">\n                <div>\n                    <layouts-template-list (onselect)=\"onSelect($event)\"></layouts-template-list>  \n                </div>\n                <div class=\"layout-view\">\n                    <img  src=\"{{currentItem.image}}\" />                \n                </div>\n            </div>\n</div>\n              ",
-            styles: [" \n             h3{\n                display: inline;\n             }\n              .layout-view {\n                   margin: 20px auto;\n                   text-align: center;\n                   width: 800px;\n                   height: 800px;\n                }\n                .layout-view>img{\n                    max-width: 800px;\n                    max-height: 800px;\n                }\n                \n                \n              "],
-            directives: [router_1.ROUTER_DIRECTIVES, layouts_template_list_1.LayoutsTemplateList],
-            providers: []
+            styles: [" \n             h3{\n                display: inline;\n             }\n              .layout-view {\n                   margin: 20px auto;\n                   text-align: center;\n                   width: 800px;\n                   height: 800px;\n                }\n                .layout-view>img{\n                    max-width: 800px;\n                    max-height: 800px;\n                }\n                \n                \n              "]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, router_1.ActivatedRoute, router_1.Router])
     ], LayoutsTemplate);

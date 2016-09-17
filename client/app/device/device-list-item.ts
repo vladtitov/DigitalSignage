@@ -54,7 +54,7 @@ import {LayoutEditorService} from "../layout-editor/layout-editor-service";
             border:thin solid red;
         }
 `]
-    ,providers:[LayoutEditorService]
+    // ,providers:[LayoutEditorService]
 
 })
 

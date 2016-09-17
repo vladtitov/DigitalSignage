@@ -3,8 +3,7 @@
  */
 
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {ROUTER_DIRECTIVES, ActivatedRoute, Router, Route} from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router, Route} from '@angular/router';
 
 import {VOLayout, VOViewport, VOTemplate} from "../services/models";
 
@@ -49,9 +48,7 @@ import {LayoutsTemplateList} from "./layouts-template-list";
                 
                 
               `]
-    ,
-    directives: [ ROUTER_DIRECTIVES, LayoutsTemplateList ]
-    ,providers:[]
+    // directives: [ LayoutsTemplateList ]
 })
 
 export class LayoutsTemplate implements OnInit {

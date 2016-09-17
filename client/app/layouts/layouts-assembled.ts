@@ -2,7 +2,7 @@
  * Created by Vlad on 7/26/2016.
  */
 import {Component} from "@angular/core";
-import {ROUTER_DIRECTIVES, ActivatedRoute, Router, RouterConfig} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {VOLayout, VODevice} from "../services/models";
 import {LayoutsListCards} from "./layouts-list-cards";
 import {LayoutEditorService} from "../layout-editor/layout-editor-service";
@@ -26,7 +26,7 @@ import {TooltipOptions} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
             </div>
 </div>
 `
-    ,directives:[ROUTER_DIRECTIVES,LayoutsListCards]
+    // ,directives:[ROUTER_DIRECTIVES,LayoutsListCards]
     ,providers:[LayoutEditorService, DeviceEditorService]
 })
 

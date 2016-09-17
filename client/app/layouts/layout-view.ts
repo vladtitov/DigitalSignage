@@ -3,8 +3,7 @@
  */
 
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute, Router } from '@angular/router';
-import { RouterConfig } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {VOLayout, VOViewport} from "../services/models";
 
@@ -27,7 +26,7 @@ import {ViewportsView} from "./viewports-view";
                 }
               `]
     ,
-    directives: [ ROUTER_DIRECTIVES, ViewportsView ]
+    // directives: [ ViewportsView ]
 })
 
 export class LayoutView implements OnInit {
