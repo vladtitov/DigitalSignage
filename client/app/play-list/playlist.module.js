@@ -14,24 +14,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
-var playlist_routing_1 = require("./playlist.routing");
-var playlist_service_1 = require("../playlist-editor/playlist-service");
-var playlists_service_1 = require("../services/playlists-service");
+var router_1 = require('@angular/router');
+var shared_module_1 = require("../shared/shared.module");
 var playlist_library_1 = require("./playlist-library");
 var playlist_simple_1 = require("./playlist-simple");
 var playlist_frame_1 = require("./playlist-frame");
 var playlist_editor_1 = require("../playlist-editor/playlist-editor");
-var assets_service_1 = require("../services/assets-service");
 var playlist_editable_1 = require("../playlist-editor/playlist-editable");
 var TimeCell_1 = require("../playlist-editor/TimeCell");
 var playlist_editable_item_1 = require("../playlist-editor/playlist-editable-item");
-var shared_module_1 = require("../shared/shared.module");
+var playlist_service_1 = require("../playlist-editor/playlist-service");
+var playlists_service_1 = require("../services/playlists-service");
+var assets_service_1 = require("../services/assets-service");
 var PlaylistModule = (function () {
     function PlaylistModule() {
     }
     PlaylistModule = __decorate([
         core_1.NgModule({
-            imports: [common_1.CommonModule, forms_1.FormsModule, playlist_routing_1.routing, shared_module_1.SharedModule],
+            imports: [common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule, router_1.RouterModule],
             declarations: [
                 playlist_library_1.PlayListLibrary,
                 playlist_simple_1.PlayListSimple,

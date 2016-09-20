@@ -14,6 +14,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
+var router_1 = require('@angular/router');
+var shared_module_1 = require("../shared/shared.module");
 var content_manager_1 = require("./content-manager");
 var asset_library_1 = require("./asset-library");
 var asset_editor_1 = require("./asset-editor");
@@ -21,17 +23,13 @@ var content_add_1 = require("../content-add/content-add");
 var content_files_1 = require("../content-add/content-files");
 var ng_file_select_1 = require("../content-add/uploader/src/directives/ng-file-select");
 var ng_file_drop_1 = require("../content-add/uploader/src/directives/ng-file-drop");
-var assets_routing_1 = require("./assets.routing");
 var asset_service_1 = require("./asset-service");
-var shared_module_1 = require("../shared/shared.module");
-// import {Ng2MdTooltip} from "../shared/ng2-md-tooltip/ng2-md-tooltip";
-// import {TooltipText} from "../shared/ng2-md-tooltip/tooltip-text";
 var AssetsModule = (function () {
     function AssetsModule() {
     }
     AssetsModule = __decorate([
         core_1.NgModule({
-            imports: [common_1.CommonModule, forms_1.FormsModule, assets_routing_1.routing, shared_module_1.SharedModule],
+            imports: [common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule, router_1.RouterModule],
             declarations: [
                 content_manager_1.ContentManager,
                 asset_library_1.AssetLibrary,
@@ -39,7 +37,7 @@ var AssetsModule = (function () {
                 content_add_1.AddContent,
                 content_files_1.FileContent,
                 ng_file_select_1.NgFileSelect,
-                ng_file_drop_1.NgFileDrop,
+                ng_file_drop_1.NgFileDrop
             ],
             providers: [asset_service_1.AssetService],
         }), 

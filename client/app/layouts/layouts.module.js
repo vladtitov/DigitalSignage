@@ -14,27 +14,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
+var router_1 = require('@angular/router');
+var shared_module_1 = require("../shared/shared.module");
 var layouts_assembled_1 = require("./layouts-assembled");
-var layout_editor_service_1 = require("../layout-editor/layout-editor-service");
-var device_editor_service_1 = require("../device/device-editor-service");
 var layouts_list_cards_1 = require("./layouts-list-cards");
-var layouts_list_service_1 = require("./layouts-list-service");
 var layout_thumb_1 = require("./layout-thumb");
 var layouts_template_1 = require("./layouts-template");
 var layout_editor_1 = require("../layout-editor/layout-editor");
-var shared_module_1 = require("../shared/shared.module");
-var layouts_routing_1 = require("./layouts.routing");
-var layouts_templates_service_1 = require("../services/layouts-templates-service");
 var layouts_template_list_1 = require("./layouts-template-list");
 var playlists_list_dragable_1 = require("../layout-editor/playlists-list-dragable");
-var drag_playlist_service_1 = require("../layout-editor/drag-playlist-service");
 var layout_editor_viewport_1 = require("../layout-editor/layout-editor-viewport");
+var layout_editor_service_1 = require("../layout-editor/layout-editor-service");
+var device_editor_service_1 = require("../device/device-editor-service");
+var layouts_list_service_1 = require("./layouts-list-service");
+var layouts_templates_service_1 = require("../services/layouts-templates-service");
+var drag_playlist_service_1 = require("../layout-editor/drag-playlist-service");
 var LayoutsModule = (function () {
     function LayoutsModule() {
     }
     LayoutsModule = __decorate([
         core_1.NgModule({
-            imports: [common_1.CommonModule, forms_1.FormsModule, layouts_routing_1.routing, shared_module_1.SharedModule],
+            imports: [common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule, router_1.RouterModule],
             declarations: [
                 layouts_assembled_1.LayoutsAssembled,
                 layouts_list_cards_1.LayoutsListCards,

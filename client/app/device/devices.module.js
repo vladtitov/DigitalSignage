@@ -14,22 +14,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
-var devices_routing_1 = require("./devices.routing");
-var devices_manager_1 = require("./devices-manager");
-var device_editor_service_1 = require("./device-editor-service");
-var devices_list_1 = require("./devices-list");
-var device_list_service_1 = require("./device-list-service");
-var device_editor_1 = require("./device-editor");
-var layouts_list_service_1 = require("../layouts/layouts-list-service");
-var device_list_item_1 = require("./device-list-item");
-var layout_editor_service_1 = require("../layout-editor/layout-editor-service");
+var router_1 = require('@angular/router');
 var shared_module_1 = require("../shared/shared.module");
+var devices_manager_1 = require("./devices-manager");
+var devices_list_1 = require("./devices-list");
+var device_editor_1 = require("./device-editor");
+var device_list_item_1 = require("./device-list-item");
+var device_editor_service_1 = require("./device-editor-service");
+var device_list_service_1 = require("./device-list-service");
+var layouts_list_service_1 = require("../layouts/layouts-list-service");
+var layout_editor_service_1 = require("../layout-editor/layout-editor-service");
 var DevicesModule = (function () {
     function DevicesModule() {
     }
     DevicesModule = __decorate([
         core_1.NgModule({
-            imports: [common_1.CommonModule, forms_1.FormsModule, devices_routing_1.routing, shared_module_1.SharedModule],
+            imports: [common_1.CommonModule, forms_1.FormsModule, shared_module_1.SharedModule, router_1.RouterModule],
             declarations: [
                 devices_manager_1.DevicesManager,
                 devices_list_1.DevicesList,

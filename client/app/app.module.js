@@ -14,6 +14,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
+var router_1 = require("@angular/router");
 var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
 var app_routing_1 = require('./app.routing');
@@ -22,7 +23,6 @@ var playlist_module_1 = require("./play-list/playlist.module");
 var layouts_module_1 = require("./layouts/layouts.module");
 var devices_module_1 = require("./device/devices.module");
 var shared_module_1 = require("./shared/shared.module");
-var router_1 = require("@angular/router");
 var AppModule = (function () {
     function AppModule() {
     }
